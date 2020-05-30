@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.openurp.edu.extern</groupId>
+    <artifactId>openurp-edu-extern-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>openurp-edu-extern-web</artifactId>
+  <packaging>jar</packaging>
+  <name>OpenURP Edu Extern Web</name>
+
+  <properties>
+    <bundle.symbolicName>org.openurp.edu.extern.web</bundle.symbolicName>
+    <bundle.namespace>org.openurp</bundle.namespace>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.openurp.app</groupId>
+      <artifactId>openurp-app-api</artifactId>
+      <version>${openurp.app.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openurp.edu</groupId>
+      <artifactId>openurp-edu-boot</artifactId>
+      <version>${openurp.edu.web.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openurp.edu.extern</groupId>
+      <artifactId>openurp-edu-extern-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openurp.edu.extern</groupId>
+      <artifactId>openurp-edu-extern-api</artifactId>
+      <version>${openurp.api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+    </dependency>
+  </dependencies>
+</project>
