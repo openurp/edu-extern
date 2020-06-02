@@ -31,11 +31,11 @@ import org.openurp.edu.base.States
 import org.openurp.edu.base.code.model.CourseType
 import org.openurp.edu.base.model.{Course, Semester, Student}
 import org.openurp.edu.base.web.ProjectSupport
-import org.openurp.edu.extern.exchange.service.{CourseGradeConvertor, ExchangeStudentService}
+import org.openurp.edu.extern.exchange.service.{CourseGradeConvertor, ExchangeStudentService, ExemptionCourse}
 import org.openurp.edu.extern.model.ExchangeStudent
 import org.openurp.edu.program.domain.CoursePlanProvider
 
-class ExchangeAction extends RestfulAction[ExchangeStudent] with ProjectSupport {
+class AuditAction extends RestfulAction[ExchangeStudent] with ProjectSupport {
 
   var coursePlanProvider: CoursePlanProvider = _
 
@@ -79,22 +79,22 @@ class ExchangeAction extends RestfulAction[ExchangeStudent] with ProjectSupport 
     val passed = getBoolean("passed", false)
     val convertor = new CourseGradeConvertor(entityDao)
     val courseTypes = buildCourseTypes(es.std)
-    val saved = Collections.newBuffer[Entity[_]]
     if (passed) {
       es.state = States.Finalized
       es.grades foreach { eg =>
+        val ecs = Collections.newBuffer[ExemptionCourse]
+        val semester=getSemester(eg.acquiredOn)
+        val gradingMode= entityDao.get(classOf[GradingMode],GradingMode.Percent)
         eg.courses foreach { c =>
-          val grade = convertor.convert(es.std, c, getSemester(eg.acquiredOn), courseTypes.getOrElse(c, c.courseType),
-            GradingMode.Percent, None, None, es.school.name + " " + eg.courseName + " " + eg.scoreText)
-          saved += grade
+          val ec = ExemptionCourse(c, courseTypes.getOrElse(c, c.courseType),semester,c.examMode, gradingMode,           None,None)
+          ecs += ec
         }
+        exchangeStudentService.addExemption(eg,ecs.toSeq)
       }
     } else {
       es.state = States.Rejected
     }
-    saved += es
-    entityDao.saveOrUpdate(saved)
-    exchangeStudentService.recalcExemption(es.std)
+    entityDao.saveOrUpdate(es)
     redirect("search", "info.save.success")
   }
 }

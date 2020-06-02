@@ -16,12 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.extern.exchange.web.action.admin
+package org.openurp.edu.extern.exchange.web.action.student
 
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.base.web.ProjectSupport
-import org.openurp.edu.extern.model.ExchangeStudent
+import org.openurp.edu.extern.model.{ExchangeSchool, ExchangeStudent}
 
-class ExchangeDepartAction extends RestfulAction[ExchangeStudent] with ProjectSupport {
+class ApplyAction extends AbstractExemptionAction {
 
+  protected override def editSetting(es: ExchangeStudent): Unit = {
+    val std = this.getStudent
+    if (!es.persisted) es.std = std
+    put("schools", entityDao.getAll(classOf[ExchangeSchool]))
+    put("levels", List(std.level))
+    put("eduCategories", List(std.project.category))
+  }
 }

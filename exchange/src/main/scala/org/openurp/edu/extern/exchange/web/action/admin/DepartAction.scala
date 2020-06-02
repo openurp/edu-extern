@@ -20,8 +20,8 @@ package org.openurp.edu.extern.exchange.web.action.admin
 
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.base.web.ProjectSupport
-import org.openurp.edu.extern.model.ExemptionCredit
+import org.openurp.edu.extern.model.ExchangeStudent
 
-class ExemptionCreditAction extends RestfulAction[ExemptionCredit] with ProjectSupport {
+class DepartAction extends RestfulAction[ExchangeStudent] with ProjectSupport {
 
 }

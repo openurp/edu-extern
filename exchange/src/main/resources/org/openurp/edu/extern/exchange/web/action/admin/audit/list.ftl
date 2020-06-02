@@ -16,11 +16,14 @@
       [@b.boxcol/]
       [@b.col title="学号" property="std.user.code" width="13%"/]
       [@b.col title="姓名" property="std.user.name" width="8%"/]
-      [@b.col title="交流学校" property="school.name"  width="20%"]
+      [@b.col title="交流学校" property="school.name"  width="24%"]
        ${(exchangeStudent.school.name)}
       [/@]
-      [@b.col title="学习专业" property="majorName" width="20%"/]
-      [@b.col title="冲抵学分" width="15%" property="exemptionCredits"/]
+      [@b.col title="学习专业" property="majorName" width="15%"/]
+      [@b.col title="学习时间"  width="15%"]
+        ${exchangeStudent.beginOn?string("yyyy-MM")}~${exchangeStudent.endOn?string("yyyy-MM")}
+      [/@]
+      [@b.col title="冲抵学分" width="10%" property="exemptionCredits"/]
       [@b.col title="状态" width="10%" property="state"/]
     [/@]
   [/@]

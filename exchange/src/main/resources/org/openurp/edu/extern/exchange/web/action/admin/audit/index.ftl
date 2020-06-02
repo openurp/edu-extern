@@ -1,6 +1,6 @@
 [#ftl]
 [@b.head/]
-[@b.toolbar title="冲抵申请管理"/]
+[@b.toolbar title="免修申请管理"/]
    <table width="100%"  class="indexpanel" height="89%">
     <tr>
      <td valign="top"  style="width:180px" class="index_view">

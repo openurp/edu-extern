@@ -22,6 +22,6 @@ import org.beangle.cdi.bind.BindModule
 
 class DefaultModule extends BindModule {
   override protected def binding(): Unit = {
-    bind(classOf[ExemptionAction], classOf[ExchangeAction])
+    bind(classOf[ExemptionAction], classOf[ApplyAction])
   }
 }

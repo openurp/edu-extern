@@ -23,8 +23,9 @@ import org.beangle.cdi.bind.BindModule
 class DefaultModule extends BindModule {
 
   override protected def binding(): Unit = {
-    bind(classOf[ExemptionCreditAction])
-    bind(classOf[ExchangeAction])
-    bind(classOf[ExchangeDepartAction])
+    bind(classOf[CreditAction])
+    bind(classOf[AuditAction])
+    bind(classOf[GradeAction])
+    bind(classOf[DepartAction])
   }
 }

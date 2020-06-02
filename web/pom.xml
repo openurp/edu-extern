@@ -37,6 +37,10 @@
       <version>${openurp.api.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.beangle.serializer</groupId>
+      <artifactId>beangle-serializer-text_2.13</artifactId>
+    </dependency>
+    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
     </dependency>

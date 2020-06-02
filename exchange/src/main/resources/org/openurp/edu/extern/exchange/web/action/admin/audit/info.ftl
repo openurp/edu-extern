@@ -6,9 +6,11 @@
   <div class="panel-heading">
     <h3 class="panel-title">
          <span class="glyphicon glyphicon-bookmark"></span>${exchangeStudent.school.name}<span style="font-size:0.8em">(${exchangeStudent.beginOn?string("yyyy-MM")}~${exchangeStudent.endOn?string("yyyy-MM")})</span>
+         [#if exchangeStudent.state!="通过"]
          <div class="btn-group">
          [@b.a onclick="return audit('${exchangeStudent.id}',1)" class="btn btn-sm btn-info"]<span class="glyphicon glyphicon-edit"></span>审核通过[/@]
          </div>
+         [/#if]
          [@b.a onclick="return audit('${exchangeStudent.id}',0)" class="btn btn-sm btn-warning"]<span class="glyphicon glyphicon-remove"></span>退回修改[/@]
     </h3>
   </div>

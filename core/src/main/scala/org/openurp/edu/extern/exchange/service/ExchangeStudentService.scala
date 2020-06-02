@@ -18,9 +18,19 @@
  */
 package org.openurp.edu.extern.exchange.service
 
-import org.openurp.edu.base.model.Student
+import org.openurp.code.edu.model.{ExamMode, GradingMode}
+import org.openurp.edu.base.code.model.CourseType
+import org.openurp.edu.base.model.{Course, Semester, Student}
+import org.openurp.edu.extern.model.ExchangeGrade
 
 trait ExchangeStudentService {
 
   def recalcExemption(std: Student): Unit
+
+  def addExemption(grade: ExchangeGrade, ecs: Seq[ExemptionCourse]): Unit
+
+  def removeExemption(grade:ExchangeGrade,course:Course)
 }
+
+case class ExemptionCourse(course: Course, courseType: CourseType, semester: Semester,
+                           examMode: ExamMode, gradingMode: GradingMode, score: Option[Float], scoreText: Option[String])

@@ -113,6 +113,7 @@ abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] wi
       if (Strings.isNotEmpty(grade.courseName) && Strings.isNotEmpty(grade.scoreText) && null != grade.acquiredOn) {
         grade.exchangeStudent = es
         credits += grade.credits
+        grade.updatedAt=Instant.now
         es.grades.addOne(grade)
       }
     }
@@ -189,7 +190,7 @@ abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] wi
       case None => es.state = States.Submited
       case Some(l) =>
         val totalCredits = entityDao.findBy(classOf[ExchangeStudent], "std", List(es.std)).map(_.exemptionCredits).sum
-        if (l.maxValue >0 && java.lang.Float.compare(l.maxValue, totalCredits) >= 0) {
+        if (l.maxValue == 0  || java.lang.Float.compare(l.maxValue, totalCredits) >= 0) {
           es.state = States.Submited
         } else {
           es.state = States.Draft

@@ -28,6 +28,7 @@ import org.openurp.code.edu.model.{CourseTakeType, GradeType, GradingMode}
 import org.openurp.edu.base.code.model.CourseType
 import org.openurp.edu.base.model.{Course, Semester, Student}
 import org.openurp.edu.clazz.model.CourseTaker
+import org.openurp.edu.extern.model.ExchangeGrade
 import org.openurp.edu.grade.course.model.{CourseGrade, GaGrade}
 import org.openurp.edu.grade.model.Grade
 
@@ -35,17 +36,11 @@ class CourseGradeConvertor(entityDao: EntityDao) {
   private val courseTakeType = new CourseTakeType()
   courseTakeType.id = CourseTakeType.Exemption
   private val gaGradeType = entityDao.get(classOf[GradeType], GradeType.EndGa)
-  private val gradingModeMap = Collections.newMap[Int, GradingMode]
 
-  entityDao.getAll(classOf[GradingMode]) foreach { g =>
-    gradingModeMap.put(g.id, g)
-  }
-
-  def convert(std: Student, course: Course, semester: Semester, courseType: CourseType,
-              gradingModeId: Int, score: Option[Float], scoreText: Option[String],
-              remark: String): CourseGrade = {
+  def convert(eg:ExchangeGrade,std: Student, ec:ExemptionCourse): CourseGrade = {
+    val remark = eg.exchangeStudent.school.name + " " + eg.courseName + " " + eg.scoreText
     val cgQuery = OqlBuilder.from(classOf[CourseGrade], "cg")
-    cgQuery.where("cg.std=:std and cg.course=:course and cg.semester=:semester", std, course, semester)
+    cgQuery.where("cg.std=:std and cg.course=:course and cg.semester=:semester", std, ec.course, ec.semester)
     val courseGrades = entityDao.search(cgQuery)
     val courseGrade =
       if (courseGrades.isEmpty) {
@@ -53,17 +48,18 @@ class CourseGradeConvertor(entityDao: EntityDao) {
         cg.project = std.project
         cg.std = std
         cg.crn = "--"
-        cg.semester = semester
-        cg.course = course
+        cg.semester = ec.semester
+        cg.course = ec.course
         cg.createdAt=Instant.now
-        cg.courseType = courseType
+        cg.courseType = ec.courseType
+        cg.examMode=ec.examMode
         cg
       } else {
         courseGrades.head
       }
 
     val ctQuery = OqlBuilder.from(classOf[CourseTaker], "ct")
-    ctQuery.where("ct.std=:std and ct.course=:course and ct.semester=:semester", std, course, semester)
+    ctQuery.where("ct.std=:std and ct.course=:course and ct.semester=:semester", std, ec.course, ec.semester)
     entityDao.search(ctQuery) foreach { taker =>
       courseGrade.clazz = Some(taker.clazz)
       courseGrade.crn = taker.clazz.crn
@@ -72,15 +68,13 @@ class CourseGradeConvertor(entityDao: EntityDao) {
       entityDao.saveOrUpdate(taker)
     }
     courseGrade.courseTakeType = courseTakeType
-    courseGrade.examMode = course.examMode
-    val gradingMode = gradingModeMap(gradingModeId)
-    courseGrade.gradingMode = gradingMode
+    courseGrade.gradingMode = ec.gradingMode
     courseGrade.freeListening = true
     courseGrade.passed = true
-    courseGrade.scoreText = scoreText
-    courseGrade.score = score
-    if (score.isEmpty && scoreText.nonEmpty && gradingMode.numerical) {
-      scoreText foreach { st =>
+    courseGrade.scoreText = ec.scoreText
+    courseGrade.score = ec.score
+    if (ec.score.isEmpty && ec.scoreText.nonEmpty && ec.gradingMode.numerical) {
+      ec.scoreText foreach { st =>
         if (Numbers.isDigits(st))
           courseGrade.score = Some(Numbers.toFloat(st, 0))
       }
