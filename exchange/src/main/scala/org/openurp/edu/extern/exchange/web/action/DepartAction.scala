@@ -16,19 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.extern.service
+package org.openurp.edu.extern.exchange.web.action
 
-import org.beangle.cdi.bind.BindModule
-import org.openurp.edu.base.service.SemesterService
-import org.openurp.edu.base.service.impl.SemesterServiceImpl
-import org.openurp.edu.extern.exchange.service.impl.ExemptionServiceImpl
-import org.openurp.edu.program.domain.{DefaultCoursePlanProvider, DefaultProgramProvider}
+import org.beangle.webmvc.entity.action.RestfulAction
+import org.openurp.edu.base.web.ProjectSupport
+import org.openurp.edu.extern.model.ExchangeStudent
 
-class DefaultModule extends BindModule {
-  override protected def binding(): Unit = {
-    bind(classOf[DefaultProgramProvider])
-    bind(classOf[DefaultCoursePlanProvider])
-    bind(classOf[SemesterServiceImpl])
-    bind(classOf[ExemptionServiceImpl])
-  }
+class DepartAction extends RestfulAction[ExchangeStudent] with ProjectSupport {
+
 }

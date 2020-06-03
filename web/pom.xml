@@ -27,6 +27,11 @@
       <version>${openurp.edu.web.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.openurp.edu.base</groupId>
+      <artifactId>openurp-edu-base-tag</artifactId>
+      <version>${openurp.edu.web.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.openurp.edu.extern</groupId>
       <artifactId>openurp-edu-extern-core</artifactId>
       <version>${project.version}</version>

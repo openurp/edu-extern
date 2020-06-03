@@ -20,15 +20,12 @@ package org.openurp.edu.extern.exchange.service
 
 import java.time.Instant
 
-import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.Numbers
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.security.Securities
-import org.openurp.code.edu.model.{CourseTakeType, GradeType, GradingMode}
-import org.openurp.edu.base.code.model.CourseType
-import org.openurp.edu.base.model.{Course, Semester, Student}
+import org.openurp.code.edu.model.{CourseTakeType, GradeType}
+import org.openurp.edu.base.model.Student
 import org.openurp.edu.clazz.model.CourseTaker
-import org.openurp.edu.extern.model.ExchangeGrade
 import org.openurp.edu.grade.course.model.{CourseGrade, GaGrade}
 import org.openurp.edu.grade.model.Grade
 
@@ -37,8 +34,7 @@ class CourseGradeConvertor(entityDao: EntityDao) {
   courseTakeType.id = CourseTakeType.Exemption
   private val gaGradeType = entityDao.get(classOf[GradeType], GradeType.EndGa)
 
-  def convert(eg:ExchangeGrade,std: Student, ec:ExemptionCourse): CourseGrade = {
-    val remark = eg.exchangeStudent.school.name + " " + eg.courseName + " " + eg.scoreText
+  def convert(std: Student, ec: ExemptionCourse, remark: String): CourseGrade = {
     val cgQuery = OqlBuilder.from(classOf[CourseGrade], "cg")
     cgQuery.where("cg.std=:std and cg.course=:course and cg.semester=:semester", std, ec.course, ec.semester)
     val courseGrades = entityDao.search(cgQuery)
@@ -50,9 +46,9 @@ class CourseGradeConvertor(entityDao: EntityDao) {
         cg.crn = "--"
         cg.semester = ec.semester
         cg.course = ec.course
-        cg.createdAt=Instant.now
+        cg.createdAt = Instant.now
         cg.courseType = ec.courseType
-        cg.examMode=ec.examMode
+        cg.examMode = ec.examMode
         cg
       } else {
         courseGrades.head
@@ -91,7 +87,7 @@ class CourseGradeConvertor(entityDao: EntityDao) {
     if (gaGrade == null) {
       gaGrade = new GaGrade()
       gaGrade.gradeType = gaGradeType
-      gaGrade.createdAt=Instant.now
+      gaGrade.createdAt = Instant.now
       courseGrade.addGaGrade(gaGrade)
     }
     gaGrade.gradingMode = courseGrade.gradingMode

@@ -17,19 +17,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.openurp.app</groupId>
-      <artifactId>openurp-app-api</artifactId>
-      <version>${openurp.app.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.openurp.edu.extern</groupId>
-      <artifactId>openurp-edu-extern-core</artifactId>
+      <artifactId>openurp-edu-extern-web</artifactId>
       <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openurp.edu.extern</groupId>
-      <artifactId>openurp-edu-extern-api</artifactId>
-      <version>${openurp.api.version}</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
