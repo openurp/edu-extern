@@ -1,10 +1,8 @@
 [#ftl]
 [@b.head/]
 [@b.toolbar title="证书成绩管理" /]
-<div>
-    <table class="indexpanel">
-    <tr>
-        <td class="index_view">
+<div class="search-container">
+  <div class="search-panel">
             [@b.form name="certificateGradesearchForm" action="!search" title="ui.searchForm" target="certificateGradeList" theme="search"]
                 <input type="hidden" name="orderBy" value="certificateGrade.updatedAt desc"/>
                 [@b.textfield name="certificateGrade.std.user.code" label="学号"/]
@@ -30,13 +28,10 @@
             [/@]
 
             [@b.form name="importForm" action="!importForm" target="certificateGradeList"/]
-        </td>
-        <td class="index_content">
+  </div>
+  <div class="search-list">
             [@b.div id="certificateGradeList" href="!search" /]
-        </td>
-
-    </tr>
-    </table>
+  </div>
 </div>
 <script>
     function importForm(){

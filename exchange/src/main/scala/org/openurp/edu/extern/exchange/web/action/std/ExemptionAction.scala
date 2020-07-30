@@ -16,14 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.extern.code.web.action
+package org.openurp.edu.extern.exchange.web.action.std
 
-import org.beangle.webmvc.api.action.ActionSupport
-import org.beangle.webmvc.api.view.View
+import org.openurp.code.edu.model.{EduCategory, EducationLevel}
+import org.openurp.edu.extern.model.{ExchangeSchool, ExchangeStudent}
 
-class IndexAction extends ActionSupport {
+class ExemptionAction extends AbstractExemptionAction {
 
-  def index: View = {
-    forward()
+  protected override def editSetting(es: ExchangeStudent): Unit = {
+    if (!es.persisted) es.std = this.getStudent
+    put("schools", entityDao.getAll(classOf[ExchangeSchool]))
+    put("levels", entityDao.getAll(classOf[EducationLevel]))
+    put("eduCategories", entityDao.getAll(classOf[EduCategory]))
   }
+
 }

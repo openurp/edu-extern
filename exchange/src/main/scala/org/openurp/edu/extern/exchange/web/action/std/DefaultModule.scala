@@ -16,14 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.extern.code.web.action
+package org.openurp.edu.extern.exchange.web.action.std
 
-import org.beangle.webmvc.api.action.ActionSupport
-import org.beangle.webmvc.api.view.View
+import org.beangle.cdi.bind.BindModule
 
-class IndexAction extends ActionSupport {
+class DefaultModule extends BindModule {
 
-  def index: View = {
-    forward()
+  override protected def binding(): Unit = {
+    bind(classOf[ExemptionAction], classOf[ApplyAction])
   }
 }

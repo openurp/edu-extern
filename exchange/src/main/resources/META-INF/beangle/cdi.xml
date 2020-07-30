@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <cdi>
   <container name="web">
-    <module class="org.openurp.edu.extern.exchange.web.action.DefaultModule" />
+    <module class="org.openurp.edu.extern.exchange.web.action.std.DefaultModule" />
+    <module class="org.openurp.edu.extern.exchange.web.action.depart.DefaultModule" />
+    <module class="org.openurp.edu.extern.exchange.web.action.admin.DefaultModule" />
   </container>
 </cdi>
