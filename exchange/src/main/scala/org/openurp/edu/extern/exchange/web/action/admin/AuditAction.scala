@@ -26,7 +26,7 @@ import org.beangle.ems.app.EmsApp
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.code.edu.model.GradingMode
-import org.openurp.edu.base.States
+import org.openurp.edu.base.AuditStates
 import org.openurp.edu.base.code.model.CourseType
 import org.openurp.edu.base.model.{Course, Semester, Student}
 import org.openurp.edu.extern.exchange.service.{CourseGradeConvertor, ExemptionCourse, ExemptionService}
@@ -79,7 +79,7 @@ class AuditAction extends RestfulAction[ExchangeStudent] with ProjectSupport {
     val convertor = new CourseGradeConvertor(entityDao)
     val courseTypes = buildCourseTypes(es.std)
     if (passed) {
-      es.state = States.Finalized
+      es.auditState = AuditStates.Finalized
       val allCourses = Collections.newSet[Course]
       es.grades foreach { eg =>
         val ecs = Collections.newBuffer[ExemptionCourse]
@@ -97,7 +97,7 @@ class AuditAction extends RestfulAction[ExchangeStudent] with ProjectSupport {
         }
       }
     } else {
-      es.state = States.Rejected
+      es.auditState = AuditStates.Rejected
     }
     entityDao.saveOrUpdate(es)
     redirect("search", "info.save.success")

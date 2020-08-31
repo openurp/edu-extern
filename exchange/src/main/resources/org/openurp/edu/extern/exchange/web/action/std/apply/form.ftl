@@ -13,7 +13,7 @@
     [@b.field label="学号"]${(exchangeStudent.std.user.code)!}[/@]
     [@b.field label="姓名"]${(exchangeStudent.std.user.name)!}[/@]
     [@b.field label="校外学校" ]
-      [@b.select label="选择" name="exchangeStudent.school.id" items=schools?sort_by("name") empty="...手工添加..." value=(exchangeStudent.school.id)! theme="html" /]
+      [@b.select name="exchangeStudent.school.id" items=schools?sort_by("name") empty="...手工添加..." value=(exchangeStudent.school.id)! theme="html" /]
       或<input type="text" name="newSchool" maxlength="100" placeholder="列表中没有,手动添加学校" title="列表中没有,手动添加学校" style=elementSTYLE/]
     [/@]
     [@b.select label="培养层次" name="exchangeStudent.level.id" items=levels required="true" value=(exchangeStudent.level.id)! style=elementSTYLE/]

@@ -19,7 +19,9 @@
       [@b.col title="学分" property="course.credits"  width="6%"/]
       [@b.col title="成绩" property="score"  width="6%"]${(courseGrade.scoreText)!"--"}[/@]
       [@b.col title="绩点" property="gp"  width="6%"]${(courseGrade.gp?string("0.#"))!'--'}[/@]
-      [@b.col title="修读类别" property="courseTakeType.name"/]
+      [@b.col title="修读类别" property="courseTakeType.name"]
+      ${courseGrade.courseTakeType.name}
+      [/@]
       [@b.col title="更新时间" property="updatedAt"  width="15%"]${courseGrade.updatedAt?string("yyyy-MM-dd HH:mm")}[/@]
     [/@]
   [/@]
@@ -42,6 +44,7 @@
   [/@]
   [@b.form name="gradeDistributeForm" action="!convert"]
   <input type="hidden" name="grade.id" value="${grade.id}"/>
+  <div class="grid" style="border: 1px solid;">
   <table class="gridtable">
     <thead class="gridhead">
       <tr>
@@ -63,7 +66,7 @@
         <td>${planCourse.group.courseType.name}</td>
         <td>${planCourse.course.credits}</td>
         <td>
-          <select name="gradingMode.id${planCourse.id}" style="width: 130px" onchange="displayScore(this.value,${planCourse.id})">
+          <select name="gradingMode.id${planCourse.id}" style="width: 100px" onchange="displayScore(this.value,${planCourse.id})">
             [#list gradingModes as gradingMode]
             <option value="${gradingMode.id}"[#if 1 == gradingMode.id] selected[/#if]>${gradingMode.name}</option>
             [/#list]
@@ -81,6 +84,7 @@
       [/#list]
     </tbody>
   </table>
+  </div>
   [/@]
 
   <script>

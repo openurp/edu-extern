@@ -7,19 +7,9 @@
 
 [@b.nav class="nav nav-tabs nav-tabs-compact"  id="code_nav"]
   [#list codes?keys as code]
-  [#if code_index<9]
-  <li role="presentation" [#if code_index=0]class="active"[/#if]>[@b.a href=codes[code] target="codelist"]${code}[/@]</li>
-  [/#if]
+  [@b.navitem href=codes[code]  active=(code_index=0) target="codelist"]${code}[/@]
   [/#list]
 [/@]
 [@b.div id="codelist" href="/code/certificate-subject"/]
-<script>
-  jQuery(document).ready(function(){
-    jQuery('#code_nav>li').bind("click",function(e){
-      jQuery("#code_nav>li").removeClass("active");
-      jQuery(this).addClass("active");
-    });
-  });
-</script>
 
 [@b.foot/]

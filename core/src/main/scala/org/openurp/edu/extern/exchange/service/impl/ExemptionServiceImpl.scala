@@ -23,7 +23,7 @@ import java.time.{Instant, LocalDate}
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.openurp.code.edu.model.CourseTakeType
-import org.openurp.edu.base.States
+import org.openurp.edu.base.AuditStates
 import org.openurp.edu.base.model.{Course, Semester, Student}
 import org.openurp.edu.base.service.SemesterService
 import org.openurp.edu.extern.exchange.service.{CourseGradeConvertor, ExemptionCourse, ExemptionService}
@@ -92,7 +92,7 @@ class ExemptionServiceImpl extends ExemptionService {
         e
     }
     var exemptedCourses = Collections.newSet[Course]
-    entityDao.findBy(classOf[ExchangeStudent], "std", List(std)).filter(_.state == States.Finalized) foreach { fes =>
+    entityDao.findBy(classOf[ExchangeStudent], "std", List(std)).filter(_.auditState == AuditStates.Finalized) foreach { fes =>
       fes.grades foreach { fgrade =>
         exemptedCourses ++= fgrade.courses
       }

@@ -29,7 +29,7 @@ import org.beangle.security.Securities
 import org.beangle.webmvc.api.annotation.mapping
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.base.States
+import org.openurp.edu.base.AuditStates
 import org.openurp.edu.base.model.{Course, Student}
 import org.openurp.edu.extern.model.{ExchangeGrade, ExchangeSchool, ExchangeStudent, ExemptionCredit}
 import org.openurp.edu.grade.course.model.CourseGrade
@@ -93,7 +93,7 @@ abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] wi
         repo.remove(p)
       }
       val meta = repo.upload("/exchange", part.getInputStream, part.getSubmittedFileName, es.std.user.code + " " + es.std.user.name);
-      es.transcriptPath = Some(meta.path)
+      es.transcriptPath = Some(meta.filePath)
     }
     entityDao.saveOrUpdate(es)
     redirect("editGrades", "&exchangeStudent.id=" + es.id, "info.save.success")
@@ -160,7 +160,7 @@ abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] wi
     val id = getId("exchangeStudent", classOf[Long])
     val es = entityDao.get(classOf[ExchangeStudent], id.get)
     val std = getStudent
-    if (es.std == std && es.state != States.Accepted) {
+    if (es.std == std && es.auditState != AuditStates.Accepted) {
       es.transcriptPath foreach { p =>
         EmsApp.getBlobRepository(true).remove(p)
       }
@@ -173,7 +173,7 @@ abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] wi
 
   def saveApplies(): View = {
     val es = getEntity(entityType, simpleEntityName)
-    if (es.state == States.Accepted) {
+    if (es.auditState == AuditStates.Accepted) {
       return redirect("index", "已经审核通过的申请不能再次冲抵")
     }
     val courseSet = Collections.newSet[Course]
@@ -188,17 +188,17 @@ abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] wi
     entityDao.saveOrUpdate(es)
     val limit = entityDao.findBy(classOf[ExemptionCredit], "std", List(es.std)).headOption
     limit match {
-      case None => es.state = States.Submited
+      case None => es.auditState = AuditStates.Submited
       case Some(l) =>
         val totalCredits = entityDao.findBy(classOf[ExchangeStudent], "std", List(es.std)).map(_.exemptionCredits).sum
         if (l.maxValue == 0  || java.lang.Float.compare(l.maxValue, totalCredits) >= 0) {
-          es.state = States.Submited
+          es.auditState = AuditStates.Submited
         } else {
-          es.state = States.Draft
+          es.auditState = AuditStates.Draft
         }
     }
     entityDao.saveOrUpdate(es)
-    if (es.state == States.Submited) {
+    if (es.auditState == AuditStates.Submited) {
       redirect("index", "info.save.success")
     } else {
       redirect("editApplies", "&exchangeStudent.id=" + es.id, "超出认定学分上限，请重新选择课程")
