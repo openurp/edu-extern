@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.openurp.edu.extern</groupId>
     <artifactId>openurp-edu-extern-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
   </parent>
   <artifactId>openurp-edu-extern-web</artifactId>
   <packaging>jar</packaging>
@@ -17,13 +17,17 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.openurp.app</groupId>
-      <artifactId>openurp-app-api</artifactId>
-      <version>${openurp.app.version}</version>
+      <groupId>org.beangle.ems</groupId>
+      <artifactId>beangle-ems-app_2.13</artifactId>
     </dependency>
     <dependency>
       <groupId>org.openurp.edu</groupId>
       <artifactId>openurp-edu-boot</artifactId>
+      <version>${openurp.edu.web.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openurp.edu</groupId>
+      <artifactId>openurp-edu-web</artifactId>
       <version>${openurp.edu.web.version}</version>
     </dependency>
     <dependency>
@@ -35,6 +39,10 @@
       <groupId>org.openurp.edu.extern</groupId>
       <artifactId>openurp-edu-extern-api</artifactId>
       <version>${openurp.api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.beangle.serializer</groupId>
+      <artifactId>beangle-serializer-text_2.13</artifactId>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>

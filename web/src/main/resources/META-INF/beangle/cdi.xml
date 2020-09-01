@@ -2,8 +2,11 @@
 <cdi>
   <container name="web">
     <module class="org.openurp.edu.boot.web.ProjectModule" />
+    <module class="org.openurp.edu.extern.code.web.action.DefaultModule"/>
   </container>
   <container>
     <module class="org.openurp.edu.extern.service.DefaultModule" />
+    <module class="org.beangle.serializer.text.DefaultModule"/>
+    <module class="org.beangle.serializer.json.DefaultModule"/>
   </container>
 </cdi>
