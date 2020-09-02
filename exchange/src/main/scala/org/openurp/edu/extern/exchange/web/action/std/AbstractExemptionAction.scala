@@ -206,8 +206,8 @@ abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] wi
   }
 
   protected def getStudent: Student = {
-    val builder = OqlBuilder.from(classOf[Student], "s")
-    builder.where("s.user.code=:code", Securities.user)
+    val BUILDER = OqlBuilder.from(classOf[Student], "s")
+    builder.where("s.project=:project and s.user.code=:code", getProject,Securities.user)
     entityDao.search(builder).head
   }
 }

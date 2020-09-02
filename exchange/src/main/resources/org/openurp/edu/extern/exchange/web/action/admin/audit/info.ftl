@@ -5,7 +5,7 @@
 [@b.card class="card-info card-outline"]
   [@b.card_header]
          <i class="fas fa-school"></i>&nbsp;${exchangeStudent.school.name}<span style="font-size:0.8em">(${exchangeStudent.beginOn?string("yyyy-MM")}~${exchangeStudent.endOn?string("yyyy-MM")})</span>
-         [#if exchangeStudent.state!="通过"]
+         [#if exchangeStudent.auditState!="通过"]
          <div class="btn-group">
          [@b.a onclick="return audit('${exchangeStudent.id}',1)" class="btn btn-sm btn-info"]<i class="fa fa-check"></i>审核通过[/@]
          </div>
@@ -39,7 +39,7 @@
          [#else]--[/#if]
       </td>
       <td class="title">审核状态：</td>
-      <td><span class="[#if exchangeStudent.state=="通过"]text-success[#else]text-danger[/#if]">${exchangeStudent.state}${exchangeStudent.auditOpinion!}</span></td>
+      <td><span class="[#if exchangeStudent.auditState=="通过"]text-success[#else]text-danger[/#if]">${exchangeStudent.auditState}${exchangeStudent.auditOpinion!}</span></td>
     </tr>
   </table>
     [@b.grid items=exchangeStudent.grades sortable="false" var="grade" ]

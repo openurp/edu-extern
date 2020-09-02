@@ -26,7 +26,7 @@
          [#else]--[/#if]
       </td>
       <td class="title">审核状态：</td>
-      <td><span class="[#if exchangeStudent.state=="通过"]text-success[#else]text-danger[/#if]">${exchangeStudent.state}${exchangeStudent.auditOpinion!}</span></td>
+      <td><span class="[#if exchangeStudent.auditState=="通过"]text-success[#else]text-danger[/#if]">${exchangeStudent.auditState}${exchangeStudent.auditOpinion!}</span></td>
     </tr>
   </table>
     [@b.grid items=exchangeStudent.grades sortable="false" var="grade" ]
