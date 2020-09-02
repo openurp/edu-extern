@@ -29,7 +29,7 @@
   [#list exchangeStudents as exchangeStudent]
   [#assign title]
      ${exchangeStudent.school.name}<span style="font-size:0.8em">(${exchangeStudent.beginOn?string("yyyy-MM")}~${exchangeStudent.endOn?string("yyyy-MM")})</span>
-     [#if exchangeStudent.grades?size>0 && exchangeStudent.state =="通过"]审核通过
+     [#if exchangeStudent.grades?size>0 && exchangeStudent.auditState =="通过"]审核通过
      [#else]
      <div class="btn-group">
      [@b.a href="!edit?id="+exchangeStudent.id class="btn btn-sm btn-info"]<i class="far fa-edit"></i>修改[/@]
