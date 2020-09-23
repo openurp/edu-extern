@@ -18,13 +18,18 @@
  */
 package org.openurp.edu.extern.exchange.web.action.std
 
+import org.openurp.edu.base.model.Student
 import org.openurp.edu.extern.model.{ExchangeSchool, ExchangeStudent}
 
 class ApplyAction extends AbstractExemptionAction {
 
   protected override def editSetting(es: ExchangeStudent): Unit = {
-    val std = getStudent(getProject)
-    if (!es.persisted) es.std = std
+    val std = if (es.persisted) {
+      es.std
+    } else {
+      getStudent(intId("project"))
+    }
+    es.std = std
     put("schools", entityDao.getAll(classOf[ExchangeSchool]))
     put("levels", List(std.level))
     put("eduCategories", List(std.project.category))
