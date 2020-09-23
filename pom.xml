@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.openurp</groupId>
     <artifactId>openurp-parent</artifactId>
-    <version>0.3.29</version>
+    <version>0.4.0</version>
   </parent>
   <groupId>org.openurp.edu.extern</groupId>
   <artifactId>openurp-edu-extern-parent</artifactId>
@@ -21,8 +21,8 @@
   </modules>
 
   <properties>
-    <openurp.api.version>0.17.1</openurp.api.version>
-    <openurp.edu.web.version>0.1.4</openurp.edu.web.version>
+    <openurp.api.version>0.18.0</openurp.api.version>
+    <openurp.edu.web.version>0.1.5</openurp.edu.web.version>
   </properties>
 
 </project>

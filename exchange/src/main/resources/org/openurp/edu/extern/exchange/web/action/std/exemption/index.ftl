@@ -19,7 +19,9 @@
     <ul class="nav navbar-nav navbar-right">
         <li>
         [@b.form class="navbar-form navbar-left" role="search" action="!editNew"]
-            [@b.a class="btn btn-sm btn-info" href="!editNew"]<i class="fas fa-plus"></i>新建[/@]
+            [#list students as std]
+            [@b.a class="btn btn-sm btn-info" href="!editNew?project.id="+std.project.id]<i class="fas fa-plus"></i>新建到${std.project.name}[/@]
+            [/#list]
         [/@]
         </li>
     </ul>
