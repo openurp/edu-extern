@@ -25,6 +25,7 @@
     [/@]
     [@b.formfoot]
       <input type="hidden" name="exchangeStudent.id" value="${(exchangeStudent.id)!}"/>
+      <input type="hidden" name="project.id" value="${(exchangeStudent.std.project.id)!}"/>
       <input type="hidden" name="exchangeStudent.category.id" value="${exchangeStudent.std.project.category.id}"/>
       [@b.submit value="保存,进入填写学习成绩" /]
     [/@]

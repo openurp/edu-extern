@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.openurp.edu.extern</groupId>
     <artifactId>openurp-edu-extern-parent</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.4</version>
   </parent>
   <artifactId>openurp-edu-extern-certificate</artifactId>
   <packaging>jar</packaging>
@@ -22,8 +22,8 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
     </dependency>
   </dependencies>
 </project>

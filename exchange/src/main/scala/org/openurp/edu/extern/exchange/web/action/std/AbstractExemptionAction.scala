@@ -20,12 +20,11 @@ package org.openurp.edu.extern.exchange.web.action.std
 
 import java.time.{Instant, LocalDate}
 
-import javax.servlet.http.Part
+import jakarta.servlet.http.Part
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.ems.app.EmsApp
-import org.beangle.security.Securities
 import org.beangle.webmvc.api.annotation.mapping
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
@@ -41,9 +40,10 @@ abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] wi
   var coursePlanProvider: CoursePlanProvider = _
 
   override def index(): View = {
-    val std = getStudent(getProject)
+    val stds = getStudents()
+    put("students", stds)
     val query = OqlBuilder.from(classOf[ExchangeStudent], "es")
-    query.where("es.std=:std", std)
+    query.where("es.std in(:stds)", stds)
     query.orderBy("es.beginOn")
     val exchangeStudents = entityDao.search(query)
     put("exchangeStudents", exchangeStudents)
@@ -58,7 +58,7 @@ abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] wi
   }
 
   override def save(): View = {
-    var std = getStudent(getProject)
+    val std = getStudent(intId("project"))
     var school: ExchangeSchool = null
     val schoolId = getInt("exchangeStudent.school.id")
     schoolId match {
@@ -114,7 +114,7 @@ abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] wi
       if (Strings.isNotEmpty(grade.courseName) && Strings.isNotEmpty(grade.scoreText) && null != grade.acquiredOn) {
         grade.exchangeStudent = es
         credits += grade.credits
-        grade.updatedAt=Instant.now
+        grade.updatedAt = Instant.now
         es.grades.addOne(grade)
       }
     }
@@ -159,7 +159,7 @@ abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] wi
   override def remove(): View = {
     val id = getId("exchangeStudent", classOf[Long])
     val es = entityDao.get(classOf[ExchangeStudent], id.get)
-    val std = getStudent(getProject)
+    val std = getStudent(intId("project"))
     if (es.std == std && es.auditState != AuditStates.Accepted) {
       es.transcriptPath foreach { p =>
         EmsApp.getBlobRepository(true).remove(p)
@@ -191,7 +191,7 @@ abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] wi
       case None => es.auditState = AuditStates.Submited
       case Some(l) =>
         val totalCredits = entityDao.findBy(classOf[ExchangeStudent], "std", List(es.std)).map(_.exemptionCredits).sum
-        if (l.maxValue == 0  || java.lang.Float.compare(l.maxValue, totalCredits) >= 0) {
+        if (l.maxValue == 0 || java.lang.Float.compare(l.maxValue, totalCredits) >= 0) {
           es.auditState = AuditStates.Submited
         } else {
           es.auditState = AuditStates.Draft
@@ -204,5 +204,4 @@ abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] wi
       redirect("editApplies", "&exchangeStudent.id=" + es.id, "超出认定学分上限，请重新选择课程")
     }
   }
-
 }
