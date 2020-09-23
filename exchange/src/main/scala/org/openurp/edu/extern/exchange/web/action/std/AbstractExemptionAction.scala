@@ -25,7 +25,6 @@ import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.ems.app.EmsApp
-import org.beangle.security.Securities
 import org.beangle.webmvc.api.annotation.mapping
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
@@ -204,5 +203,4 @@ abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] wi
       redirect("editApplies", "&exchangeStudent.id=" + es.id, "超出认定学分上限，请重新选择课程")
     }
   }
-
 }

@@ -24,7 +24,7 @@
         ${exchangeStudent.beginOn?string("yyyy-MM")}~${exchangeStudent.endOn?string("yyyy-MM")}
       [/@]
       [@b.col title="冲抵学分" width="10%" property="exemptionCredits"/]
-      [@b.col title="状态" width="10%" property="state"/]
+      [@b.col title="状态" width="10%" property="auditState"/]
     [/@]
   [/@]
 [@b.foot/]
