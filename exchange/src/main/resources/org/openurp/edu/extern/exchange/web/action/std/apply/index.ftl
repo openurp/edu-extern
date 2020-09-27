@@ -9,8 +9,8 @@
     <ul class="nav navbar-nav navbar-right">
         <li>
         [@b.form class="navbar-form navbar-left" role="search" action="!editNew"]
-            [#list students as std]
-            [@b.a class="btn btn-sm btn-info" href="!editNew?project.id="+std.project.id]<i class="fas fa-plus"></i>添加到${std.project.name}[/@]
+            [#list projects as p]
+            [@b.a class="btn btn-sm btn-info" href="!editNew?project.id="+project.id]<i class="fas fa-plus"></i>添加到${p.name}[/@]
             [/#list]
         [/@]
         </li>

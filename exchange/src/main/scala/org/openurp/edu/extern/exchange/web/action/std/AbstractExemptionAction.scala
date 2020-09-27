@@ -40,10 +40,10 @@ abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] wi
   var coursePlanProvider: CoursePlanProvider = _
 
   override def index(): View = {
-    val stds = getStudents()
-    put("students", stds)
+    put("projects",getUserProjects(classOf[Student]))
+    val std = getUser(classOf[Student])
     val query = OqlBuilder.from(classOf[ExchangeStudent], "es")
-    query.where("es.std in(:stds)", stds)
+    query.where("es.std = :std", std)
     query.orderBy("es.beginOn")
     val exchangeStudents = entityDao.search(query)
     put("exchangeStudents", exchangeStudents)
@@ -58,7 +58,7 @@ abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] wi
   }
 
   override def save(): View = {
-    val std = getStudent(intId("project"))
+    val std = getUser(classOf[Student])
     var school: ExchangeSchool = null
     val schoolId = getInt("exchangeStudent.school.id")
     schoolId match {
@@ -159,7 +159,7 @@ abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] wi
   override def remove(): View = {
     val id = getId("exchangeStudent", classOf[Long])
     val es = entityDao.get(classOf[ExchangeStudent], id.get)
-    val std = getStudent(intId("project"))
+    val std = getUser(classOf[Student])
     if (es.std == std && es.auditState != AuditStates.Accepted) {
       es.transcriptPath foreach { p =>
         EmsApp.getBlobRepository(true).remove(p)

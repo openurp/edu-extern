@@ -24,7 +24,7 @@ import org.openurp.edu.extern.model.{ExchangeSchool, ExchangeStudent}
 class ApplyAction extends AbstractExemptionAction {
 
   protected override def editSetting(es: ExchangeStudent): Unit = {
-    es.std = getLogin(classOf[Student])
+    es.std = getUser(classOf[Student])
     put("schools", entityDao.getAll(classOf[ExchangeSchool]))
     put("levels", List(es.std.level))
     put("eduCategories", List(es.std.project.category))
