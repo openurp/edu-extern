@@ -25,7 +25,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.ems.app.EmsApp
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.code.edu.model.GradingMode
+import org.openurp.code.edu.model.{GradingMode, StudentStatus}
 import org.openurp.edu.base.AuditStates
 import org.openurp.edu.base.code.model.CourseType
 import org.openurp.edu.base.model.{Course, Semester, Student}
@@ -39,6 +39,10 @@ class AuditAction extends RestfulAction[ExchangeStudent] with ProjectSupport {
   var coursePlanProvider: CoursePlanProvider = _
 
   var exemptionService: ExemptionService = _
+
+  override def indexSetting(): Unit = {
+    put("studentStatuses", getCodes(classOf[StudentStatus]))
+  }
 
   override def info(id: String): View = {
     val es = getModel[ExchangeStudent](entityName, convertId(id))
