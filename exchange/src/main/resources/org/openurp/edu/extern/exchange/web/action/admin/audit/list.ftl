@@ -2,6 +2,7 @@
 [@b.head/]
   [@b.grid items=exchangeStudents var="exchangeStudent"]
     [@b.gridbar]
+      bar.addItem("新增",action.add());
       bar.addItem("审核...", action.single("info"));
       //bar.addItem("${b.text('action.export')}", "exportData()");
       function exportData(){

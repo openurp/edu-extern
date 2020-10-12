@@ -64,7 +64,7 @@ class GradeAction extends RestfulAction[ExchangeGrade] with ProjectSupport {
     val yyyyMM = DateTimeFormatter.ofPattern("yyyy-MM")
     entityDao.search(query).map { es =>
       val p = new Properties()
-      p.put("value", es.id)
+      p.put("value", es.id.toString)
       p.put("text", s"${es.std.user.code} ${es.std.user.name} ${es.school.name}(${es.beginOn.format(yyyyMM)})")
       p
     }
