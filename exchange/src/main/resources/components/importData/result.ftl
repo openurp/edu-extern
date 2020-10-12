@@ -16,7 +16,6 @@
         [@b.col title="错误内容" width="40%"][#if message.message?starts_with("error")]${b.text(message.message)}[#else]${message.message}[/#if][/@]
         [@b.col title="错误值"][#list message.values as value]${value?default("")}[/#list][/@]
     [/@]
-    <div style="text-align:center">请将所有的输入数据(包括日期,数字等)在导入文件中以文字格式存放。</div>
 [/@]
 <br>
 [#if (importResult.msgs)?? && importResult.msgs?size > 0]
