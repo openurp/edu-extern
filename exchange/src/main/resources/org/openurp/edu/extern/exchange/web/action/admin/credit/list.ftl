@@ -1,6 +1,12 @@
 [#ftl]
 [@b.head/]
   [@b.grid items=exemptionCredits var="exemptionCredit"]
+    [@b.gridbar]
+      bar.addItem("新增",action.add());
+      bar.addItem("修改",action.edit());
+      bar.addItem("导入",action.method('importForm'))
+      bar.addItem("删除",action.remove())
+    [/@]
     [@b.row]
       [@b.boxcol/]
       [@b.col title="学号" property="std.user.code" width="15%"/]
