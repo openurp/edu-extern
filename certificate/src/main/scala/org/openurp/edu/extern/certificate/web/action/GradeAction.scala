@@ -85,7 +85,7 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
 
   override def saveAndRedirect(grade: CertificateGrade): View = {
     val project = getProject
-    val stdCode = get("examGrade.std.user.code", "")
+    val stdCode = get("certificateGrade.std.user.code", "")
     if (grade.std == null && Strings.isNotBlank(stdCode)) {
       val q = OqlBuilder.from(classOf[Student], "s")
       q.where("s.user.code=:code and s.project=:project", stdCode, project)
