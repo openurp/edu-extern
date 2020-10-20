@@ -19,17 +19,17 @@
 package org.openurp.edu.extern.certificate.web.action
 
 import java.time.{Instant, ZoneId}
-import java.io.{ByteArrayOutputStream,ByteArrayInputStream}
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.transfer.excel.ExcelSchema
 import org.beangle.webmvc.api.annotation.response
-import org.beangle.webmvc.api.view.{PathView, View,Stream}
+import org.beangle.webmvc.api.view.{PathView, Stream, View}
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.code.edu.model.{ExamStatus, GradingMode}
-import org.openurp.edu.base.model.{Semester, Student}
+import org.openurp.edu.base.model.{Semester, Student, Terms}
 import org.openurp.edu.base.service.SemesterService
 import org.openurp.edu.web.ProjectSupport
 import org.openurp.edu.extern.code.model.{CertificateCategory, CertificateSubject}
@@ -132,7 +132,8 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
     val ecs = Collections.newBuffer[ExemptionCourse]
     val std = eg.std
     planCourses foreach { pc =>
-      val semester = exemptionService.getSemester(std, eg.acquiredOn, pc.terms.termList.headOption).orNull
+
+      val semester = exemptionService.getSemester(std, eg.acquiredOn, termList(pc.terms).headOption).orNull
       val scoreText = get("scoreText" + pc.id)
       if (null != semester && scoreText.nonEmpty) {
         val gradingMode = entityDao.get(classOf[GradingMode], getInt("gradingMode.id" + pc.id, 0))
@@ -143,6 +144,17 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
     }
     this.exemptionService.addExemption(eg, ecs.toSeq)
     redirect("search", "info.action.success")
+  }
+
+  private def termList(terms:Terms):List[Int]={
+    val str = java.lang.Integer.toBinaryString(terms.value)
+    var i = str.length - 1
+    val result = new collection.mutable.ListBuffer[Int]
+    while (i >= 0) {
+      if (str.charAt(i) == '1') result += (str.length - i)
+      i -= 1
+    }
+    result.toList
   }
 
   def removeCourseGrade: View = {
