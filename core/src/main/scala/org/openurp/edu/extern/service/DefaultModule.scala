@@ -19,7 +19,6 @@
 package org.openurp.edu.extern.service
 
 import org.beangle.cdi.bind.BindModule
-import org.openurp.edu.base.service.SemesterService
 import org.openurp.edu.base.service.impl.SemesterServiceImpl
 import org.openurp.edu.extern.exchange.service.impl.ExemptionServiceImpl
 import org.openurp.edu.program.domain.{DefaultCoursePlanProvider, DefaultProgramProvider}
