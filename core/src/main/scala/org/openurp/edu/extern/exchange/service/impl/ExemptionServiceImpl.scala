@@ -73,7 +73,7 @@ class ExemptionServiceImpl extends ExemptionService {
       List.empty
     } else {
       val query2 = OqlBuilder.from(classOf[CourseGrade], "cg")
-      query2.where("cg.std=:std and cg.status=:status", std, Grade.Status.Published)
+      query2.where("cg.std=:std", std)
       query2.where("cg.course in(:courses)", courses)
       query2.where("cg.courseTakeType.id=:exemption", CourseTakeType.Exemption)
       entityDao.search(query2)
@@ -101,7 +101,6 @@ class ExemptionServiceImpl extends ExemptionService {
     ec.updatedAt = Instant.now
     entityDao.saveOrUpdate(ec)
   }
-
 
   override def removeExemption(eg: ExchangeGrade, course: Course): Unit = {
     eg.courses.subtractOne(course)
