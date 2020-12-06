@@ -28,10 +28,10 @@ import org.beangle.data.transfer.importer.ImportSetting
 import org.beangle.webmvc.api.annotation.response
 import org.beangle.webmvc.api.view.Stream
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.base.model.Student
+import org.openurp.base.edu.model.Student
 import org.openurp.edu.extern.exchange.web.helper.ExemptionCreditImportListener
 import org.openurp.edu.extern.model.ExemptionCredit
-import org.openurp.edu.web.ProjectSupport
+import org.openurp.boot.edu.helper.ProjectSupport
 
 class CreditAction extends RestfulAction[ExemptionCredit] with ProjectSupport {
 

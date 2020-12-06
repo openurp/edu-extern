@@ -10,7 +10,6 @@
       var bar1=bar.addMenu("导入导出");
       bar1.addItem("导入","importForm()");
       bar1.addItem("导出","exportData()");
-      bar1.addItem("学分银行", action.exportData("info.std.user.name:姓名,info.std.person.code:身份证号,info.subject.code:转换学校代码,original.course.code:原课程来源代码,original.major.name:原专业名称,info.subject.name:原课程名称,original.school.name:原办学机构,original.level.code:原教育层次代码,original.project.category.code:原教育类别代码,original.course.credits:原学分,original.course.creditHours:原学时,courseGrade.scoreText:原成绩,info.acquiredOn:获得时间,info.std.level.code:转换后教育层次代码,courseGrade.course.code:转换后课程代码,courseGrade.course.name:转换后课程名称,courseGrade.course.credits:转换后学分", "xls", "fileName=批次学分银行成绩-证书成绩&dataInSource=courseGrade"), "excel.png");
     [/@]
     [@b.row]
         [@b.boxcol/]

@@ -18,7 +18,7 @@
  */
 package org.openurp.edu.extern.exchange.web.action.std
 
-import org.openurp.edu.base.model.Student
+import org.openurp.base.edu.model.Student
 import org.openurp.edu.extern.model.{ExchangeSchool, ExchangeStudent}
 
 class ApplyAction extends AbstractExemptionAction {

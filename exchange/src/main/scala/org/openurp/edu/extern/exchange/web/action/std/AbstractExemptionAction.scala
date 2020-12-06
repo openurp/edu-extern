@@ -28,12 +28,12 @@ import org.beangle.ems.app.EmsApp
 import org.beangle.webmvc.api.annotation.mapping
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.base.AuditStates
-import org.openurp.edu.base.model.{Course, Student}
+import org.openurp.base.edu.AuditStates
+import org.openurp.base.edu.model.{Course, Student}
 import org.openurp.edu.extern.model.{ExchangeGrade, ExchangeSchool, ExchangeStudent, ExemptionCredit}
 import org.openurp.edu.grade.course.model.CourseGrade
 import org.openurp.edu.program.domain.CoursePlanProvider
-import org.openurp.edu.web.ProjectSupport
+import org.openurp.boot.edu.helper.ProjectSupport
 
 abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] with ProjectSupport {
 

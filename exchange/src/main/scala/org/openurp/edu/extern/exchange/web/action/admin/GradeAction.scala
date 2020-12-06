@@ -28,8 +28,8 @@ import org.beangle.webmvc.api.annotation.response
 import org.beangle.webmvc.api.view.{PathView, View}
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.code.edu.model.{CourseTakeType, GradingMode}
-import org.openurp.edu.base.model.Course
-import org.openurp.edu.web.ProjectSupport
+import org.openurp.base.edu.model.{Course, Terms}
+import org.openurp.boot.edu.helper.ProjectSupport
 import org.openurp.edu.extern.exchange.service.{ExemptionCourse, ExemptionService}
 import org.openurp.edu.extern.exchange.web.action.ExchangeGradePropertyExtractor
 import org.openurp.edu.extern.model.{ExchangeGrade, ExchangeStudent}
@@ -91,7 +91,7 @@ class GradeAction extends RestfulAction[ExchangeGrade] with ProjectSupport {
     val ecs = Collections.newBuffer[ExemptionCourse]
     val std = es.std
     planCourses foreach { pc =>
-      var semester = exemptionService.getSemester(std, eg.acquiredOn, pc.terms.termList.headOption).orNull
+      var semester = exemptionService.getSemester(std, eg.acquiredOn, termList(pc.terms).headOption).orNull
       val scoreText = get("scoreText" + pc.id)
       if (null != semester && scoreText.nonEmpty) {
         val gradingMode = entityDao.get(classOf[GradingMode], getInt("gradingMode.id" + pc.id, 0))
@@ -104,6 +104,16 @@ class GradeAction extends RestfulAction[ExchangeGrade] with ProjectSupport {
     redirect("search", "info.action.success")
   }
 
+  private def termList(terms:Terms):List[Int]={
+    val str = java.lang.Integer.toBinaryString(terms.value)
+    var i = str.length - 1
+    val result = new collection.mutable.ListBuffer[Int]
+    while (i >= 0) {
+      if (str.charAt(i) == '1') result += (str.length - i)
+      i -= 1
+    }
+    result.toList
+  }
   def removeCourseGrade: View = {
     val eg = entityDao.get(classOf[ExchangeGrade], longId("grade"))
     val cg = entityDao.get(classOf[CourseGrade], longId("courseGrade"))
