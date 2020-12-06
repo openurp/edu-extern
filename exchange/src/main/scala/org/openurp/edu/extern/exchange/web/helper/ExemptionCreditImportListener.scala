@@ -23,7 +23,7 @@ import java.time.Instant
 import org.beangle.commons.lang.Numbers
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.data.transfer.importer.{ImportListener, ImportResult}
-import org.openurp.edu.base.model.{Project, Student}
+import org.openurp.base.edu.model.{Project, Student}
 import org.openurp.edu.extern.model.ExemptionCredit
 
 class ExemptionCreditImportListener(project: Project, entityDao: EntityDao) extends ImportListener {

@@ -27,14 +27,15 @@ import org.beangle.ems.app.EmsApp
 import org.beangle.webmvc.api.annotation.response
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.code.edu.model.{GradingMode, StudentStatus}
-import org.openurp.edu.base.AuditStates
-import org.openurp.edu.base.code.model.CourseType
-import org.openurp.edu.base.model.{Course, Semester, Student}
+import org.openurp.code.edu.model.GradingMode
+import org.openurp.base.edu.AuditStates
+import org.openurp.base.edu.code.model.CourseType
+import org.openurp.base.edu.model.{Course, Semester, Student}
 import org.openurp.edu.extern.exchange.service.{CourseGradeConvertor, ExemptionCourse, ExemptionService}
 import org.openurp.edu.extern.model.{ExchangeSchool, ExchangeStudent}
 import org.openurp.edu.program.domain.CoursePlanProvider
-import org.openurp.edu.web.ProjectSupport
+import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.code.std.model.StudentStatus
 
 class AuditAction extends RestfulAction[ExchangeStudent] with ProjectSupport {
 

@@ -24,7 +24,7 @@ import org.beangle.commons.lang.Numbers
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.security.Securities
 import org.openurp.code.edu.model.{CourseTakeType, GradeType}
-import org.openurp.edu.base.model.Student
+import org.openurp.base.edu.model.Student
 import org.openurp.edu.clazz.model.CourseTaker
 import org.openurp.edu.grade.course.model.{CourseGrade, GaGrade}
 import org.openurp.edu.grade.model.Grade

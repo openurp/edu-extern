@@ -29,9 +29,9 @@ import org.beangle.webmvc.api.annotation.response
 import org.beangle.webmvc.api.view.{PathView, Stream, View}
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.code.edu.model.{ExamStatus, GradingMode}
-import org.openurp.edu.base.model.{Semester, Student, Terms}
-import org.openurp.edu.base.service.SemesterService
-import org.openurp.edu.web.ProjectSupport
+import org.openurp.base.edu.model.{Semester, Student, Terms}
+import org.openurp.base.edu.service.SemesterService
+import org.openurp.boot.edu.helper.ProjectSupport
 import org.openurp.edu.extern.code.model.{CertificateCategory, CertificateSubject}
 import org.openurp.edu.extern.exchange.service.{ExemptionCourse, ExemptionService}
 import org.openurp.edu.extern.model.CertificateGrade

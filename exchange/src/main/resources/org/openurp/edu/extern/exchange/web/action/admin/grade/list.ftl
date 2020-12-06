@@ -7,11 +7,11 @@
       bar.addItem("成绩认定", action.single("convertList"), "action-update");
       bar.addItem("${b.text("action.delete")}", action.remove("确认要删除吗？"));
       [#if exchangeGrades.totalItems gt 10000]
-        bar.addMenu("导出", function() {
+        bar.addItem("导出", function() {
           alert("导出数据每次不能超过10000条，建议分批导出。");
         });
       [#else]
-        bar.addMenu("导出", action.exportData("exchangeStudent.std.user.code:学号,exchangeStudent.std.user.name:姓名,exchangeStudent.school.name:校外学校,exchangeStudent.level.name:培养层次,exchangeStudent.category.name:教育类别,exchangeStudent.majorName:外校专业,courseName:外校课程,scoreText:外校得分,credits:外校学分,acquiredOn:获得日期,updatedAt:录入时间"));
+        bar.addItem("导出", action.exportData("exchangeStudent.std.user.code:学号,exchangeStudent.std.user.name:姓名,exchangeStudent.school.name:校外学校,exchangeStudent.level.name:培养层次,exchangeStudent.category.name:教育类别,exchangeStudent.majorName:外校专业,courseName:外校课程,scoreText:外校得分,credits:外校学分,acquiredOn:获得日期,updatedAt:录入时间"));
       [/#if]
     [/@]
     [@b.row]

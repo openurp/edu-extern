@@ -21,24 +21,19 @@
       <artifactId>beangle-ems-app_2.13</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.openurp.edu</groupId>
-      <artifactId>openurp-edu-boot</artifactId>
-      <version>${openurp.edu.web.version}</version>
+      <groupId>org.openurp.boot</groupId>
+      <artifactId>openurp-boot-web</artifactId>
+      <version>${openurp.boot.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.openurp.edu</groupId>
-      <artifactId>openurp-edu-web</artifactId>
-      <version>${openurp.edu.web.version}</version>
+      <groupId>org.openurp.base</groupId>
+      <artifactId>openurp-base-tag</artifactId>
+      <version>${openurp.base.version}</version>
     </dependency>
     <dependency>
       <groupId>org.openurp.edu.extern</groupId>
       <artifactId>openurp-edu-extern-core</artifactId>
       <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openurp.edu.extern</groupId>
-      <artifactId>openurp-edu-extern-api</artifactId>
-      <version>${openurp.api.version}</version>
     </dependency>
     <dependency>
       <groupId>org.beangle.serializer</groupId>

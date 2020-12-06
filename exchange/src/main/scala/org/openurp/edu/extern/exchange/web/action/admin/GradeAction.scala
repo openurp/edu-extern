@@ -28,8 +28,8 @@ import org.beangle.webmvc.api.annotation.response
 import org.beangle.webmvc.api.view.{PathView, View}
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.code.edu.model.{CourseTakeType, GradingMode}
-import org.openurp.edu.base.model.{Course, Terms}
-import org.openurp.edu.web.ProjectSupport
+import org.openurp.base.edu.model.{Course, Terms}
+import org.openurp.boot.edu.helper.ProjectSupport
 import org.openurp.edu.extern.exchange.service.{ExemptionCourse, ExemptionService}
 import org.openurp.edu.extern.exchange.web.action.ExchangeGradePropertyExtractor
 import org.openurp.edu.extern.model.{ExchangeGrade, ExchangeStudent}

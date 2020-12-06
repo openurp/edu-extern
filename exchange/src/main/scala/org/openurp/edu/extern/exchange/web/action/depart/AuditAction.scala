@@ -19,7 +19,7 @@
 package org.openurp.edu.extern.exchange.web.action.depart
 
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.web.ProjectSupport
+import org.openurp.boot.edu.helper.ProjectSupport
 import org.openurp.edu.extern.model.ExchangeStudent
 
 class AuditAction extends RestfulAction[ExchangeStudent] with ProjectSupport {

@@ -22,11 +22,6 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.openurp.edu.program</groupId>
-      <artifactId>openurp-edu-program-api</artifactId>
-      <version>${openurp.api.version}</version>
-    </dependency>
-    <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
     </dependency>

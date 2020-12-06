@@ -21,13 +21,8 @@
       <artifactId>beangle-ems-app_2.13</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.openurp.edu.extern</groupId>
-      <artifactId>openurp-edu-extern-api</artifactId>
-      <version>${openurp.api.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openurp.edu.program</groupId>
-      <artifactId>openurp-edu-program-api</artifactId>
+      <groupId>org.openurp.edu</groupId>
+      <artifactId>openurp-edu-api</artifactId>
       <version>${openurp.api.version}</version>
     </dependency>
   </dependencies>

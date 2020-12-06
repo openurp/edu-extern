@@ -21,8 +21,8 @@ package org.openurp.edu.extern.exchange.service
 import java.time.LocalDate
 
 import org.openurp.code.edu.model.{ExamMode, GradingMode}
-import org.openurp.edu.base.code.model.CourseType
-import org.openurp.edu.base.model.{Course, Semester, Student}
+import org.openurp.base.edu.code.model.CourseType
+import org.openurp.base.edu.model.{Course, Semester, Student}
 import org.openurp.edu.extern.model.{CertificateGrade, ExchangeGrade}
 import org.openurp.edu.grade.course.model.CourseGrade
 import org.openurp.edu.program.model.{CoursePlan, PlanCourse}

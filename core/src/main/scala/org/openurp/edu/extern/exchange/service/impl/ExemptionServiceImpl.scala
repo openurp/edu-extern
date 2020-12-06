@@ -23,9 +23,9 @@ import java.time.{Instant, LocalDate}
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.openurp.code.edu.model.CourseTakeType
-import org.openurp.edu.base.AuditStates
-import org.openurp.edu.base.model.{Course, Semester, Student}
-import org.openurp.edu.base.service.SemesterService
+import org.openurp.base.edu.AuditStates
+import org.openurp.base.edu.model.{Course, Semester, Student}
+import org.openurp.base.edu.service.SemesterService
 import org.openurp.edu.extern.exchange.service.{CourseGradeConvertor, ExemptionCourse, ExemptionService}
 import org.openurp.edu.extern.model.{CertificateGrade, ExchangeGrade, ExchangeStudent, ExemptionCredit}
 import org.openurp.edu.grade.course.model.CourseGrade
