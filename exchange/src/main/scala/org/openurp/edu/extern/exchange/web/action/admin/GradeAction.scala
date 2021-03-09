@@ -91,7 +91,7 @@ class GradeAction extends RestfulAction[ExchangeGrade] with ProjectSupport {
     val ecs = Collections.newBuffer[ExemptionCourse]
     val std = es.std
     planCourses foreach { pc =>
-      var semester = exemptionService.getSemester(std, eg.acquiredOn, termList(pc.terms).headOption).orNull
+      val semester = exemptionService.getSemester(std, eg.acquiredOn, termList(pc.terms).headOption).orNull
       val scoreText = get("scoreText" + pc.id)
       if (null != semester && scoreText.nonEmpty) {
         val gradingMode = entityDao.get(classOf[GradingMode], getInt("gradingMode.id" + pc.id, 0))

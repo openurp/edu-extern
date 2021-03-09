@@ -50,6 +50,7 @@
         <th width="25%">课程名称</th>
         <th width="15%">课程类别</th>
         <th width="50px">学分</th>
+        <th width="50px">开课学期</th>
         <th width="100px">成绩记录方式</th>
         <th width="100px">成绩(分数)</th>
         <th>修读类别</th>
@@ -63,6 +64,7 @@
         <td>${planCourse.course.name}</td>
         <td>${planCourse.group.courseType.name}</td>
         <td>${planCourse.course.credits}</td>
+        <td>${planCourse.terms}</td>
         <td>
           <select name="gradingMode.id${planCourse.id}" style="width: 130px" onchange="displayScore(this.value,${planCourse.id})">
             [#list gradingModes as gradingMode]
