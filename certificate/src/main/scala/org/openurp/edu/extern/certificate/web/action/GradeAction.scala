@@ -18,20 +18,19 @@
  */
 package org.openurp.edu.extern.certificate.web.action
 
-import java.time.{Instant, ZoneId}
-import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
-
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.transfer.excel.ExcelSchema
+import org.beangle.data.transfer.exporter.ExportSetting
 import org.beangle.webmvc.api.annotation.response
 import org.beangle.webmvc.api.view.{PathView, Stream, View}
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.code.edu.model.{ExamStatus, GradingMode}
 import org.openurp.base.edu.model.{Semester, Student, Terms}
 import org.openurp.base.edu.service.SemesterService
 import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.code.edu.model.{ExamStatus, GradingMode}
+import org.openurp.edu.extern.certificate.web.helper.CertificateGradePropertyExtractor
 import org.openurp.edu.extern.code.model.{CertificateCategory, CertificateSubject}
 import org.openurp.edu.extern.exchange.service.{ExemptionCourse, ExemptionService}
 import org.openurp.edu.extern.model.CertificateGrade
@@ -40,10 +39,13 @@ import org.openurp.edu.grade.model.Grade
 import org.openurp.edu.program.domain.CoursePlanProvider
 import org.openurp.edu.program.model.PlanCourse
 
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
+import java.time.{Instant, ZoneId}
+
 class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
 
   var exemptionService: ExemptionService = _
-  var semesterService:SemesterService=_
+  var semesterService: SemesterService = _
   var coursePlanProvider: CoursePlanProvider = _
 
   override def indexSetting(): Unit = {
@@ -146,7 +148,7 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
     redirect("search", "info.action.success")
   }
 
-  private def termList(terms:Terms):List[Int]={
+  private def termList(terms: Terms): List[Int] = {
     val str = java.lang.Integer.toBinaryString(terms.value)
     var i = str.length - 1
     val result = new collection.mutable.ListBuffer[Int]
@@ -186,5 +188,10 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
     val os = new ByteArrayOutputStream()
     schema.generate(os)
     Stream(new ByteArrayInputStream(os.toByteArray), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "证书信息.xlsx")
+  }
+
+  override def configExport(setting: ExportSetting): Unit = {
+    super.configExport(setting)
+    setting.context.extractor = new CertificateGradePropertyExtractor()
   }
 }
