@@ -8,7 +8,7 @@
   </parent>
   <groupId>org.openurp.edu.extern</groupId>
   <artifactId>openurp-edu-extern-parent</artifactId>
-  <version>0.0.11</version>
+  <version>0.0.12</version>
   <packaging>pom</packaging>
   <name>OpenURP Edu Extern Parent</name>
 
@@ -22,7 +22,7 @@
 
   <properties>
     <openurp.api.version>0.22.0</openurp.api.version>
-    <openurp.boot.version>0.0.3</openurp.boot.version>
+    <openurp.boot.version>0.0.4</openurp.boot.version>
     <openurp.base.version>0.1.15</openurp.base.version>
   </properties>
 
