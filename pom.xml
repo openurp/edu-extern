@@ -4,11 +4,11 @@
   <parent>
     <groupId>org.openurp</groupId>
     <artifactId>openurp-parent</artifactId>
-    <version>0.4.8</version>
+    <version>0.4.10</version>
   </parent>
   <groupId>org.openurp.edu.extern</groupId>
   <artifactId>openurp-edu-extern-parent</artifactId>
-  <version>0.0.12</version>
+  <version>0.0.13</version>
   <packaging>pom</packaging>
   <name>OpenURP Edu Extern Parent</name>
 
@@ -21,9 +21,9 @@
   </modules>
 
   <properties>
-    <openurp.api.version>0.22.0</openurp.api.version>
-    <openurp.boot.version>0.0.4</openurp.boot.version>
-    <openurp.base.version>0.1.15</openurp.base.version>
+    <openurp.api.version>0.22.1</openurp.api.version>
+    <openurp.boot.version>0.0.5</openurp.boot.version>
+    <openurp.base.version>0.1.17</openurp.base.version>
   </properties>
 
 </project>
