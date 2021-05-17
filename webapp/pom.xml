@@ -17,6 +17,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.openurp.base</groupId>
+      <artifactId>openurp-base-api</artifactId>
+      <version>${openurp.api.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.openurp.edu.extern</groupId>
       <artifactId>openurp-edu-extern-web</artifactId>
       <version>${project.version}</version>

@@ -21,7 +21,7 @@
   </modules>
 
   <properties>
-    <openurp.api.version>0.22.1</openurp.api.version>
+    <openurp.api.version>0.22.2-SNAPSHOT</openurp.api.version>
     <openurp.boot.version>0.0.5</openurp.boot.version>
     <openurp.base.version>0.1.17</openurp.base.version>
   </properties>

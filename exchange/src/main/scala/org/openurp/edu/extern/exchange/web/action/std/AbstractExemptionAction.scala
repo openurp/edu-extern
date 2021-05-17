@@ -18,8 +18,6 @@
  */
 package org.openurp.edu.extern.exchange.web.action.std
 
-import java.time.{Instant, LocalDate}
-
 import jakarta.servlet.http.Part
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.Strings
@@ -29,18 +27,21 @@ import org.beangle.webmvc.api.annotation.mapping
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.edu.AuditStates
+import org.openurp.base.edu.code.model.CourseType
 import org.openurp.base.edu.model.{Course, Student}
+import org.openurp.boot.edu.helper.ProjectSupport
 import org.openurp.edu.extern.model.{ExchangeGrade, ExchangeSchool, ExchangeStudent, ExemptionCredit}
 import org.openurp.edu.grade.course.model.CourseGrade
 import org.openurp.edu.program.domain.CoursePlanProvider
-import org.openurp.boot.edu.helper.ProjectSupport
+
+import java.time.{Instant, LocalDate}
 
 abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] with ProjectSupport {
 
   var coursePlanProvider: CoursePlanProvider = _
 
   override def index(): View = {
-    put("projects",getUserProjects(classOf[Student]))
+    put("projects", getUserProjects(classOf[Student]))
     val std = getUser(classOf[Student])
     val query = OqlBuilder.from(classOf[ExchangeStudent], "es")
     query.where("es.std = :std", std)
@@ -92,7 +93,8 @@ abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] wi
       es.transcriptPath foreach { p =>
         repo.remove(p)
       }
-      val meta = repo.upload("/exchange", part.getInputStream, part.getSubmittedFileName, es.std.user.code + " " + es.std.user.name);
+      val meta = repo.upload("/exchange", part.getInputStream,
+        es.std.user.code + "_" + part.getSubmittedFileName, es.std.user.code + " " + es.std.user.name);
       es.transcriptPath = Some(meta.filePath)
     }
     entityDao.saveOrUpdate(es)
@@ -126,16 +128,23 @@ abstract class AbstractExemptionAction extends RestfulAction[ExchangeStudent] wi
 
   private def getPlanCourses(std: Student): collection.Seq[Course] = {
     val courses = Collections.newSet[Course]
+    val emptyCourseTypes = Collections.newSet[CourseType]
     coursePlanProvider.getCoursePlan(std) foreach { plan =>
       for (group <- plan.groups) {
         if (group.planCourses.isEmpty && group.children.isEmpty) {
-          courses.addAll(entityDao.findBy(classOf[Course], "courseType", List(group.courseType)))
+          emptyCourseTypes += group.courseType
         } else {
           for (planCourse <- group.planCourses) {
             courses.addOne(planCourse.course)
           }
         }
       }
+    }
+
+    if (emptyCourseTypes.nonEmpty) {
+      val typeQuery = OqlBuilder.from(classOf[CourseType], "ct").where("ct.parent in(:parents)", emptyCourseTypes)
+      emptyCourseTypes ++= entityDao.search(typeQuery)
+      courses.addAll(entityDao.findBy(classOf[Course], "courseType", emptyCourseTypes))
     }
 
     val query = OqlBuilder.from[Course](classOf[CourseGrade].getName, "cg")
