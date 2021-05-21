@@ -28,8 +28,8 @@ import org.beangle.webmvc.api.view.{PathView, Stream, View}
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.edu.model.{Semester, Student, Terms}
 import org.openurp.base.edu.service.SemesterService
-import org.openurp.boot.edu.helper.ProjectSupport
-import org.openurp.code.edu.model.{ExamStatus, GradingMode}
+import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.code.edu.model.{CourseTakeType, ExamStatus, GradingMode}
 import org.openurp.edu.extern.certificate.web.helper.CertificateGradePropertyExtractor
 import org.openurp.edu.extern.code.model.{CertificateCategory, CertificateSubject}
 import org.openurp.edu.extern.exchange.service.{ExemptionCourse, ExemptionService}
@@ -122,8 +122,16 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
     val plan = coursePlanProvider.getCoursePlan(grade.std)
     if (plan.isEmpty) return PathView("noPlanMsg")
     val planCourses = exemptionService.getConvertablePlanCourses(std, plan.get, grade.acquiredOn)
+    val semesters = Collections.newMap[PlanCourse, Semester]
+    planCourses foreach { pc =>
+      exemptionService.getSemester(plan.get.program, grade.acquiredOn, pc.terms.termList.headOption) foreach { s =>
+        semesters.put(pc, s)
+      }
+    }
+    put("semesters", semesters)
     put("convertedGrades", exemptionService.getConvertedGrades(std, grade.courses))
     put("planCourses", planCourses)
+    put("ExemptionType",entityDao.get(classOf[CourseTakeType],CourseTakeType.Exemption))
     put("gradingModes", getCodes(classOf[GradingMode]))
     forward()
   }
@@ -132,10 +140,9 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
     val eg = entityDao.get(classOf[CertificateGrade], longId("grade"))
     val planCourses = entityDao.find(classOf[PlanCourse], longIds("planCourse"))
     val ecs = Collections.newBuffer[ExemptionCourse]
-    val std = eg.std
+    val program = planCourses.head.group.plan.program
     planCourses foreach { pc =>
-
-      val semester = exemptionService.getSemester(std, eg.acquiredOn, termList(pc.terms).headOption).orNull
+      val semester = exemptionService.getSemester(program, eg.acquiredOn, pc.terms.termList.headOption).orNull
       val scoreText = get("scoreText" + pc.id)
       if (null != semester && scoreText.nonEmpty) {
         val gradingMode = entityDao.get(classOf[GradingMode], getInt("gradingMode.id" + pc.id, 0))
@@ -146,17 +153,6 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
     }
     this.exemptionService.addExemption(eg, ecs.toSeq)
     redirect("search", "info.action.success")
-  }
-
-  private def termList(terms: Terms): List[Int] = {
-    val str = java.lang.Integer.toBinaryString(terms.value)
-    var i = str.length - 1
-    val result = new collection.mutable.ListBuffer[Int]
-    while (i >= 0) {
-      if (str.charAt(i) == '1') result += (str.length - i)
-      i -= 1
-    }
-    result.toList
   }
 
   def removeCourseGrade: View = {

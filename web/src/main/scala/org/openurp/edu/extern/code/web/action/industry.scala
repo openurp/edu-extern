@@ -21,7 +21,6 @@ package org.openurp.edu.extern.code.web.action
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.edu.extern.code.model.{CertificateCategory, CertificateSubject}
 
-
 class CertificateSubjectAction extends RestfulAction[CertificateSubject] {
   override protected def editSetting(subject: CertificateSubject): Unit = {
     put("categories", entityDao.getAll(classOf[CertificateCategory]))

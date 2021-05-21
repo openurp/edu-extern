@@ -29,7 +29,7 @@ import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.edu.AuditStates
 import org.openurp.base.edu.code.model.CourseType
 import org.openurp.base.edu.model.{Course, Student}
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.edu.extern.model.{ExchangeGrade, ExchangeSchool, ExchangeStudent, ExemptionCredit}
 import org.openurp.edu.grade.course.model.CourseGrade
 import org.openurp.edu.program.domain.CoursePlanProvider

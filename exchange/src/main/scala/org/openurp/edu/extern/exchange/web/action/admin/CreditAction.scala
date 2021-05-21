@@ -31,7 +31,7 @@ import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.edu.model.Student
 import org.openurp.edu.extern.exchange.web.helper.ExemptionCreditImportListener
 import org.openurp.edu.extern.model.ExemptionCredit
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 
 class CreditAction extends RestfulAction[ExemptionCredit] with ProjectSupport {
 

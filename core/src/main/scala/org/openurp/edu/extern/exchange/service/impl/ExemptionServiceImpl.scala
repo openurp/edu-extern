@@ -18,19 +18,19 @@
  */
 package org.openurp.edu.extern.exchange.service.impl
 
-import java.time.{Instant, LocalDate}
-
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
-import org.openurp.code.edu.model.CourseTakeType
 import org.openurp.base.edu.AuditStates
 import org.openurp.base.edu.model.{Course, Semester, Student}
 import org.openurp.base.edu.service.SemesterService
+import org.openurp.code.edu.model.CourseTakeType
 import org.openurp.edu.extern.exchange.service.{CourseGradeConvertor, ExemptionCourse, ExemptionService}
 import org.openurp.edu.extern.model.{CertificateGrade, ExchangeGrade, ExchangeStudent, ExemptionCredit}
 import org.openurp.edu.grade.course.model.CourseGrade
 import org.openurp.edu.grade.model.Grade
-import org.openurp.edu.program.model.{CoursePlan, PlanCourse}
+import org.openurp.edu.program.model.{CoursePlan, PlanCourse, Program}
+
+import java.time.{Instant, LocalDate}
 
 class ExemptionServiceImpl extends ExemptionService {
 
@@ -38,14 +38,14 @@ class ExemptionServiceImpl extends ExemptionService {
 
   var semesterService: SemesterService = _
 
-  override def getSemester(std: Student, acquiredOn: LocalDate, term: Option[Int]): Option[Semester] = {
-    if (acquiredOn.isBefore(std.beginOn)) {
+  override def getSemester(program: Program, acquiredOn: LocalDate, term: Option[Int]): Option[Semester] = {
+    if (acquiredOn.isBefore(program.beginOn)) {
       term match {
-        case Some(t) => semesterService.get(std.project, std.beginOn, std.endOn, t)
+        case Some(t) => semesterService.get(program.project, program.beginOn, program.endOn.get, t)
         case None => None
       }
     } else {
-      semesterService.get(std.project, acquiredOn)
+      semesterService.get(program.project, acquiredOn)
     }
   }
 
@@ -91,7 +91,7 @@ class ExemptionServiceImpl extends ExemptionService {
         e.std = std
         e
     }
-    var exemptedCourses = Collections.newSet[Course]
+    val exemptedCourses = Collections.newSet[Course]
     entityDao.findBy(classOf[ExchangeStudent], "std", List(std)).filter(_.auditState == AuditStates.Finalized) foreach { fes =>
       fes.grades foreach { fgrade =>
         exemptedCourses ++= fgrade.courses
@@ -118,10 +118,7 @@ class ExemptionServiceImpl extends ExemptionService {
   }
 
   private def removeExemption(std: Student, course: Course): Unit = {
-    val cgQuery = OqlBuilder.from(classOf[CourseGrade], "cg")
-    cgQuery.where("cg.std=:std and cg.course=:course", std, course)
-    cgQuery.where("cg.courseTakeType.id=:exemption", CourseTakeType.Exemption)
-    val cgs = entityDao.search(cgQuery)
+    val cgs = getExemptionGrades(std, course)
     if (cgs.size > 1) {
       throw new RuntimeException(s"found ${cgs.size} exemption grades of ${std.user.code}")
     } else {
@@ -130,10 +127,19 @@ class ExemptionServiceImpl extends ExemptionService {
     }
   }
 
+  private def getExemptionGrades(std: Student, course: Course): Iterable[CourseGrade] = {
+    val cgQuery = OqlBuilder.from(classOf[CourseGrade], "cg")
+    cgQuery.where("cg.std=:std and cg.course=:course", std, course)
+    cgQuery.where("cg.courseTakeType.id=:exemption", CourseTakeType.Exemption)
+    entityDao.search(cgQuery)
+  }
+
   override def addExemption(eg: ExchangeGrade, ecs: Seq[ExemptionCourse]): Unit = {
     val remark = eg.exchangeStudent.school.name + " " + eg.courseName + " " + eg.scoreText
     val std = eg.exchangeStudent.std
     addExemption(std, ecs, remark)
+    val emptyCourses = eg.courses filter (x => getExemptionGrades(std, x).isEmpty)
+    eg.courses.subtractAll(emptyCourses)
     ecs foreach { ec =>
       eg.courses += ec.course
     }
@@ -145,6 +151,8 @@ class ExemptionServiceImpl extends ExemptionService {
     val remark = cg.subject.name + " " + cg.scoreText
     val std = cg.std
     addExemption(std, ecs, remark)
+    val emptyCourses = cg.courses filter (x => getExemptionGrades(std, x).isEmpty)
+    cg.courses.subtractAll(emptyCourses)
     ecs foreach { ec =>
       cg.courses += ec.course
     }

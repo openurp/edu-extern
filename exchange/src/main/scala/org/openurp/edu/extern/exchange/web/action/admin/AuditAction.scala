@@ -34,7 +34,7 @@ import org.openurp.base.edu.model.{Course, Semester, Student}
 import org.openurp.edu.extern.exchange.service.{CourseGradeConvertor, ExemptionCourse, ExemptionService}
 import org.openurp.edu.extern.model.{ExchangeSchool, ExchangeStudent}
 import org.openurp.edu.program.domain.CoursePlanProvider
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.code.std.model.StudentStatus
 
 class AuditAction extends RestfulAction[ExchangeStudent] with ProjectSupport {
@@ -45,6 +45,7 @@ class AuditAction extends RestfulAction[ExchangeStudent] with ProjectSupport {
 
   override def indexSetting(): Unit = {
     put("studentStatuses", getCodes(classOf[StudentStatus]))
+    put("auditStates",AuditStates.values)
   }
 
   override def info(id: String): View = {

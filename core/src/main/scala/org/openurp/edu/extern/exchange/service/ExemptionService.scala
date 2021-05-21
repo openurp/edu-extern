@@ -19,17 +19,16 @@
 package org.openurp.edu.extern.exchange.service
 
 import java.time.LocalDate
-
 import org.openurp.code.edu.model.{ExamMode, GradingMode}
 import org.openurp.base.edu.code.model.CourseType
 import org.openurp.base.edu.model.{Course, Semester, Student}
 import org.openurp.edu.extern.model.{CertificateGrade, ExchangeGrade}
 import org.openurp.edu.grade.course.model.CourseGrade
-import org.openurp.edu.program.model.{CoursePlan, PlanCourse}
+import org.openurp.edu.program.model.{CoursePlan, PlanCourse, Program}
 
 trait ExemptionService {
 
-  def getSemester(std: Student, acquiredOn: LocalDate, term: Option[Int]): Option[Semester]
+  def getSemester(program:Program, acquiredOn: LocalDate, term: Option[Int]): Option[Semester]
 
   def getConvertablePlanCourses(std: Student, plan: CoursePlan, acquiredOn: LocalDate): Seq[PlanCourse]
 
