@@ -25,7 +25,7 @@
     [#assign start=exchangeStudent.grades?size+1]
     [#assign maxLines= 10/]
     [#if exchangeStudent.grades?size > 9]
-      [#assign maxLines = exchangeStudent.grades +1 /]
+      [#assign maxLines = exchangeStudent.grades?size + 1 /]
     [/#if]
     [#list start..maxLines as i]
     [@b.field label="课程"+i]

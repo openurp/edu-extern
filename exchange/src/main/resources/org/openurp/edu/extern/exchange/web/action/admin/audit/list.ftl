@@ -24,8 +24,9 @@
       [@b.col title="学习时间"  width="15%"]
         ${exchangeStudent.beginOn?string("yyyy-MM")}~${exchangeStudent.endOn?string("yyyy-MM")}
       [/@]
-      [@b.col title="冲抵学分" width="10%" property="exemptionCredits"/]
-      [@b.col title="状态" width="10%" property="auditState"/]
+      [@b.col title="冲抵学分" width="6%" property="exemptionCredits"/]
+      [@b.col title="状态" width="5%" property="auditState"/]
+      [@b.col title="申请时间" width="9%" property="updatedAt"]${exchangeStudent.updatedAt?string("MM-dd")}[/@]
     [/@]
   [/@]
 [@b.foot/]

@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.openurp.edu.extern</groupId>
     <artifactId>openurp-edu-extern-parent</artifactId>
-    <version>0.0.13</version>
+    <version>0.0.14</version>
   </parent>
   <artifactId>openurp-edu-extern-webapp</artifactId>
   <packaging>war</packaging>
@@ -16,6 +16,11 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>org.openurp.base</groupId>
+      <artifactId>openurp-base-api</artifactId>
+      <version>${openurp.api.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.openurp.edu.extern</groupId>
       <artifactId>openurp-edu-extern-web</artifactId>

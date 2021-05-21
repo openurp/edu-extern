@@ -21,7 +21,7 @@
       [@b.col title="成绩" property="score"  width="6%"]${(courseGrade.scoreText)!"--"}[/@]
       [@b.col title="绩点" property="gp"  width="6%"]${(courseGrade.gp?string("0.#"))!'--'}[/@]
       [@b.col title="修读类别" property="courseTakeType.name"/]
-      [@b.col title="更新时间" property="updatedAt"  width="12%"]${courseGrade.updatedAt?string("yyyy-MM-dd HH:mm")}[/@]
+      [@b.col title="更新时间" property="updatedAt"  width="15%"]${courseGrade.updatedAt?string("yy-MM-dd HH:mm")}[/@]
     [/@]
   [/@]
   [/#if]
@@ -43,18 +43,19 @@
   [/@]
   [@b.form name="gradeDistributeForm" action="!convert"]
   <input type="hidden" name="grade.id" value="${grade.id}"/>
+  <div class="grid" style="border:0.5px solid #006CB2">
   <table class="gridtable">
     <thead class="gridhead">
       <tr>
         <th width="10%">课程代码</th>
-        <th width="25%">课程名称</th>
+        <th width="20%">课程名称</th>
         <th width="15%">课程类别</th>
         <th width="50px">学分</th>
-        <th width="50px">开课学期</th>
-        <th width="100px">成绩记录方式</th>
-        <th width="100px">成绩(分数)</th>
-        <th>修读类别</th>
-        <th>考核方式</th>
+        <th width="130px">开课学期</th>
+        <th width="100px">记录方式</th>
+        <th width="80px">成绩(分数)</th>
+        <th width="60px">修读类别</th>
+        <th width="60px">考核方式</th>
       </tr>
     </thead>
     <tbody>
@@ -64,9 +65,9 @@
         <td>${planCourse.course.name}</td>
         <td>${planCourse.group.courseType.name}</td>
         <td>${planCourse.course.credits}</td>
-        <td>${planCourse.terms}</td>
+        <td title="第${planCourse.terms}学期 ">${semesters.get(planCourse).schoolYear} ${semesters.get(planCourse).name} 学期</td>
         <td>
-          <select name="gradingMode.id${planCourse.id}" style="width: 130px" onchange="displayScore(this.value,${planCourse.id})">
+          <select name="gradingMode.id${planCourse.id}" style="width: 100px" onchange="displayScore(this.value,${planCourse.id})">
             [#list gradingModes as gradingMode]
             <option value="${gradingMode.id}"[#if 1 == gradingMode.id] selected[/#if]>${gradingMode.name}</option>
             [/#list]
@@ -78,12 +79,13 @@
                           （<input type="text" name="score${planCourse.id}" value="" maxlength="10" style="width: 50px"/>）
           </div>
         </td>
-        <td>正常</td>
+        <td>${ExemptionType.name}</td>
         <td>${planCourse.course.examMode.name}</td>
       </tr>
       [/#list]
     </tbody>
   </table>
+  </div>
   [/@]
 
   <script>

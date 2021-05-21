@@ -18,25 +18,24 @@
  */
 package org.openurp.edu.extern.exchange.web.action.admin
 
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-
 import org.beangle.commons.collection.{Collections, Properties}
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.transfer.exporter.ExportSetting
 import org.beangle.webmvc.api.annotation.response
 import org.beangle.webmvc.api.view.{PathView, View}
 import org.beangle.webmvc.entity.action.RestfulAction
+import org.openurp.base.edu.model.{Semester, Terms}
 import org.openurp.code.edu.model.{CourseTakeType, GradingMode}
-import org.openurp.base.edu.model.{Course, Terms}
-import org.openurp.boot.edu.helper.ProjectSupport
 import org.openurp.edu.extern.exchange.service.{ExemptionCourse, ExemptionService}
 import org.openurp.edu.extern.exchange.web.action.ExchangeGradePropertyExtractor
 import org.openurp.edu.extern.model.{ExchangeGrade, ExchangeStudent}
 import org.openurp.edu.grade.course.model.CourseGrade
-import org.openurp.edu.grade.model.Grade
 import org.openurp.edu.program.domain.CoursePlanProvider
 import org.openurp.edu.program.model.PlanCourse
+import org.openurp.starter.edu.helper.ProjectSupport
+
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 class GradeAction extends RestfulAction[ExchangeGrade] with ProjectSupport {
 
@@ -77,9 +76,17 @@ class GradeAction extends RestfulAction[ExchangeGrade] with ProjectSupport {
     val std = es.std
     val plan = coursePlanProvider.getCoursePlan(grade.exchangeStudent.std)
     if (plan.isEmpty) return PathView("noPlanMsg")
-    val planCourses=exemptionService.getConvertablePlanCourses(std,plan.get,grade.acquiredOn)
-    put("convertedGrades", exemptionService.getConvertedGrades(std,grade.courses))
+    val planCourses = exemptionService.getConvertablePlanCourses(std, plan.get, grade.acquiredOn)
+    put("convertedGrades", exemptionService.getConvertedGrades(std, grade.courses))
+    val semesters = Collections.newMap[PlanCourse, Semester]
+    planCourses foreach { pc =>
+      exemptionService.getSemester(plan.get.program, grade.acquiredOn, pc.terms.termList.headOption) foreach { s =>
+        semesters.put(pc, s)
+      }
+    }
+    put("semesters", semesters)
     put("planCourses", planCourses)
+    put("ExemptionType",entityDao.get(classOf[CourseTakeType],CourseTakeType.Exemption))
     put("gradingModes", getCodes(classOf[GradingMode]))
     forward()
   }
@@ -87,11 +94,10 @@ class GradeAction extends RestfulAction[ExchangeGrade] with ProjectSupport {
   def convert: View = {
     val eg = entityDao.get(classOf[ExchangeGrade], longId("grade"))
     val planCourses = entityDao.find(classOf[PlanCourse], longIds("planCourse"))
-    val es = eg.exchangeStudent
     val ecs = Collections.newBuffer[ExemptionCourse]
-    val std = es.std
+    val program = planCourses.head.group.plan.program
     planCourses foreach { pc =>
-      val semester = exemptionService.getSemester(std, eg.acquiredOn, termList(pc.terms).headOption).orNull
+      val semester = exemptionService.getSemester(program, eg.acquiredOn, pc.terms.termList.headOption).orNull
       val scoreText = get("scoreText" + pc.id)
       if (null != semester && scoreText.nonEmpty) {
         val gradingMode = entityDao.get(classOf[GradingMode], getInt("gradingMode.id" + pc.id, 0))
@@ -104,16 +110,6 @@ class GradeAction extends RestfulAction[ExchangeGrade] with ProjectSupport {
     redirect("search", "info.action.success")
   }
 
-  private def termList(terms:Terms):List[Int]={
-    val str = java.lang.Integer.toBinaryString(terms.value)
-    var i = str.length - 1
-    val result = new collection.mutable.ListBuffer[Int]
-    while (i >= 0) {
-      if (str.charAt(i) == '1') result += (str.length - i)
-      i -= 1
-    }
-    result.toList
-  }
   def removeCourseGrade: View = {
     val eg = entityDao.get(classOf[ExchangeGrade], longId("grade"))
     val cg = entityDao.get(classOf[CourseGrade], longId("courseGrade"))
