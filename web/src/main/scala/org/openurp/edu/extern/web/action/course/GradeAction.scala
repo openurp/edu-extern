@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.extern.course.web.action
+package org.openurp.edu.extern.web.action.course
 
 import org.beangle.commons.collection.{Collections, Properties}
 import org.beangle.data.dao.OqlBuilder
@@ -26,9 +26,9 @@ import org.beangle.webmvc.api.view.{PathView, View}
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.edu.model.{ExternStudent, Semester}
 import org.openurp.code.edu.model.{CourseTakeType, GradingMode}
-import org.openurp.edu.extern.course.web.helper.ExternGradePropertyExtractor
 import org.openurp.edu.extern.model.ExternGrade
 import org.openurp.edu.extern.service.{ExemptionCourse, ExemptionService}
+import org.openurp.edu.extern.web.helper.ExternGradePropertyExtractor
 import org.openurp.edu.grade.course.model.CourseGrade
 import org.openurp.edu.program.domain.CoursePlanProvider
 import org.openurp.edu.program.model.PlanCourse

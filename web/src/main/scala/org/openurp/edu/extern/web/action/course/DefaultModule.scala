@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.extern.course.web.action
+package org.openurp.edu.extern.web.action.course
 
 import org.beangle.cdi.bind.BindModule
 

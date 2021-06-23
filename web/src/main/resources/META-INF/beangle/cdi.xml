@@ -2,9 +2,9 @@
 <cdi>
   <container name="web">
     <module class="org.openurp.starter.edu.action.ProjectModule" />
-    <module class="org.openurp.edu.extern.code.web.action.DefaultModule"/>
-    <module class="org.openurp.edu.extern.certificate.web.action.DefaultModule" />
-    <module class="org.openurp.edu.extern.course.web.action.DefaultModule"/>
+    <module class="org.openurp.edu.extern.web.action.code.DefaultModule"/>
+    <module class="org.openurp.edu.extern.web.action.certificate.DefaultModule" />
+    <module class="org.openurp.edu.extern.web.action.course.DefaultModule"/>
   </container>
   <container>
     <module class="org.openurp.edu.extern.service.DefaultModule" />

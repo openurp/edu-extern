@@ -16,14 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.extern.code.web.action
+package org.openurp.edu.extern.web.action.code
 
-import org.beangle.webmvc.api.action.ActionSupport
-import org.beangle.webmvc.api.view.View
+import org.beangle.webmvc.entity.action.RestfulAction
+import org.openurp.base.model.ExternSchool
 
-class IndexAction extends ActionSupport {
+class SchoolAction extends RestfulAction[ExternSchool] {
 
-  def index: View = {
-    forward()
-  }
 }

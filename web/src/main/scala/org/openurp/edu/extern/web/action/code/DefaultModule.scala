@@ -16,18 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.extern.certificate.web.helper
+package org.openurp.edu.extern.web.action.code
 
-import org.beangle.data.transfer.exporter.DefaultPropertyExtractor
-import org.openurp.edu.extern.model.CertificateGrade
+import org.beangle.cdi.bind.BindModule
 
-class CertificateGradePropertyExtractor extends DefaultPropertyExtractor {
+class DefaultModule extends BindModule {
 
-  override def getPropertyValue(target: Object, property: String): Any = {
-    if (property == "courseSize") {
-      target.asInstanceOf[CertificateGrade].courses.size;
-    } else {
-      super.getPropertyValue(target, property)
-    }
+  override protected def binding(): Unit = {
+    bind(classOf[IndexAction])
+    bind(classOf[SchoolAction])
+    bind(classOf[CertificateCategoryAction])
+    bind(classOf[CertificateSubjectAction])
   }
 }

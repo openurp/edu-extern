@@ -1,6 +1,6 @@
 [#ftl]
 [@b.head/]
-[#include "../../../../course/web/action/nav.ftl"/]
+[#include "../../course/nav.ftl"/]
 <div class="search-container">
   <div class="search-panel">
     [@b.form name="externSchoolSearchForm" action="!search" target="externSchoollist" title="ui.searchForm" theme="search"]

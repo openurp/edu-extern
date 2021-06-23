@@ -16,15 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.extern.code.web.action
+package org.openurp.edu.extern.web.action.code
 
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.edu.extern.code.model.{CertificateCategory, CertificateSubject}
+import org.beangle.webmvc.api.action.ActionSupport
+import org.beangle.webmvc.api.view.View
 
-class CertificateSubjectAction extends RestfulAction[CertificateSubject] {
-  override protected def editSetting(subject: CertificateSubject): Unit = {
-    put("categories", entityDao.getAll(classOf[CertificateCategory]))
+class IndexAction extends ActionSupport {
+
+  def index: View = {
+    forward()
   }
 }
-
-class CertificateCategoryAction extends RestfulAction[CertificateCategory]

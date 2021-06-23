@@ -20,7 +20,6 @@
     [@b.startend label="就读时间" name="externStudent.beginOn,externStudent.endOn" start=(externStudent.beginOn)! end=(externStudent.endOn)! required="true"/]
     [@b.formfoot]
       <input type="hidden" name="externStudent.id" value="${(externStudent.id)!}"/>
-      <input type="hidden" name="externStudent.category.id" value="${project.category.id}"/>
       [@b.submit value="提交"/]
     [/@]
   [/@]

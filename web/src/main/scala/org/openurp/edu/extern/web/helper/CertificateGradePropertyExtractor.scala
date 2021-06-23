@@ -16,11 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.extern.code.web.action
+package org.openurp.edu.extern.web.helper
 
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.base.model.ExternSchool
+import org.beangle.data.transfer.exporter.DefaultPropertyExtractor
+import org.openurp.edu.extern.model.CertificateGrade
 
-class SchoolAction extends RestfulAction[ExternSchool] {
+class CertificateGradePropertyExtractor extends DefaultPropertyExtractor {
 
+  override def getPropertyValue(target: Object, property: String): Any = {
+    if (property == "courseSize") {
+      target.asInstanceOf[CertificateGrade].courses.size;
+    } else {
+      super.getPropertyValue(target, property)
+    }
+  }
 }

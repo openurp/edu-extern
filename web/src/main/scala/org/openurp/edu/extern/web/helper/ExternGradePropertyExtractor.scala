@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.extern.course.web.helper
+package org.openurp.edu.extern.web.helper
 
 import org.beangle.data.transfer.exporter.DefaultPropertyExtractor
 import org.openurp.edu.extern.model.ExternGrade
