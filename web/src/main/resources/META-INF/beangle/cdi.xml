@@ -3,6 +3,8 @@
   <container name="web">
     <module class="org.openurp.starter.edu.action.ProjectModule" />
     <module class="org.openurp.edu.extern.code.web.action.DefaultModule"/>
+    <module class="org.openurp.edu.extern.certificate.web.action.DefaultModule" />
+    <module class="org.openurp.edu.extern.course.web.action.DefaultModule"/>
   </container>
   <container>
     <module class="org.openurp.edu.extern.service.DefaultModule" />

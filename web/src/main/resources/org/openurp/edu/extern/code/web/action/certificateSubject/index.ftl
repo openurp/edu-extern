@@ -1,5 +1,6 @@
 [#ftl]
 [@b.head/]
+[#include "../nav.ftl"/]
 <div class="search-container">
   <div class="search-panel">
     [@b.form name="certificateSubjectSearchForm" action="!search" target="certificateSubjectlist" title="ui.searchForm" theme="search"]

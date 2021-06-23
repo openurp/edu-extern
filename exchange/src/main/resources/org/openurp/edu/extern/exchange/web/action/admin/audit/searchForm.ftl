@@ -1,6 +1,0 @@
-[#ftl/]
-[@b.textfield name="exchangeStudent.std.user.code" label="学号"/]
-[@b.textfield name="exchangeStudent.std.user.name" label="姓名"/]
-[@b.textfield name="exchangeStudent.std.state.grade" label="年级"/]
-[@b.textfield name="exchangeStudent.std.state.major.name" label="专业"/]
-[@b.select name="exchangeStudent.std.state.status.id" label="学籍状态" items=studentStatuses empty="..."/]

@@ -1,0 +1,5 @@
+[#ftl]
+  [@b.nav class="nav-tabs nav-tabs-compact"]
+    [@b.navitem href="certificate-subject"]考试科目[/@]
+    [@b.navitem href="certificate-category"]科目分类[/@]
+  [/@]

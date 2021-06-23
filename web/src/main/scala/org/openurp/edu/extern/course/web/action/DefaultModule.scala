@@ -16,11 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.extern.code.web.action
+package org.openurp.edu.extern.course.web.action
 
-import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.base.model.ExternSchool
+import org.beangle.cdi.bind.BindModule
 
-class SchoolAction extends RestfulAction[ExternSchool] {
+class DefaultModule extends BindModule {
 
+  override protected def binding(): Unit = {
+    bind(classOf[StudentAction])
+    bind(classOf[GradeAction])
+  }
 }

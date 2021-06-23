@@ -24,11 +24,23 @@
       <groupId>org.openurp.starter</groupId>
       <artifactId>openurp-starter-web</artifactId>
       <version>${openurp.starter.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.openurp.base</groupId>
+          <artifactId>openurp-base-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.openurp.base</groupId>
       <artifactId>openurp-base-tag</artifactId>
       <version>${openurp.base.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.openurp.base</groupId>
+          <artifactId>openurp-base-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.openurp.edu.extern</groupId>

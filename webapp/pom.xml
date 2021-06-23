@@ -27,16 +27,6 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.openurp.edu.extern</groupId>
-      <artifactId>openurp-edu-extern-certificate</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.openurp.edu.extern</groupId>
-      <artifactId>openurp-edu-extern-exchange</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
     </dependency>
