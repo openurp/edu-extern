@@ -38,13 +38,9 @@ class ExemptionServiceImpl extends ExemptionService {
   var semesterService: SemesterService = _
 
   override def getSemester(program: Program, acquiredOn: LocalDate, term: Option[Int]): Option[Semester] = {
-    if (acquiredOn.isBefore(program.beginOn)) {
-      term match {
-        case Some(t) => semesterService.get(program.project, program.beginOn, program.endOn, t)
-        case None => None
-      }
-    } else {
-      semesterService.get(program.project, acquiredOn)
+    term match {
+      case Some(t) => semesterService.get(program.project, program.beginOn, program.endOn, t)
+      case None => None
     }
   }
 

@@ -47,6 +47,7 @@
   <table class="gridtable">
     <thead class="gridhead">
       <tr>
+        <th width="60px">序号</th>
         <th width="10%">课程代码</th>
         <th width="20%">课程名称</th>
         <th width="15%">课程类别</th>
@@ -54,18 +55,24 @@
         <th width="130px">开课学期</th>
         <th width="100px">记录方式</th>
         <th width="80px">成绩(分数)</th>
-        <th width="60px">修读类别</th>
         <th width="60px">考核方式</th>
       </tr>
     </thead>
     <tbody>
       [#list planCourses?sort_by(["course","name"]) as planCourse]
       <tr class="${(0 == planCourse_index % 2)?string("griddata-even", "griddata-odd")}">
+        <td>${planCourse_index+1}</td>
         <td>${planCourse.course.code}</td>
         <td>${planCourse.course.name}</td>
         <td>${planCourse.group.courseType.name}</td>
         <td>${planCourse.course.credits}</td>
-        <td title="第${planCourse.terms}学期 ">${semesters.get(planCourse).schoolYear} ${semesters.get(planCourse).name} 学期</td>
+        <td title="第${planCourse.terms}学期 ">
+        [#assign hasSemester=false/]
+        [#if semesters.get(planCourse)??]
+        [#assign hasSemester=true/]
+        ${semesters.get(planCourse).schoolYear} ${semesters.get(planCourse).name} 学期
+        [/#if]
+        </td>
         <td>
           <select name="gradingMode.id${planCourse.id}" style="width: 100px" onchange="displayScore(this.value,${planCourse.id})">
             [#list gradingModes as gradingMode]
@@ -74,12 +81,12 @@
           </select>
         </td>
         <td>
-          <input type="hidden" name="planCourse.id${planCourse.id}" value="${planCourse.id}"/><input type="text" name="scoreText${planCourse.id}" value="" maxlength="5" style="width: 50px"/>
+          <input type="hidden" name="planCourse.id${planCourse.id}" value="${planCourse.id}"/>
+          [#if hasSemester]<input type="text" name="scoreText${planCourse.id}" value="" maxlength="5" style="width: 50px"/>[/#if]
           <div id="score${planCourse.id}" style="display:none">
                           （<input type="text" name="score${planCourse.id}" value="" maxlength="10" style="width: 50px"/>）
           </div>
         </td>
-        <td>${ExemptionType.name}</td>
         <td>${planCourse.course.examMode.name}</td>
       </tr>
       [/#list]
