@@ -41,6 +41,7 @@ import org.openurp.starter.edu.helper.ProjectSupport
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 import java.time.{Instant, ZoneId}
+import scala.collection.mutable
 
 class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
 
@@ -131,19 +132,27 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
     put("semesters", semesters)
     put("convertedGrades", exemptionService.getConvertedGrades(std, grade.courses))
     put("planCourses", planCourses)
-    put("ExemptionType",entityDao.get(classOf[CourseTakeType],CourseTakeType.Exemption))
+    put("ExemptionType", entityDao.get(classOf[CourseTakeType], CourseTakeType.Exemption))
     put("gradingModes", getCodes(classOf[GradingMode]))
     forward()
   }
 
   def convert: View = {
     val eg = entityDao.get(classOf[CertificateGrade], longId("grade"))
-    val planCourses = entityDao.find(classOf[PlanCourse], longIds("planCourse"))
+    val plan = coursePlanProvider.getCoursePlan(eg.std).get
+    //这里获取计划，而不是直接根据planCourseId查询的主要顾虑是，不知道课程来自个人计划、执行计划、专业方案
+    val planCourses = new mutable.HashMap[Long, PlanCourse]
+    for (g <- plan.groups; pc <- g.planCourses) {
+      planCourses.put(pc.id, pc)
+    }
     val ecs = Collections.newBuffer[ExemptionCourse]
-    val program = planCourses.head.group.plan.program
-    planCourses foreach { pc =>
+    val program = plan.program
+    val planCourseIds = longIds("planCourse")
+    planCourseIds foreach { pcId =>
+      val pc = planCourses(pcId)
       val semester = exemptionService.getSemester(program, eg.acquiredOn, pc.terms.termList.headOption).orNull
       val scoreText = get("scoreText" + pc.id)
+
       if (null != semester && scoreText.nonEmpty) {
         val gradingMode = entityDao.get(classOf[GradingMode], getInt("gradingMode.id" + pc.id, 0))
         val ec = ExemptionCourse(pc.course, pc.group.courseType, semester, pc.course.examMode, gradingMode,
