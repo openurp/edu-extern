@@ -19,7 +19,8 @@ package org.openurp.edu.extern.service
 
 import org.beangle.cdi.bind.BindModule
 import org.openurp.base.edu.service.impl.SemesterServiceImpl
-import org.openurp.edu.extern.service.impl.ExemptionServiceImpl
+import org.openurp.edu.extern.service.impl.{DefaultCertificateGradeService, ExemptionServiceImpl}
+import org.openurp.edu.extern.service.signup.impl.{DefaultCertSignupService, SignupBuildInChecker}
 import org.openurp.edu.program.domain.{DefaultCoursePlanProvider, DefaultProgramProvider}
 
 class DefaultModule extends BindModule {
@@ -28,5 +29,13 @@ class DefaultModule extends BindModule {
     bind(classOf[DefaultCoursePlanProvider])
     bind(classOf[SemesterServiceImpl])
     bind(classOf[ExemptionServiceImpl])
+
+    bind("cert.signupBuildInChecker",classOf[SignupBuildInChecker])
+    bind(classOf[DefaultCertSignupService]).property("checkerStack",
+      list(ref("cert.signupBuildInChecker")))
+//      , ref("examExistChecker"), ref("examConditionChecker"), ref("examSuperCategoryChecker"))
+
+    bind(classOf[DefaultCertificateGradeService])
+
   }
 }

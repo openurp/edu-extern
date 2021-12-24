@@ -52,7 +52,7 @@
         bg.form.addInput(form,"keys","std.user.code,std.user.name,subject.category.name,subject.name,score,scoreText,std.state.department.name,std.state.major.name,std.state.grade,certificate,acquiredOn,examNo,updatedAt,courseSize");
         bg.form.addInput(form,"titles","学号,姓名,考试类型,考试科目,分数,成绩,院系,专业,年级,证书编号,考试日期,准考证号,录入时间,已认定课数");
         bg.form.addInput(form,"fileName","校外考试成绩数据");
-        bg.form.submit(form,"${b.url('!export')}","_self");
+        bg.form.submit(form,"${b.url('!exportData')}","_self");
     }
 </script>
 [@b.foot/]

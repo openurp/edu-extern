@@ -28,6 +28,7 @@ val apiVer = "0.24.0"
 val starterVer = "0.0.15"
 val baseVer = "0.1.24"
 val openurp_edu_api = "org.openurp.edu" % "openurp-edu-api" % apiVer
+val openurp_std_api = "org.openurp.std" % "openurp-std-api" % apiVer
 val openurp_stater_web = "org.openurp.starter" % "openurp-starter-web" % starterVer
 val openurp_base_tag = "org.openurp.base" % "openurp-base-tag" % baseVer
 
@@ -38,7 +39,7 @@ lazy val core = (project in file("core"))
   .settings(
     name := "openurp-edu-extern-core",
     common,
-    libraryDependencies ++= Seq(openurp_edu_api,beangle_ems_app,openurp_stater_web)
+    libraryDependencies ++= Seq(openurp_edu_api,openurp_std_api,beangle_ems_app,openurp_stater_web)
   )
 
 lazy val web = (project in file("web"))

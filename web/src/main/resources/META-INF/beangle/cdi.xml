@@ -5,6 +5,7 @@
     <module class="org.openurp.edu.extern.web.action.code.DefaultModule"/>
     <module class="org.openurp.edu.extern.web.action.certificate.DefaultModule" />
     <module class="org.openurp.edu.extern.web.action.course.DefaultModule"/>
+    <module class="org.openurp.edu.extern.web.action.signup.DefaultModule"/>
   </container>
   <container>
     <module class="org.openurp.edu.extern.service.DefaultModule" />
