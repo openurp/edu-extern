@@ -1,6 +1,5 @@
 import org.openurp.parent.Settings._
 import org.openurp.parent.Dependencies._
-import org.beangle.tools.sbt.Sas
 
 ThisBuild / organization := "org.openurp.edu.extern"
 ThisBuild / version := "0.0.16-SNAPSHOT"
@@ -14,14 +13,14 @@ ThisBuild / scmInfo := Some(
 
 ThisBuild / developers := List(
   Developer(
-    id    = "chaostone",
-    name  = "Tihua Duan",
+    id = "chaostone",
+    name = "Tihua Duan",
     email = "duantihua@gmail.com",
-    url   = url("http://github.com/duantihua")
+    url = url("http://github.com/duantihua")
   )
 )
 
-ThisBuild / description := "OpenURP Std CreditBank"
+ThisBuild / description := "OpenURP Edu Extern"
 ThisBuild / homepage := Some(url("http://openurp.github.io/edu-extern/index.html"))
 
 val apiVer = "0.25.0"
@@ -33,30 +32,28 @@ val openurp_stater_web = "org.openurp.starter" % "openurp-starter-web" % starter
 val openurp_base_tag = "org.openurp.base" % "openurp-base-tag" % baseVer
 
 lazy val root = (project in file("."))
-  .aggregate(core,web,webapp)
+  .aggregate(core, web, webapp)
 
 lazy val core = (project in file("core"))
   .settings(
     name := "openurp-edu-extern-core",
     common,
-    libraryDependencies ++= Seq(openurp_edu_api,openurp_std_api,beangle_ems_app,openurp_stater_web)
+    libraryDependencies ++= Seq(openurp_edu_api, openurp_std_api, beangle_ems_app, openurp_stater_web)
   )
 
 lazy val web = (project in file("web"))
   .settings(
     name := "openurp-edu-extern-web",
     common,
-    libraryDependencies ++= Seq(openurp_stater_web,openurp_base_tag,beangle_serializer_text),
+    libraryDependencies ++= Seq(openurp_stater_web, openurp_base_tag, beangle_serializer_text),
   ).dependsOn(core)
 
 lazy val webapp = (project in file("webapp"))
-  .enablePlugins(WarPlugin,UndertowPlugin)
+  .enablePlugins(WarPlugin, UndertowPlugin)
   .settings(
     name := "openurp-edu-extern-webapp",
     common,
-    libraryDependencies ++= Seq(openurp_stater_web,openurp_base_tag),
-    libraryDependencies ++= Seq(Sas.Tomcat % "test")
-  ).dependsOn(core,web)
+    libraryDependencies ++= Seq(openurp_stater_web, openurp_base_tag)
+  ).dependsOn(core, web)
 
-
-
+publish / skip := true
