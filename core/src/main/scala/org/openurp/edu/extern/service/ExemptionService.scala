@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -18,7 +18,9 @@
 package org.openurp.edu.extern.service
 
 import org.openurp.base.edu.code.model.CourseType
-import org.openurp.base.edu.model.{Course, Semester, Student}
+import org.openurp.base.edu.model.Course
+import org.openurp.base.model.Semester
+import org.openurp.base.std.model.Student
 import org.openurp.code.edu.model.{ExamMode, GradingMode}
 import org.openurp.edu.extern.model.{CertificateGrade, ExternGrade}
 import org.openurp.edu.grade.course.model.CourseGrade
@@ -28,7 +30,7 @@ import java.time.LocalDate
 
 trait ExemptionService {
 
-  def getSemester(program:Program, acquiredOn: LocalDate, term: Option[Int]): Option[Semester]
+  def getSemester(program: Program, acquiredOn: LocalDate, term: Option[Int]): Option[Semester]
 
   def getConvertablePlanCourses(std: Student, plan: CoursePlan, acquiredOn: LocalDate): Seq[PlanCourse]
 

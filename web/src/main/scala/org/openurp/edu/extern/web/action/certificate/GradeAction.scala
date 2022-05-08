@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -20,13 +20,14 @@ package org.openurp.edu.extern.web.action.certificate
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
+import org.beangle.data.excel.schema.ExcelSchema
 import org.beangle.data.transfer.exporter.ExportSetting
-import org.beangle.doc.excel.schema.ExcelSchema
 import org.beangle.web.action.annotation.response
 import org.beangle.web.action.view.{PathView, Stream, View}
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.edu.model.{Semester, Student}
-import org.openurp.base.edu.service.SemesterService
+import org.openurp.base.model.Semester
+import org.openurp.base.service.SemesterService
+import org.openurp.base.std.model.Student
 import org.openurp.code.edu.model.{CourseTakeType, ExamStatus, GradingMode}
 import org.openurp.edu.extern.code.model.{CertificateCategory, CertificateSubject}
 import org.openurp.edu.extern.model.CertificateGrade
@@ -53,27 +54,6 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
     put("certificateCategories", getCodes(classOf[CertificateCategory]))
     put("departments", getDeparts)
     put("project", getProject)
-  }
-
-  override protected def getQueryBuilder: OqlBuilder[CertificateGrade] = {
-    val builder = super.getQueryBuilder
-    getFloat("from") foreach { from =>
-      builder.where("certificateGrade.score >=:F", from)
-    }
-    getFloat("to") foreach { to =>
-      builder.where("certificateGrade.score <=:T", to)
-    }
-
-    getDate("fromAt") foreach { fromAt =>
-      builder.where("certificateGrade.updatedAt >= :fromAt", fromAt.atTime(0, 0, 0).atZone(ZoneId.systemDefault()).toInstant)
-    }
-    getDate("toAt") foreach { toAt =>
-      builder.where(" certificateGrade.updatedAt <= :toAt", toAt.plusDays(1).atTime(0, 0, 0).atZone(ZoneId.systemDefault()).toInstant)
-    }
-    getBoolean("hasCourse") foreach { hasCourse =>
-      builder.where((if (hasCourse) "" else "not ") + "exists (from certificateGrade.courses ec)")
-    }
-    builder
   }
 
   override def editSetting(entity: CertificateGrade): Unit = {
@@ -197,5 +177,26 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
   override def configExport(setting: ExportSetting): Unit = {
     super.configExport(setting)
     setting.context.extractor = new CertificateGradePropertyExtractor()
+  }
+
+  override protected def getQueryBuilder: OqlBuilder[CertificateGrade] = {
+    val builder = super.getQueryBuilder
+    getFloat("from") foreach { from =>
+      builder.where("certificateGrade.score >=:F", from)
+    }
+    getFloat("to") foreach { to =>
+      builder.where("certificateGrade.score <=:T", to)
+    }
+
+    getDate("fromAt") foreach { fromAt =>
+      builder.where("certificateGrade.updatedAt >= :fromAt", fromAt.atTime(0, 0, 0).atZone(ZoneId.systemDefault()).toInstant)
+    }
+    getDate("toAt") foreach { toAt =>
+      builder.where(" certificateGrade.updatedAt <= :toAt", toAt.plusDays(1).atTime(0, 0, 0).atZone(ZoneId.systemDefault()).toInstant)
+    }
+    getBoolean("hasCourse") foreach { hasCourse =>
+      builder.where((if (hasCourse) "" else "not ") + "exists (from certificateGrade.courses ec)")
+    }
+    builder
   }
 }

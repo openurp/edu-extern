@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -21,7 +21,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.transfer.exporter.ExportSetting
 import org.beangle.web.action.annotation.ignore
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.edu.model.Semester
+import org.openurp.base.model.Semester
 import org.openurp.edu.extern.code.model.{CertificateCategory, CertificateSubject}
 import org.openurp.edu.extern.model.CertExamSignup
 import org.openurp.edu.extern.web.helper.PETSPropertyExtractor

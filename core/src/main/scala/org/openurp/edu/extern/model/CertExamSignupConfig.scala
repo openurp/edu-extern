@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -19,7 +19,7 @@ package org.openurp.edu.extern.model
 
 import org.beangle.data.model.LongId
 import org.beangle.data.model.pojo.{Coded, InstantRange, Named}
-import org.openurp.base.edu.model.{Project, Semester}
+import org.openurp.base.model.{Project, Semester}
 import org.openurp.edu.extern.code.model.{CertificateCategory, CertificateSubject}
 
 import java.time.Instant

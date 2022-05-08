@@ -1,13 +1,11 @@
 <?xml version="1.0"?>
 <cdi>
-  <container name="web">
+  <container>
     <module class="org.openurp.starter.edu.action.ProjectModule" />
-    <module class="org.openurp.edu.extern.web.action.code.DefaultModule"/>
     <module class="org.openurp.edu.extern.web.action.certificate.DefaultModule" />
     <module class="org.openurp.edu.extern.web.action.course.DefaultModule"/>
     <module class="org.openurp.edu.extern.web.action.signup.DefaultModule"/>
-  </container>
-  <container>
+
     <module class="org.openurp.edu.extern.service.DefaultModule" />
     <module class="org.beangle.serializer.text.DefaultModule"/>
     <module class="org.beangle.serializer.json.DefaultModule"/>

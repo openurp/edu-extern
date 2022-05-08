@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -19,8 +19,10 @@ package org.openurp.edu.extern.service.impl
 
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
-import org.openurp.base.edu.model.{Course, Semester, Student}
-import org.openurp.base.edu.service.SemesterService
+import org.openurp.base.edu.model.Course
+import org.openurp.base.model.Semester
+import org.openurp.base.service.SemesterService
+import org.openurp.base.std.model.Student
 import org.openurp.code.edu.model.CourseTakeType
 import org.openurp.edu.extern.model.{CertificateGrade, ExternGrade}
 import org.openurp.edu.extern.service.{CourseGradeConvertor, ExemptionCourse, ExemptionService}
@@ -82,13 +84,6 @@ class ExemptionServiceImpl extends ExemptionService {
     entityDao.saveOrUpdate(eg)
   }
 
-  override def removeExemption(cg: CertificateGrade, course: Course): Unit = {
-    cg.courses.subtractOne(course)
-    entityDao.saveOrUpdate(cg)
-    removeExemption(cg.std, course)
-    entityDao.saveOrUpdate(cg)
-  }
-
   private def removeExemption(std: Student, course: Course): Unit = {
     val cgs = getExemptionGrades(std, course)
     if (cgs.size > 1) {
@@ -98,11 +93,11 @@ class ExemptionServiceImpl extends ExemptionService {
     }
   }
 
-  private def getExemptionGrades(std: Student, course: Course): Iterable[CourseGrade] = {
-    val cgQuery = OqlBuilder.from(classOf[CourseGrade], "cg")
-    cgQuery.where("cg.std=:std and cg.course=:course", std, course)
-    cgQuery.where("cg.courseTakeType.id=:exemption", CourseTakeType.Exemption)
-    entityDao.search(cgQuery)
+  override def removeExemption(cg: CertificateGrade, course: Course): Unit = {
+    cg.courses.subtractOne(course)
+    entityDao.saveOrUpdate(cg)
+    removeExemption(cg.std, course)
+    entityDao.saveOrUpdate(cg)
   }
 
   override def addExemption(eg: ExternGrade, ecs: Seq[ExemptionCourse]): Unit = {
@@ -127,6 +122,13 @@ class ExemptionServiceImpl extends ExemptionService {
       cg.courses += ec.course
     }
     entityDao.saveOrUpdate(cg)
+  }
+
+  private def getExemptionGrades(std: Student, course: Course): Iterable[CourseGrade] = {
+    val cgQuery = OqlBuilder.from(classOf[CourseGrade], "cg")
+    cgQuery.where("cg.std=:std and cg.course=:course", std, course)
+    cgQuery.where("cg.courseTakeType.id=:exemption", CourseTakeType.Exemption)
+    entityDao.search(cgQuery)
   }
 
   private def addExemption(std: Student, ecs: Seq[ExemptionCourse], remark: String): Unit = {

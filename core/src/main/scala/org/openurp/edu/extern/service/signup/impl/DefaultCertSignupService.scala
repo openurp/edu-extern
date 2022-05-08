@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -19,12 +19,12 @@ package org.openurp.edu.extern.service.signup.impl
 
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
-import org.openurp.base.edu.model.{Project, Student}
+import org.openurp.base.model.Project
+import org.openurp.base.std.model.Student
 import org.openurp.edu.extern.model.{CertExamSignup, CertExamSignupConfig, CertExamSignupSetting}
 import org.openurp.edu.extern.service.signup.{CertSignupChecker, CertSignupService}
 
-import java.time.LocalDate
-import java.time.Instant
+import java.time.{Instant, LocalDate}
 import scala.collection.mutable
 
 class DefaultCertSignupService extends CertSignupService {
@@ -130,7 +130,7 @@ class DefaultCertSignupService extends CertSignupService {
   }
 
   override def isExist(signup: CertExamSignup): Boolean = {
-    val builder  = OqlBuilder.from(classOf[CertExamSignup], "signup")
+    val builder = OqlBuilder.from(classOf[CertExamSignup], "signup")
     builder.where("signup.subject  =:subject", signup.subject)
     builder.where("signup.semester  =:semester", signup.semester)
     builder.where("signup.std =:std", signup.std)

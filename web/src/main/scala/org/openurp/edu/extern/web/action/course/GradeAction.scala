@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -23,7 +23,8 @@ import org.beangle.data.transfer.exporter.ExportSetting
 import org.beangle.web.action.annotation.response
 import org.beangle.web.action.view.{PathView, View}
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.edu.model.{ExternStudent, Semester}
+import org.openurp.base.std.model.ExternStudent
+import org.openurp.base.model.Semester
 import org.openurp.code.edu.model.{CourseTakeType, GradingMode}
 import org.openurp.edu.extern.model.ExternGrade
 import org.openurp.edu.extern.service.{ExemptionCourse, ExemptionService}

@@ -1,10 +1,10 @@
 [#ftl]
 [@b.head/]
 <div class="container">
-	[#assign toolBarTitle]${((setting.config.notice!)=="")?string("二","三")}[/#assign]
-	[@b.toolbar title="校外考试报名(第"+toolBarTitle+"步)"]
-		bar.addBack("${b.text("action.back")}");
-	[/@]
+  [#assign toolBarTitle]${((setting.config.notice!)=="")?string("二","三")}[/#assign]
+  [@b.toolbar title="校外考试报名(第"+toolBarTitle+"步)"]
+    bar.addBack("${b.text("action.back")}");
+  [/@]
   [@b.card class="card-info card-outline"]
     [@b.card_header]报名确认[/@]
     [@b.form name="actionForm" action="!save"]

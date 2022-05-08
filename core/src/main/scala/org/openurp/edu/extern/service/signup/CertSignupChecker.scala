@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -17,7 +17,7 @@
 
 package org.openurp.edu.extern.service.signup
 
-import org.openurp.base.edu.model.Student
+import org.openurp.base.std.model.Student
 import org.openurp.edu.extern.model.CertExamSignupSetting
 
 object CertSignupChecker {

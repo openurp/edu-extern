@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -15,15 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openurp.edu.extern.web.action.code
+package org.openurp.edu.extern.web.action.certificate
 
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.edu.extern.code.model.{CertificateCategory, CertificateSubject}
 
-class CertificateSubjectAction extends RestfulAction[CertificateSubject] {
+class SubjectAction extends RestfulAction[CertificateSubject] {
   override protected def editSetting(subject: CertificateSubject): Unit = {
     put("categories", entityDao.getAll(classOf[CertificateCategory]))
   }
 }
 
-class CertificateCategoryAction extends RestfulAction[CertificateCategory]
+class CategoryAction extends RestfulAction[CertificateCategory]

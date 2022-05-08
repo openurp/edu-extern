@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -17,7 +17,8 @@
 
 package org.openurp.edu.extern.service.signup;
 
-import org.openurp.base.edu.model.{Project, Semester, Student}
+import org.openurp.base.model.{Project, Semester}
+import org.openurp.base.std.model.Student
 import org.openurp.edu.extern.code.model.CertificateSubject
 import org.openurp.edu.extern.model.{CertExamSignup, CertExamSignupConfig, CertExamSignupSetting}
 
@@ -74,6 +75,7 @@ trait CertSignupService {
    * @return
    */
   def search(std: Student, start: LocalDate, end: LocalDate): Iterable[CertExamSignup]
+
   /**
    * 判断该学生是否可以报名（true可以报名，false则否
    *

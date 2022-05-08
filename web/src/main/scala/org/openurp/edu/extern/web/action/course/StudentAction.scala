@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -22,9 +22,8 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.annotation.response
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.edu.AuditStates
-import org.openurp.base.edu.model.{ExternStudent, Student}
 import org.openurp.base.model.ExternSchool
+import org.openurp.base.std.model.{ExternStudent, Student}
 import org.openurp.code.edu.model.{EduCategory, EducationLevel}
 import org.openurp.code.std.model.StudentStatus
 import org.openurp.edu.extern.service.ExemptionService
@@ -41,22 +40,12 @@ class StudentAction extends RestfulAction[ExternStudent] with ProjectSupport {
 
   override def indexSetting(): Unit = {
     put("studentStatuses", getCodes(classOf[StudentStatus]))
-    put("auditStates", AuditStates.values)
   }
 
   override def info(id: String): View = {
     val es = getModel[ExternStudent](entityName, convertId(id))
     put("externStudent", es)
     forward()
-  }
-
-  override protected def editSetting(entity: ExternStudent): Unit = {
-    put("schools", entityDao.getAll(classOf[ExternSchool]))
-    val project = getProject
-    put("levels", entityDao.getAll(classOf[EducationLevel]))
-    put("categories", entityDao.getAll(classOf[EduCategory]))
-    put("project", project)
-    super.editSetting(entity)
   }
 
   @response
@@ -70,6 +59,15 @@ class StudentAction extends RestfulAction[ExternStudent] with ProjectSupport {
       p.put("name", s"${std.state.get.department.name} ${std.user.name}")
       p
     }
+  }
+
+  override protected def editSetting(entity: ExternStudent): Unit = {
+    put("schools", entityDao.getAll(classOf[ExternSchool]))
+    val project = getProject
+    put("levels", entityDao.getAll(classOf[EducationLevel]))
+    put("categories", entityDao.getAll(classOf[EduCategory]))
+    put("project", project)
+    super.editSetting(entity)
   }
 
 }

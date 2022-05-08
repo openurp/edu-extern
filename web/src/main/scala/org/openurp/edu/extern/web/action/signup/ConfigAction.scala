@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005, The OpenURP Software.
+ * Copyright (C) 2014, The OpenURP Software.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -40,7 +40,7 @@ class ConfigAction extends RestfulAction[CertExamSignupConfig] with ProjectSuppo
   }
 
   protected override def editSetting(config: CertExamSignupConfig): Unit = {
-    put("semesters", getProject.calendars.head.semesters)
+    put("semesters", getProject.calendar.semesters)
     val examCategories = getCodes(classOf[CertificateCategory])
     put("categories", examCategories)
     if (!config.persisted) {
