@@ -1,0 +1,6 @@
+[#ftl]
+  [@b.nav class="nav-tabs nav-tabs-compact"]
+    [@b.navitem href="/course/grade"]校外成绩[/@]
+    [@b.navitem href="/course/student"]校外学习[/@]
+    [@b.navitem href="/course/school"]外校信息[/@]
+  [/@]
