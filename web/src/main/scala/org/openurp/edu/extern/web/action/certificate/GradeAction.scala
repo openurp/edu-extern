@@ -29,12 +29,11 @@ import org.openurp.base.model.Semester
 import org.openurp.base.service.SemesterService
 import org.openurp.base.std.model.Student
 import org.openurp.code.edu.model.{CourseTakeType, ExamStatus, GradingMode}
-import org.openurp.edu.extern.code.model.{CertificateCategory, CertificateSubject}
+import org.openurp.edu.extern.code.{CertificateCategory, CertificateSubject}
 import org.openurp.edu.extern.model.CertificateGrade
 import org.openurp.edu.extern.service.{ExemptionCourse, ExemptionService}
 import org.openurp.edu.extern.web.helper.CertificateGradePropertyExtractor
-import org.openurp.edu.grade.course.model.CourseGrade
-import org.openurp.edu.grade.model.Grade
+import org.openurp.edu.grade.model.{CourseGrade, Grade}
 import org.openurp.edu.program.domain.CoursePlanProvider
 import org.openurp.edu.program.model.PlanCourse
 import org.openurp.starter.edu.helper.ProjectSupport

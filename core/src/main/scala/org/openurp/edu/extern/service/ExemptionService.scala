@@ -17,13 +17,13 @@
 
 package org.openurp.edu.extern.service
 
-import org.openurp.base.edu.code.model.CourseType
+import org.openurp.base.edu.code.CourseType
 import org.openurp.base.edu.model.Course
 import org.openurp.base.model.Semester
 import org.openurp.base.std.model.Student
 import org.openurp.code.edu.model.{ExamMode, GradingMode}
 import org.openurp.edu.extern.model.{CertificateGrade, ExternGrade}
-import org.openurp.edu.grade.course.model.CourseGrade
+import org.openurp.edu.grade.model.CourseGrade
 import org.openurp.edu.program.model.{CoursePlan, PlanCourse, Program}
 
 import java.time.LocalDate

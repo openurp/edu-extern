@@ -19,7 +19,7 @@ package org.openurp.edu.extern.service.signup;
 
 import org.openurp.base.model.{Project, Semester}
 import org.openurp.base.std.model.Student
-import org.openurp.edu.extern.code.model.CertificateSubject
+import org.openurp.edu.extern.code.CertificateSubject
 import org.openurp.edu.extern.model.{CertExamSignup, CertExamSignupConfig, CertExamSignupSetting}
 
 import java.time.LocalDate

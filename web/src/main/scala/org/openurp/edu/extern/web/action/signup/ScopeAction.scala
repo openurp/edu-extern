@@ -22,7 +22,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.annotation.ignore
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.edu.extern.code.model.CertificateSubject
+import org.openurp.edu.extern.code.CertificateSubject
 import org.openurp.edu.extern.model.{CertExamSignupConfig, CertExamSignupSetting, CertExamStdScope}
 import org.openurp.starter.edu.helper.ProjectSupport
 
@@ -33,7 +33,7 @@ class ScopeAction extends RestfulAction[CertExamStdScope] with ProjectSupport {
   override protected def editSetting(scope: CertExamStdScope): Unit = {
     getSignupConfig()
     put("levels", getProject.levels)
-    put("codes", scope.codes.mkString(","))
+    put("codes", scope.codes.toList.sorted.mkString(","))
     forward()
   }
 
@@ -55,7 +55,9 @@ class ScopeAction extends RestfulAction[CertExamStdScope] with ProjectSupport {
       codes = Strings.replace(c, "\n", ",")
       codes = Strings.replace(c, "，", ",")
       entity.codes.clear()
-      entity.codes ++= Strings.split(codes)
+      Strings.split(codes) foreach { code =>
+        entity.codes += code.trim()
+      }
     }
     super.saveAndRedirect(entity)
   }

@@ -21,7 +21,7 @@ import org.beangle.data.model.LongId
 import org.beangle.data.model.pojo.Updated
 import org.openurp.base.model.{Campus, Semester}
 import org.openurp.base.std.model.Student
-import org.openurp.edu.extern.code.model.CertificateSubject
+import org.openurp.edu.extern.code.CertificateSubject
 
 import java.time.Instant
 import java.util.Date
