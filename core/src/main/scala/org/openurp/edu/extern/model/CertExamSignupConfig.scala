@@ -20,7 +20,7 @@ package org.openurp.edu.extern.model
 import org.beangle.data.model.LongId
 import org.beangle.data.model.pojo.{Coded, InstantRange, Named}
 import org.openurp.base.model.{Project, Semester}
-import org.openurp.edu.extern.code.model.{CertificateCategory, CertificateSubject}
+import org.openurp.edu.extern.code.{CertificateCategory, CertificateSubject}
 
 import java.time.Instant
 import scala.collection.mutable

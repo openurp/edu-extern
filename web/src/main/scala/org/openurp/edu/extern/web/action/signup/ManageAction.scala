@@ -22,7 +22,7 @@ import org.beangle.data.transfer.exporter.ExportSetting
 import org.beangle.web.action.annotation.ignore
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Semester
-import org.openurp.edu.extern.code.model.{CertificateCategory, CertificateSubject}
+import org.openurp.edu.extern.code.{CertificateCategory, CertificateSubject}
 import org.openurp.edu.extern.model.CertExamSignup
 import org.openurp.edu.extern.web.helper.PETSPropertyExtractor
 import org.openurp.starter.edu.helper.ProjectSupport

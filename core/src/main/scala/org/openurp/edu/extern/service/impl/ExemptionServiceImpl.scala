@@ -26,8 +26,7 @@ import org.openurp.base.std.model.Student
 import org.openurp.code.edu.model.CourseTakeType
 import org.openurp.edu.extern.model.{CertificateGrade, ExternGrade}
 import org.openurp.edu.extern.service.{CourseGradeConvertor, ExemptionCourse, ExemptionService}
-import org.openurp.edu.grade.course.model.CourseGrade
-import org.openurp.edu.grade.model.Grade
+import org.openurp.edu.grade.model.{CourseGrade, Grade}
 import org.openurp.edu.program.model.{CoursePlan, PlanCourse, Program}
 
 import java.time.LocalDate

@@ -19,7 +19,7 @@ package org.openurp.edu.extern.model
 
 import org.beangle.commons.lang.time.HourMinute
 import org.beangle.data.model.LongId
-import org.openurp.edu.extern.code.model.CertificateSubject
+import org.openurp.edu.extern.code.CertificateSubject
 
 import java.time.LocalDate
 import scala.collection.mutable

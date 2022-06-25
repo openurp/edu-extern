@@ -57,15 +57,11 @@
           <td>${(setting.examOn?string('yyyy-MM-dd'))!} [#if setting.examBeginAt.value>0] ${setting.examBeginAt}-${setting.examEndAt!}[/#if]</td>
           <td>${(setting.dependsOn.name)!'无'}</td>
           <td align="center">
-          [#if !passedSubjects?seq_contains(setting.subject)]
             [#if (!signUpSubjects?? || !signUpSubjects?seq_contains(setting.subject))]
               <button class="btn btn-primary btn-sm" onclick="signUp('${setting.id}')">报名</button>
             [#else]
               已报名
             [/#if]
-          [#else]
-            已通过
-          [/#if]
         </td>
         </tr>
       [/#list]

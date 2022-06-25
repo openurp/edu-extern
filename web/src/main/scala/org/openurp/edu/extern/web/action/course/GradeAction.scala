@@ -23,13 +23,13 @@ import org.beangle.data.transfer.exporter.ExportSetting
 import org.beangle.web.action.annotation.response
 import org.beangle.web.action.view.{PathView, View}
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.std.model.ExternStudent
 import org.openurp.base.model.Semester
+import org.openurp.base.std.model.ExternStudent
 import org.openurp.code.edu.model.{CourseTakeType, GradingMode}
 import org.openurp.edu.extern.model.ExternGrade
 import org.openurp.edu.extern.service.{ExemptionCourse, ExemptionService}
 import org.openurp.edu.extern.web.helper.ExternGradePropertyExtractor
-import org.openurp.edu.grade.course.model.CourseGrade
+import org.openurp.edu.grade.model.CourseGrade
 import org.openurp.edu.program.domain.CoursePlanProvider
 import org.openurp.edu.program.model.PlanCourse
 import org.openurp.starter.edu.helper.ProjectSupport
