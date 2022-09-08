@@ -30,7 +30,7 @@ import java.time.LocalDate
 
 trait ExemptionService {
 
-  def getSemester(program: Program, acquiredOn: LocalDate, term: Option[Int]): Option[Semester]
+  def getSemester(program: Program, term: Option[Int]): Option[Semester]
 
   def getConvertablePlanCourses(std: Student, plan: CoursePlan, acquiredOn: LocalDate): Seq[PlanCourse]
 
@@ -46,4 +46,4 @@ trait ExemptionService {
 }
 
 case class ExemptionCourse(course: Course, courseType: CourseType, semester: Semester,
-                           examMode: ExamMode, gradingMode: GradingMode, score: Option[Float], scoreText: Option[String])
+                           examMode: ExamMode, gradingMode: GradingMode, score: Option[Float], scoreText: String)

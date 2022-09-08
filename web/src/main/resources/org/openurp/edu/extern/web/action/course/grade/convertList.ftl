@@ -27,18 +27,18 @@
   [/#if]
  [@b.toolbar title = "添加新的认定课程"]
     bar.addItem("认定", function() {
-      var fillSize = 0;
-      var planCourseIds = "";
-
+      var courseIds = "";
       var form = document.gradeDistributeForm;
       $(form).find("[name^=scoreText]").each(function() {
         if ($(this).val().trim().length) {
-          planCourseIds += (planCourseIds.length > 0 ? "," : "") + $(this).prev().val();
+          courseIds += (courseIds.length > 0 ? "," : "") + $(this).prev().val();
         }
       });
-
-      bg.form.addInput(form, "planCourseIds", planCourseIds);
-      bg.form.submit(form, "${b.url("!convert")}");
+      if(courseIds){
+         bg.form.submit(form, "${b.url("!convert")}");
+      }else{
+         alert("尚未填写认定成绩");
+      }
     }, "action-new");
   [/@]
   [@b.form name="gradeDistributeForm" action="!convert"]
@@ -65,19 +65,30 @@
         <td>${planCourse.course.name}</td>
         <td>${planCourse.group.courseType.name}</td>
         <td>${planCourse.course.credits}</td>
-        <td title="第${planCourse.terms}学期 ">${semesters.get(planCourse).schoolYear} ${semesters.get(planCourse).name} 学期</td>
+        <td title="第${planCourse.terms}学期 ">
+            [#assign hasSemester=false/]
+            [#if semesters.get(planCourse)??]
+            [#assign hasSemester=true/]
+            ${semesters.get(planCourse).schoolYear} ${semesters.get(planCourse).name} 学期
+            [/#if]
+        </td>
         <td>
-          <select name="gradingMode.id${planCourse.id}" style="width: 100px" onchange="displayScore(this.value,${planCourse.id})">
+          <select name="gradingMode_${planCourse.course.id}" style="width: 100px" onchange="displayScore(this.value,${planCourse.course.id})">
             [#list gradingModes as gradingMode]
             <option value="${gradingMode.id}"[#if 1 == gradingMode.id] selected[/#if]>${gradingMode.name}</option>
             [/#list]
           </select>
         </td>
         <td>
-          <input type="hidden" name="planCourse.id${planCourse.id}" value="${planCourse.id}"/><input type="text" name="scoreText${planCourse.id}" value="" maxlength="5" style="width: 50px"/>
-          <div id="score${planCourse.id}" style="display:none">
-                          （<input type="text" name="score${planCourse.id}" value="" maxlength="10" style="width: 50px"/>）
+          <input type="hidden" name="course.id" value="${planCourse.course.id}"/>
+          <input type="hidden" name="courseType_${planCourse.course.id}" value="${planCourse.group.courseType.id}"/>
+          [#if hasSemester]
+          <input type="hidden" name="semester_${planCourse.course.id}" value="${semesters.get(planCourse).id}"/>
+          <input type="text" name="scoreText_${planCourse.course.id}" value="" maxlength="5" placeholder="成绩" style="width: 50px"/>
+          <div id="score_${planCourse.course.id}" style="display:none">
+           (<input type="text" name="score_${planCourse.course.id}" placeholder="分数" value="" maxlength="10" style="width: 50px"/>)
           </div>
+          [/#if]
         </td>
         <td>${ExemptionType.name}</td>
         <td>${planCourse.course.examMode.name}</td>
@@ -93,11 +104,11 @@
     [#list gradingModes as gradingMode]
       gradingModes['g${gradingMode.id}']=${gradingMode.numerical?string('1','0')}
     [/#list]
-    function displayScore(gradingModeId,planCourseId){
+    function displayScore(gradingModeId,courseId){
       if(gradingModes['g'+gradingModeId]=='1'){
-        document.getElementById('score'+planCourseId).style.display="none";
+        document.getElementById('score_'+courseId).style.display="none";
       }else{
-        document.getElementById('score'+planCourseId).style.display="";
+        document.getElementById('score_'+courseId).style.display="inline-block";
       }
     }
   </script>

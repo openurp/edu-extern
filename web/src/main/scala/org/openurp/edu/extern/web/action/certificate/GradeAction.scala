@@ -25,6 +25,8 @@ import org.beangle.data.transfer.exporter.ExportSetting
 import org.beangle.web.action.annotation.response
 import org.beangle.web.action.view.{PathView, Stream, View}
 import org.beangle.webmvc.support.action.RestfulAction
+import org.openurp.base.edu.code.CourseType
+import org.openurp.base.edu.model.Course
 import org.openurp.base.model.Semester
 import org.openurp.base.service.SemesterService
 import org.openurp.base.std.model.Student
@@ -103,7 +105,7 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
     val planCourses = exemptionService.getConvertablePlanCourses(std, plan.get, grade.acquiredOn)
     val semesters = Collections.newMap[PlanCourse, Semester]
     planCourses foreach { pc =>
-      exemptionService.getSemester(plan.get.program, grade.acquiredOn, pc.terms.termList.headOption) foreach { s =>
+      exemptionService.getSemester(plan.get.program, pc.terms.termList.headOption) foreach { s =>
         semesters.put(pc, s)
       }
     }
@@ -117,24 +119,16 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
 
   def convert: View = {
     val eg = entityDao.get(classOf[CertificateGrade], longId("grade"))
-    val plan = coursePlanProvider.getCoursePlan(eg.std).get
-    //这里获取计划，而不是直接根据planCourseId查询的主要顾虑是，不知道课程来自个人计划、执行计划、专业方案
-    val planCourses = new mutable.HashMap[Long, PlanCourse]
-    for (g <- plan.groups; pc <- g.planCourses) {
-      planCourses.put(pc.id, pc)
-    }
+    val courses = entityDao.find(classOf[Course], longIds("course"))
     val ecs = Collections.newBuffer[ExemptionCourse]
-    val program = plan.program
-    val planCourseIds = longIds("planCourse")
-    planCourseIds foreach { pcId =>
-      val pc = planCourses(pcId)
-      val semester = exemptionService.getSemester(program, eg.acquiredOn, pc.terms.termList.headOption).orNull
-      val scoreText = get("scoreText" + pc.id)
-
-      if (null != semester && scoreText.nonEmpty) {
-        val gradingMode = entityDao.get(classOf[GradingMode], getInt("gradingMode.id" + pc.id, 0))
-        val ec = ExemptionCourse(pc.course, pc.group.courseType, semester, pc.course.examMode, gradingMode,
-          getFloat("score" + pc.id), scoreText)
+    courses foreach { c =>
+      val scoreText = get("scoreText_" + c.id, "")
+      if (scoreText.nonEmpty) {
+        val courseType = entityDao.get(classOf[CourseType], getInt(s"courseType_${c.id}").getOrElse(0))
+        val semester = entityDao.get(classOf[Semester], getInt(s"semester_${c.id}").getOrElse(0))
+        val gradingMode = entityDao.get(classOf[GradingMode], getInt("gradingMode_" + c.id, 0))
+        val ec = ExemptionCourse(c, courseType, semester, c.examMode, gradingMode,
+          getFloat("score_" + c.id), scoreText)
         ecs += ec
       }
     }

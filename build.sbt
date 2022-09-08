@@ -49,7 +49,7 @@ lazy val web = (project in file("web"))
   ).dependsOn(core)
 
 lazy val webapp = (project in file("webapp"))
-  .enablePlugins(WarPlugin, UndertowPlugin)
+  .enablePlugins(WarPlugin, TomcatPlugin)
   .settings(
     name := "openurp-edu-extern-webapp",
     common,

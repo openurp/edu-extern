@@ -65,13 +65,11 @@ class CourseGradeConvertor(entityDao: EntityDao) {
     courseGrade.gradingMode = ec.gradingMode
     courseGrade.freeListening = true
     courseGrade.passed = true
-    courseGrade.scoreText = ec.scoreText
+    courseGrade.scoreText = Some(ec.scoreText)
     courseGrade.score = ec.score
-    if (ec.score.isEmpty && ec.scoreText.nonEmpty && ec.gradingMode.numerical) {
-      ec.scoreText foreach { st =>
-        if (Numbers.isDigits(st))
-          courseGrade.score = Some(Numbers.toFloat(st, 0))
-      }
+    if (ec.score.isEmpty && ec.gradingMode.numerical) {
+      if (Numbers.isDigits(ec.scoreText))
+        courseGrade.score = Some(Numbers.toFloat(ec.scoreText, 0))
     }
     courseGrade.status = Grade.Status.Published
     courseGrade.updatedAt = Instant.now

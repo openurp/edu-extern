@@ -37,7 +37,7 @@ class ExemptionServiceImpl extends ExemptionService {
 
   var semesterService: SemesterService = _
 
-  override def getSemester(program: Program, acquiredOn: LocalDate, term: Option[Int]): Option[Semester] = {
+  override def getSemester(program: Program, term: Option[Int]): Option[Semester] = {
     term match {
       case Some(t) => semesterService.get(program.project, program.beginOn, program.endOn, t)
       case None => None
@@ -55,10 +55,8 @@ class ExemptionServiceImpl extends ExemptionService {
     for (courseGrade <- courseGrades) {
       if (courseGrade.passed) coursesMap.remove(courseGrade.course)
     }
-    if (acquiredOn.isBefore(std.beginOn)) {
-      coursesMap.filterInPlace { case (_, pc) =>
-        pc.terms.termList.nonEmpty && semesterService.get(std.project, std.beginOn, std.endOn, pc.terms.termList.head).nonEmpty
-      }
+    coursesMap.filterInPlace { case (_, pc) =>
+      pc.terms.termList.nonEmpty && semesterService.get(std.project, std.beginOn, std.endOn, pc.terms.termList.head).nonEmpty
     }
     coursesMap.values.toSeq
   }
