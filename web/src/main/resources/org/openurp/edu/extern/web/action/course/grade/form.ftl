@@ -6,7 +6,7 @@
   [@b.form name="externGradeForm" action="!save" target="externGrades" theme="list"]
     [#assign elementSTYLE = "width: 200px"/]
     [#if (externGrade.id)?exists]
-      [@b.field label="学习经历"]<span style="display: inline-block;">${(externGrade.externStudent.std.user.code)!} ${(externGrade.externStudent.std.user.name)!} ${(externGrade.externStudent.school.name)!} ${(externGrade.externStudent.beginOn?string('yyyy-MM'))}~${(externGrade.externStudent.endOn?string("yyyy-MM"))}</span>[/@]
+      [@b.field label="学习经历"]<span style="display: inline-block;">${(externGrade.externStudent.std.code)!} ${(externGrade.externStudent.std.name)!} ${(externGrade.externStudent.school.name)!} ${(externGrade.externStudent.beginOn?string('yyyy-MM'))}~${(externGrade.externStudent.endOn?string("yyyy-MM"))}</span>[/@]
     [#else]
       [@b.field label="学号"]
        <input name="stdCode" style=elementSTYLE placeholder="输入学号后，点击页面空白处，即可获取该学生信息">

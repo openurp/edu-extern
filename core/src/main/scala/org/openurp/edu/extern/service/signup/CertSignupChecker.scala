@@ -18,7 +18,7 @@
 package org.openurp.edu.extern.service.signup
 
 import org.openurp.base.std.model.Student
-import org.openurp.edu.extern.model.CertExamSignupSetting
+import org.openurp.edu.extern.config.CertSignupSetting
 
 object CertSignupChecker {
   /** 没有完成要求的上级考试要求 */
@@ -32,5 +32,5 @@ object CertSignupChecker {
 }
 
 trait CertSignupChecker {
-  def check(student: Student, setting: CertExamSignupSetting): String
+  def check(student: Student, setting: CertSignupSetting): String
 }

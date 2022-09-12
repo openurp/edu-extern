@@ -5,8 +5,8 @@
   <div class="search-panel">
       [@b.form theme="search" name="signupsearchForm" action="!search" title="ui.searchForm" target="signupList"]
           [@urp_base.semester value=currentSemester label="学年学期"/]
-          [@b.textfield name="signup.std.user.code" label="学号"/]
-          [@b.textfield name="signup.std.user.name" label="姓名"/]
+          [@b.textfield name="signup.std.code" label="学号"/]
+          [@b.textfield name="signup.std.name" label="姓名"/]
           [@b.textfield name="signup.std.state.grade" label="年级"/]
           [@b.select name="signup.std.level.id" id="levelTypeId" label="培养层次" items=levels empty="..."/]
           [@b.select name="signup.std.state.department.id" label="院系" items=departments empty="..." /]

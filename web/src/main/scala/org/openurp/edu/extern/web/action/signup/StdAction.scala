@@ -25,20 +25,21 @@ import org.beangle.web.action.view.View
 import org.beangle.web.servlet.util.RequestUtils
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.std.model.Student
-import org.openurp.edu.extern.model.{CertExamSignup, CertExamSignupSetting, CertificateGrade}
+import org.openurp.edu.extern.config.CertSignupSetting
+import org.openurp.edu.extern.model.{CertSignup, CertificateGrade}
 import org.openurp.edu.extern.service.signup.CertSignupService
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 
 import java.time.Instant
 import scala.collection.mutable
 
-class StdAction extends ActionSupport with EntityAction[CertExamSignup] with ProjectSupport with Logging {
+class StdAction extends ActionSupport with EntityAction[CertSignup] with ProjectSupport with Logging {
 
   var examSignupService: CertSignupService = _
 
   def index(): View = {
     val std = getUser(classOf[Student])
-    val builder = OqlBuilder.from(classOf[CertExamSignup], "signUp").where("signUp.std =:std", std)
+    val builder = OqlBuilder.from(classOf[CertSignup], "signUp").where("signUp.std =:std", std)
     val signUpList = entityDao.search(builder)
     val gradeBuilder = OqlBuilder.from(classOf[CertificateGrade], "grade").where("grade.std =:std", std)
     put("grades", entityDao.search(gradeBuilder))
@@ -56,7 +57,7 @@ class StdAction extends ActionSupport with EntityAction[CertExamSignup] with Pro
     if (configs.isEmpty) {
       forward("noconfig")
     } else {
-      val signUpList = new mutable.ArrayBuffer[CertExamSignup]
+      val signUpList = new mutable.ArrayBuffer[CertSignup]
       configs foreach { config =>
         val signUps = examSignupService.search(std, config)
         signUpList ++= signUps
@@ -78,7 +79,7 @@ class StdAction extends ActionSupport with EntityAction[CertExamSignup] with Pro
    * 显示报名须知(操作第二步)
    */
   def notice(): View = {
-    val setting = entityDao.get(classOf[CertExamSignupSetting], longId("setting"))
+    val setting = entityDao.get(classOf[CertSignupSetting], longId("setting"))
     val std = getUser(classOf[Student])
     val msg = examSignupService.canSignup(std, setting)
     if (null != msg) {
@@ -96,7 +97,7 @@ class StdAction extends ActionSupport with EntityAction[CertExamSignup] with Pro
 
   def signUpForm(): View = {
     val std = getUser(classOf[Student])
-    val setting = entityDao.get(classOf[CertExamSignupSetting], longId("setting"))
+    val setting = entityDao.get(classOf[CertSignupSetting], longId("setting"))
     put("setting", setting)
     put("student", std)
     forward()
@@ -104,12 +105,12 @@ class StdAction extends ActionSupport with EntityAction[CertExamSignup] with Pro
 
   def save(): View = {
     val std = getUser(classOf[Student])
-    val setting = entityDao.get(classOf[CertExamSignupSetting], longId("setting"))
+    val setting = entityDao.get(classOf[CertSignupSetting], longId("setting"))
     val config = setting.config
     if (!(config.isTimeSuitable && config.opened)) {
       return redirect("configs", "不在报名时间段内")
     }
-    val signup = new CertExamSignup
+    val signup = new CertSignup
     signup.std = std
     signup.updatedAt = Instant.now
     signup.ip = RequestUtils.getIpAddr(request)
@@ -121,7 +122,7 @@ class StdAction extends ActionSupport with EntityAction[CertExamSignup] with Pro
       var msg = examSignupService.signup(signup, setting)
       if (null == msg) {
         msg = if (config.prediction) "预报名成功" else "报名成功"
-        logger.info(std.user.code + " 报名 " + signup.subject.name + " @" + remoteAddr)
+        logger.info(std.code + " 报名 " + signup.subject.name + " @" + RequestUtils.getIpAddr(request))
       }
       redirect("configs", msg)
     } else {
@@ -130,7 +131,7 @@ class StdAction extends ActionSupport with EntityAction[CertExamSignup] with Pro
   }
 
   def cancel(): View = {
-    val signup = entityDao.get(classOf[CertExamSignup], longId("signup"))
+    val signup = entityDao.get(classOf[CertSignup], longId("signup"))
     val std = getUser(classOf[Student])
     if (signup.std != std) {
       return redirect("configs", "非法操作，只能取消自己的报名信息!")
@@ -145,7 +146,7 @@ class StdAction extends ActionSupport with EntityAction[CertExamSignup] with Pro
     if (openConfig) {
       entityDao.remove(signup)
       val remoteAddr = RequestUtils.getIpAddr(request)
-      logger.info(std.user.code + " 取消了 " + signup.subject.name + " @" + remoteAddr)
+      logger.info(std.code + " 取消了 " + signup.subject.name + " @" + remoteAddr)
       redirect("configs", "取消报名成功!")
     } else {
       redirect("configs", "不在报名时间内")

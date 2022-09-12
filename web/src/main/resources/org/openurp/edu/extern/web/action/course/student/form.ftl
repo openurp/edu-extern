@@ -5,7 +5,7 @@
   [/@]
   [@b.form name="externStudentForm" action="!save" theme="list"]
     [#if (externStudent.id)?exists]
-      [@b.field label="学号"]<span style="display: inline-block;">${(externStudent.std.user.code)!} ${(externStudent.std.user.name)!}[/@]
+      [@b.field label="学号"]<span style="display: inline-block;">${(externStudent.std.code)!} ${(externStudent.std.name)!}[/@]
     [#else]
       [@b.field label="学号"]
        <input name="stdCode" style="width:200px" placeholder="输入学号后，点击页面空白处，即可获取该学生信息">

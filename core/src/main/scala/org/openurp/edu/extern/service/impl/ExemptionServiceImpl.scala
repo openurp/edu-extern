@@ -84,7 +84,7 @@ class ExemptionServiceImpl extends ExemptionService {
   private def removeExemption(std: Student, course: Course): Unit = {
     val cgs = getExemptionGrades(std, course)
     if (cgs.size > 1) {
-      throw new RuntimeException(s"found ${cgs.size} exemption grades of ${std.user.code}")
+      throw new RuntimeException(s"found ${cgs.size} exemption grades of ${std.code}")
     } else {
       entityDao.remove(cgs)
     }

@@ -20,7 +20,8 @@ package org.openurp.edu.extern.service.signup;
 import org.openurp.base.model.{Project, Semester}
 import org.openurp.base.std.model.Student
 import org.openurp.edu.extern.code.CertificateSubject
-import org.openurp.edu.extern.model.{CertExamSignup, CertExamSignupConfig, CertExamSignupSetting}
+import org.openurp.edu.extern.config.{CertSignupConfig, CertSignupSetting}
+import org.openurp.edu.extern.model.CertSignup
 
 import java.time.LocalDate
 
@@ -36,7 +37,7 @@ trait CertSignupService {
    * @param signup
    * @return 返回""如果成功,否则返回错误信息
    */
-  def signup(signup: CertExamSignup, setting: CertExamSignupSetting): String
+  def signup(signup: CertSignup, setting: CertSignupSetting): String
 
   /**
    * 取消报名<br>
@@ -46,7 +47,7 @@ trait CertSignupService {
    * @param setting
    * @return
    */
-  def cancel(std: Student, setting: CertExamSignupSetting): String
+  def cancel(std: Student, setting: CertSignupSetting): String
 
   /**
    * 查询在特定设置条件下的报名记录
@@ -55,7 +56,7 @@ trait CertSignupService {
    * @param setting
    * @return
    */
-  def get(std: Student, setting: CertExamSignupSetting): Option[CertExamSignup]
+  def get(std: Student, setting: CertSignupSetting): Option[CertSignup]
 
   /**
    * 获得学生这次期号中的报名记录
@@ -64,7 +65,7 @@ trait CertSignupService {
    * @param config
    * @return
    */
-  def search(std: Student, config: CertExamSignupConfig): Iterable[CertExamSignup]
+  def search(std: Student, config: CertSignupConfig): Iterable[CertSignup]
 
   /**
    * 查询在一定时间段内的学生的报名记录
@@ -74,7 +75,7 @@ trait CertSignupService {
    * @param end
    * @return
    */
-  def search(std: Student, start: LocalDate, end: LocalDate): Iterable[CertExamSignup]
+  def search(std: Student, start: LocalDate, end: LocalDate): Iterable[CertSignup]
 
   /**
    * 判断该学生是否可以报名（true可以报名，false则否
@@ -83,21 +84,21 @@ trait CertSignupService {
    * @param setting
    * @return
    */
-  def canSignup(student: Student, setting: CertExamSignupSetting): String
+  def canSignup(student: Student, setting: CertSignupSetting): String
 
   /**
    * 返回现在开放，并且在时间内的设置
    *
    * @return
    */
-  def getOpenedSettings(project: Project): Iterable[CertExamSignupSetting]
+  def getOpenedSettings(project: Project): Iterable[CertSignupSetting]
 
   /**
    * 获得这次期号中某门科目开放的期号
    *
    * @return
    */
-  def getOpenedConfigs(project: Project): Iterable[CertExamSignupConfig]
+  def getOpenedConfigs(project: Project): Iterable[CertSignupConfig]
 
-  def isExist(signup: CertExamSignup): Boolean
+  def isExist(signup: CertSignup): Boolean
 }

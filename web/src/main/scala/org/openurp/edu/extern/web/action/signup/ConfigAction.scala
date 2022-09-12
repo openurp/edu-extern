@@ -22,15 +22,18 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.annotation.ignore
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
+import org.openurp.base.model.Project
 import org.openurp.edu.extern.code.{CertificateCategory, CertificateSubject}
-import org.openurp.edu.extern.model.CertExamSignupConfig
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.edu.extern.config.CertSignupConfig
+import org.openurp.starter.web.support.ProjectSupport
 
 import scala.collection.mutable
 
-class ConfigAction extends RestfulAction[CertExamSignupConfig] with ProjectSupport {
+class ConfigAction extends RestfulAction[CertSignupConfig] with ProjectSupport {
 
   override def indexSetting(): Unit = {
+    given project: Project = getProject
+
     put("categories", getCodes(classOf[CertificateCategory]))
   }
 
@@ -39,8 +42,10 @@ class ConfigAction extends RestfulAction[CertExamSignupConfig] with ProjectSuppo
     "config"
   }
 
-  protected override def editSetting(config: CertExamSignupConfig): Unit = {
-    put("semesters", getProject.calendar.semesters)
+  protected override def editSetting(config: CertSignupConfig): Unit = {
+    given project: Project = getProject
+
+    put("semesters", project.calendar.semesters)
     val examCategories = getCodes(classOf[CertificateCategory])
     put("categories", examCategories)
     if (!config.persisted) {
@@ -65,8 +70,8 @@ class ConfigAction extends RestfulAction[CertExamSignupConfig] with ProjectSuppo
     }
   }
 
-  override protected def saveAndRedirect(config: CertExamSignupConfig): View = {
-    val query = OqlBuilder.from(classOf[CertExamSignupConfig], "config")
+  override protected def saveAndRedirect(config: CertSignupConfig): View = {
+    val query = OqlBuilder.from(classOf[CertSignupConfig], "config")
     query.where("config.code = :configCode", config.code)
     query.where("config.name = :configName", config.name)
     val configs = entityDao.search(query)

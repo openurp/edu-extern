@@ -19,7 +19,8 @@ package org.openurp.edu.extern.service.signup.impl
 
 import org.beangle.data.dao.OqlBuilder
 import org.openurp.base.std.model.Student
-import org.openurp.edu.extern.model.{CertExamSignupSetting, CertificateGrade}
+import org.openurp.edu.extern.config.CertSignupSetting
+import org.openurp.edu.extern.model.CertificateGrade
 import org.openurp.edu.extern.service.CertificateGradeService
 import org.openurp.edu.extern.service.signup.{CertSignupChecker, CertSignupService}
 
@@ -31,14 +32,14 @@ class SignupBuildInChecker extends CertSignupChecker {
   var certificateGradeService: CertificateGradeService = _
   var examSignupService: CertSignupService = _
 
-  override def check(student: Student, setting: CertExamSignupSetting): String = {
+  override def check(student: Student, setting: CertSignupSetting): String = {
     //    if (!student.within(LocalDate.now)) {
     //      return "不在籍同学不能报名"
     //    }
 
-    val exclusive = setting.scopes.exists(s => s.matchStd(student) && !s.includeIn)
+    val exclusive = setting.scopes.exists(s => s.matchStd(student) && !s.included)
     if (exclusive) return "不在报名许可名单中"
-    val inclusive = setting.scopes.exists(s => s.matchStd(student) && s.includeIn)
+    val inclusive = setting.scopes.exists(s => s.matchStd(student) && s.included)
     if (!inclusive) return "不在报名许可名单中"
 
     if (setting.dependsOn.nonEmpty) {
@@ -61,7 +62,7 @@ class SignupBuildInChecker extends CertSignupChecker {
     null
   }
 
-  private def isTimeCollision(setting: CertExamSignupSetting, student: Student): Boolean = {
+  private def isTimeCollision(setting: CertSignupSetting, student: Student): Boolean = {
     setting.examOn match {
       case None => false
       case Some(e) =>
