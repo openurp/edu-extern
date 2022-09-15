@@ -26,6 +26,7 @@ import org.beangle.ems.app.web.WebBusinessLogger
 import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
+import org.openurp.base.edu.model.Course
 import org.openurp.base.model.{AuditStatus, Project}
 import org.openurp.base.service.SemesterService
 import org.openurp.base.std.model.Student
@@ -33,7 +34,7 @@ import org.openurp.code.edu.model.GradingMode
 import org.openurp.code.service.CodeService
 import org.openurp.edu.extern.code.CertificateSubject
 import org.openurp.edu.extern.config.{CertExemptConfig, CertExemptSetting}
-import org.openurp.edu.extern.model.CertExemptApply
+import org.openurp.edu.extern.model.{CertExemptApply, CertificateGrade}
 import org.openurp.starter.web.support.StdProjectSupport
 
 import java.time.Instant
@@ -47,11 +48,19 @@ class StdAction extends StdProjectSupport with EntityAction[CertExemptApply] {
   var businessLogger: WebBusinessLogger = _
 
   protected def projectIndex(student: Student): Unit = {
+    val cgQuery = OqlBuilder.from(classOf[CertificateGrade], "cg")
+    cgQuery.where("size(cg.courses)>0")
+    cgQuery.where("cg.std=:std", student)
+    val grades = entityDao.search(cgQuery)
+    put("grades", grades)
+
     val applies = entityDao.findBy(classOf[CertExemptApply], "std", student)
     put("applies", applies)
     val repo = EmsApp.getBlobRepository(true)
     val paths = applies.map(x => (x, repo.url(x.attachmentPath)))
     put("attachmentPaths", paths.toMap)
+
+    put("editables", Set(AuditStatus.Draft, AuditStatus.Submited, AuditStatus.Rejected, AuditStatus.RejectedByDepart))
 
     val configQuery = OqlBuilder.from(classOf[CertExemptConfig], "config")
     configQuery.where("config.project=:project", student.project)
@@ -121,8 +130,11 @@ class StdAction extends StdProjectSupport with EntityAction[CertExemptApply] {
       apply.updatedAt = Instant.now
       apply.subject = setting.subject
       apply.auditDepart = setting.auditDepart
-      val courses = setting.courses.filter { x => x.levels.exists(l => l.level == std.level) }
-      apply.courses ++= courses
+      val courses = entityDao.find(classOf[Course], longIds("course"))
+      if (courses.size <= setting.maxCount) {
+        apply.courses.clear()
+        apply.courses ++= courses
+      }
       apply.semester = setting.config.semester
 
       val parts = getAll("attachment", classOf[Part])

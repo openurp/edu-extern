@@ -49,9 +49,8 @@
   [#if editables?seq_contains(apply.status)]
   [@b.form name="applyForm" action="!audit" theme="list"]
     [@b.radios name="passed" value="1" label="是否同意" required="true"/]
-    [@b.textarea name="auditOpinion" required="true" rows="4" style="width:80%" label="审核意见" value="同意免修"/]
     [@b.formfoot]
-    <input name="id" value="${apply.id}" type="hidden"/>
+    <input name="apply.id" value="${apply.id}" type="hidden"/>
     [@b.submit value="提交"/]
     [/@]
   [/@]

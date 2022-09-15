@@ -29,7 +29,7 @@ import org.openurp.base.model.{Project, Semester}
 import org.openurp.base.std.model.ExternStudent
 import org.openurp.code.edu.model.{CourseTakeType, GradingMode}
 import org.openurp.edu.extern.model.ExternGrade
-import org.openurp.edu.extern.service.{ExemptionCourse, ExemptionService}
+import org.openurp.edu.extern.service.ExemptionService
 import org.openurp.edu.extern.web.helper.ExternGradePropertyExtractor
 import org.openurp.edu.grade.model.CourseGrade
 import org.openurp.edu.program.domain.CoursePlanProvider
@@ -81,7 +81,7 @@ class GradeAction extends RestfulAction[ExternGrade] with ProjectSupport {
     val std = es.std
     val plan = coursePlanProvider.getCoursePlan(grade.externStudent.std)
     if (plan.isEmpty) return PathView("noPlanMsg")
-    val planCourses = exemptionService.getConvertablePlanCourses(std, plan.get, grade.acquiredOn)
+    val planCourses = exemptionService.getConvertablePlanCourses(std, plan.get)
     put("convertedGrades", exemptionService.getConvertedGrades(std, grade.courses))
     val semesters = Collections.newMap[PlanCourse, Semester]
     planCourses foreach { pc =>
@@ -99,19 +99,14 @@ class GradeAction extends RestfulAction[ExternGrade] with ProjectSupport {
   def convert: View = {
     val eg = entityDao.get(classOf[ExternGrade], longId("grade"))
     val courses = entityDao.find(classOf[Course], longIds("course"))
-    val ecs = Collections.newBuffer[ExemptionCourse]
+    val exemptCourses = Collections.newSet[Course]
     courses foreach { c =>
       val scoreText = get("scoreText_" + c.id, "")
       if (scoreText.nonEmpty) {
-        val courseType = entityDao.get(classOf[CourseType], getInt(s"courseType_${c.id}").getOrElse(0))
-        val semester = entityDao.get(classOf[Semester], getInt(s"semester_${c.id}").getOrElse(0))
-        val gradingMode = entityDao.get(classOf[GradingMode], getInt("gradingMode_" + c.id, 0))
-        val ec = ExemptionCourse(c, courseType, semester, c.examMode, gradingMode,
-          getFloat("score_" + c.id), scoreText)
-        ecs += ec
+        exemptCourses += c
       }
     }
-    this.exemptionService.addExemption(eg, ecs.toSeq)
+    this.exemptionService.addExemption(eg, exemptCourses)
     redirect("search", "info.action.success")
   }
 

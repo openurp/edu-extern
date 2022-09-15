@@ -24,6 +24,7 @@ import org.beangle.security.Securities
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.{AuditStatus, Project}
+import org.openurp.edu.extern.code.CertificateSubject
 import org.openurp.edu.extern.model.CertExemptApply
 import org.openurp.starter.web.support.ProjectSupport
 
@@ -37,6 +38,11 @@ class AuditAction extends RestfulAction[CertExemptApply] with ProjectSupport {
 
   override protected def indexSetting(): Unit = {
     put("statuses", statuses)
+
+    given project: Project = getProject
+
+    put("subjects", codeService.get(classOf[CertificateSubject]))
+    put("levels", project.levels)
     super.indexSetting()
   }
 
@@ -47,13 +53,16 @@ class AuditAction extends RestfulAction[CertExemptApply] with ProjectSupport {
     query.where("apply.std.project=:project", project)
     query.where("apply.status in :statusList", statuses)
     query.where("apply.auditDepart in(:departs)", getDeparts)
+    get("exemptCourseName") foreach { name =>
+      query.where("exists(from apply.courses c where c.name like :courseName)", "%" + name + "%")
+    }
     query
   }
 
   def auditForm(): View = {
     val apply = getEntity(classOf[CertExemptApply], "apply")
     put("apply", apply)
-    put("editables", List(AuditStatus.Submited, AuditStatus.PassedByDepart, AuditStatus.RejectedByDepart))
+    put("editables", Set(AuditStatus.Submited, AuditStatus.PassedByDepart, AuditStatus.RejectedByDepart))
     val repo = EmsApp.getBlobRepository(true)
     put("attachmentPath", repo.url(apply.attachmentPath))
     forward()

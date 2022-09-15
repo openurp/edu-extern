@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <cdi>
   <container>
-    <module class="org.openurp.starter.web.ProjectModule" />
     <module class="org.openurp.edu.extern.web.action.certificate.DefaultModule" />
     <module class="org.openurp.edu.extern.web.action.course.DefaultModule"/>
     <module class="org.openurp.edu.extern.web.action.signup.DefaultModule"/>
