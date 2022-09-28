@@ -48,12 +48,18 @@
   </table>
   [#if editables?seq_contains(apply.status)]
   [@b.form name="applyForm" action="!audit" theme="list"]
-    [@b.radios name="passed" value="1" label="是否同意" required="true"/]
-    [@b.textarea name="auditOpinion" required="true" rows="4" style="width:80%" label="审核意见" value="同意免修"/]
+    [@b.radios name="passed" value="1" label="是否同意" required="true" onclick="resetOpinion(this)"/]
+    [@b.textarea name="auditOpinion" id="auditOpinion" required="true" rows="4" style="width:80%" label="审核意见" placeholder="请填写意见" value="同意免修"/]
     [@b.formfoot]
     <input name="id" value="${apply.id}" type="hidden"/>
     [@b.submit value="提交"/]
     [/@]
   [/@]
+  <script>
+    function resetOpinion(ele){
+      var reject=jQuery(ele).val()=='0';
+      if(reject) jQuery("#auditOpinion").val('');
+    }
+  </script>
   [/#if]
 [/@]

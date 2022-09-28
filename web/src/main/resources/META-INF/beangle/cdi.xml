@@ -5,6 +5,7 @@
     <module class="org.openurp.edu.extern.web.action.course.DefaultModule"/>
     <module class="org.openurp.edu.extern.web.action.signup.DefaultModule"/>
     <module class="org.openurp.edu.extern.web.action.exempt.DefaultModule"/>
+    <module class="org.openurp.starter.web.ProjectModule"/>
 
     <module class="org.openurp.edu.extern.service.DefaultModule" />
     <module class="org.beangle.serializer.text.DefaultModule"/>

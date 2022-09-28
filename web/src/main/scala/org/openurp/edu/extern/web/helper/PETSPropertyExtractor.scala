@@ -19,8 +19,9 @@ package org.openurp.edu.extern.web.helper
 
 import org.beangle.data.dao.EntityDao
 import org.beangle.data.transfer.exporter.DefaultPropertyExtractor
+import org.openurp.base.std.model.Graduate
 import org.openurp.edu.extern.model.{CertSignup, ExternGrade}
-import org.openurp.std.info.model.{Examinee, Graduation}
+import org.openurp.std.info.model.Examinee
 import org.springframework.format.datetime.DateFormatter
 
 import java.time.format.DateTimeFormatter
@@ -33,8 +34,8 @@ class PETSPropertyExtractor(entityDao: EntityDao) extends DefaultPropertyExtract
     property match {
       case "std.enrollYear" => std.beginOn.getYear.toString
       case "std.graduateStatus" =>
-        val graduations = entityDao.findBy(classOf[Graduation], "std", List(std))
-        if (graduations.isEmpty) "在籍" else "毕业"
+        val graduates = entityDao.findBy(classOf[Graduate], "std", List(std))
+        if (graduates.isEmpty) "在籍" else "毕业"
       case "dummy1" => ""
       case "dummy2" => ""
       case "std.person.birthday" =>

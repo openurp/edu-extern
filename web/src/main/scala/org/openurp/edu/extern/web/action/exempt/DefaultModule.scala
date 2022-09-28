@@ -28,6 +28,5 @@ class DefaultModule extends BindModule {
 
     bind(classOf[ConfigAction])
     bind(classOf[SettingAction])
-    println("xyz")
   }
 }
