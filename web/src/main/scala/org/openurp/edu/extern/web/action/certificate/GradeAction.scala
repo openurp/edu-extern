@@ -77,7 +77,7 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
     val stdCode = get("certificateGrade.std.code", "")
     if (grade.std == null && Strings.isNotBlank(stdCode)) {
       val q = OqlBuilder.from(classOf[Student], "s")
-      q.where("s.user.code=:code and s.project=:project", stdCode, project)
+      q.where("s.code=:code and s.project=:project", stdCode, project)
       entityDao.search(q).foreach { std =>
         grade.std = std
       }

@@ -16,12 +16,14 @@
             ${(apply.scoreText)!}
           </span>
         [/@]
-        [@b.col property="std.state.department.name" title="院系" width="15%"/]
+        [@b.col property="std.state.department.name" title="院系" width="10%"]
+          ${apply.std.state.department.shortName!apply.std.state.department.name}
+        [/@]
         [@b.col property="acquiredOn" title="获得日期" width="10%"]${(apply.acquiredOn)!"--"}[/@]
-        [@b.col title="免修" sortable="false" width="20%"]
+        [@b.col title="免修" sortable="false"]
           [#list apply.courses as c]${c.name}[#sep],[/#list]
         [/@]
-        [@b.col property="status" title="状态"]${apply.status}[/@]
+        [@b.col property="status" title="状态" width="10%"]${apply.status}[/@]
     [/@]
 [/@]
 <script>

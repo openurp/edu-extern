@@ -22,6 +22,7 @@
         [@b.field label="成绩证明材料" required="true"]
          <input type="file" name="attachment">
          [#if apply.attachmentPath??]已上传[/#if]
+         <span style="color:blue">为方便审核，请上传图片类型的证明材料</span>
         [/@]
         [@b.textarea name="apply.reasons" label="申请理由" value=apply.reasons maxlength="500" rows="5" style="width:70%" required="true"/]
         [@b.formfoot]
