@@ -71,7 +71,7 @@ class GradeAction extends RestfulAction[ExternGrade] with ProjectSupport {
     }
   }
 
-  def convertList: View = {
+  def convertList(): View = {
     val grade = entityDao.get(classOf[ExternGrade], longId("externGrade"))
 
     given project: Project = grade.externStudent.std.project
@@ -96,7 +96,7 @@ class GradeAction extends RestfulAction[ExternGrade] with ProjectSupport {
     forward()
   }
 
-  def convert: View = {
+  def convert(): View = {
     val eg = entityDao.get(classOf[ExternGrade], longId("grade"))
     val courses = entityDao.find(classOf[Course], longIds("course"))
     val exemptCourses = Collections.newSet[Course]
@@ -110,7 +110,7 @@ class GradeAction extends RestfulAction[ExternGrade] with ProjectSupport {
     redirect("search", "info.action.success")
   }
 
-  def removeCourseGrade: View = {
+  def removeCourseGrade(): View = {
     val eg = entityDao.get(classOf[ExternGrade], longId("grade"))
     val cg = entityDao.get(classOf[CourseGrade], longId("courseGrade"))
     exemptionService.removeExemption(eg, cg.course)

@@ -17,7 +17,7 @@
       [@b.col title="课程名称" property="course.name" width="25%"/]
       [@b.col title="课程类别" property="courseType.name" width="15%"/]
       [@b.col title="学年学期" property="semester.code"]${courseGrade.semester.schoolYear} ${courseGrade.semester.name}[/@]
-      [@b.col title="学分" property="course.credits"  width="6%"/]
+      [@b.col title="学分" property="course.defaultCredits"  width="6%"/]
       [@b.col title="成绩" property="score"  width="6%"]${(courseGrade.scoreText)!"--"}[/@]
       [@b.col title="绩点" property="gp"  width="6%"]${(courseGrade.gp?string("0.#"))!'--'}[/@]
       [@b.col title="修读类别" property="courseTakeType.name"/]
@@ -64,7 +64,7 @@
         <td>${planCourse.course.code}</td>
         <td>${planCourse.course.name}</td>
         <td>${planCourse.group.courseType.name}</td>
-        <td>${planCourse.course.credits}</td>
+        <td>${planCourse.course.defaultCredits}</td>
         <td title="第${planCourse.terms}学期 ">
             [#assign hasSemester=false/]
             [#if semesters.get(planCourse)??]
