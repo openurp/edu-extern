@@ -25,18 +25,19 @@ import java.time.format.DateTimeFormatter
 class ExternGradePropertyExtractor extends DefaultPropertyExtractor {
   override def getPropertyValue(target: Object, property: String): Any = {
     val eg = target.asInstanceOf[ExternGrade]
+    val std = eg.externStudent.std
     property match {
       case "courseCode" => "01"
       case "creditHours" => "0"
       case "acquiredOn" => DateTimeFormatter.ofPattern("yyyyMM").format(eg.acquiredOn)
       case "courseCodes" => eg.courses.map(c => s"${c.code}").mkString("\r\n")
       case "courseNames" => eg.courses.map(c => s"${c.name}").mkString("\r\n")
-      case "courseCredits" => eg.courses.map(c => s"${c.credits}").mkString("\r\n")
+      case "courseCredits" => eg.courses.map(c => s"${c.getCredits(std.level)}").mkString("\r\n")
       case "courses" =>
         if (eg.courses.isEmpty) {
           "--"
         } else {
-          eg.courses.map(c => s"${c.name} ${c.credits}分").mkString("\r\n")
+          eg.courses.map(c => s"${c.name} ${c.getCredits(std.level)}分").mkString("\r\n")
         }
       case _ =>
         super.getPropertyValue(target, property)

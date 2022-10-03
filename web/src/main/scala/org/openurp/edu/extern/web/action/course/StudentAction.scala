@@ -22,13 +22,13 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.annotation.response
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.model.ExternSchool
+import org.openurp.base.model.{ExternSchool, Project}
 import org.openurp.base.std.model.{ExternStudent, Student}
 import org.openurp.code.edu.model.{EduCategory, EducationLevel}
 import org.openurp.code.std.model.StudentStatus
 import org.openurp.edu.extern.service.ExemptionService
 import org.openurp.edu.program.domain.CoursePlanProvider
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 
 import java.time.format.DateTimeFormatter
 
@@ -39,24 +39,25 @@ class StudentAction extends RestfulAction[ExternStudent] with ProjectSupport {
   var exemptionService: ExemptionService = _
 
   override def indexSetting(): Unit = {
+    given project: Project = getProject
+
     put("studentStatuses", getCodes(classOf[StudentStatus]))
   }
 
   override def info(id: String): View = {
-    val es = getModel[ExternStudent](entityName, convertId(id))
-    put("externStudent", es)
+    put("externStudent", entityDao.get(classOf[ExternStudent], id.toLong))
     forward()
   }
 
   @response
   def loadStudent: Seq[Properties] = {
     val query = OqlBuilder.from(classOf[Student], "std")
-    query.where("std.user.code=:code", get("q", ""))
+    query.where("std.code=:code", get("q", ""))
     val yyyyMM = DateTimeFormatter.ofPattern("yyyy-MM")
     entityDao.search(query).map { std =>
       val p = new Properties()
       p.put("id", std.id)
-      p.put("name", s"${std.state.get.department.name} ${std.user.name}")
+      p.put("name", s"${std.state.get.department.name} ${std.name}")
       p
     }
   }

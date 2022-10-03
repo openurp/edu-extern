@@ -13,7 +13,7 @@
               <img width="80px" height="110px" src="${base}/avatar/my.action" alt="${(student.name)!}" title="${(student.name)!}"/>
             </td>
           <td width="85%">
-            ${(student.user.name)!}同学(${(student.user.code)!})，您好<br>
+            ${(student.name)!}同学(${(student.code)!})，您好<br>
             <font color='red'>
               你的身份证为:${(student.person.code)!'系统中暂时没有你的身份证号码'}<br>
               如没有显示或数据有误请及时联系学院，以免耽误你的报名。

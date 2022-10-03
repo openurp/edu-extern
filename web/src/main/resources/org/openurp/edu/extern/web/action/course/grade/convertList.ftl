@@ -1,6 +1,6 @@
 [#ftl]
 [@b.head/]
-  [@b.toolbar title = "<span style=\"color:blue\">" + grade.externStudent.std.user.name + "（<span style=\"padding-left: 1px; padding-right: 1px\">" + grade.externStudent.std.user.code + "</span>）于" + grade.acquiredOn?string("yyyy-MM-dd") +"获得“"+ grade.courseName + "”</span>课程及认定明细"]
+  [@b.toolbar title = "<span style=\"color:blue\">" + grade.externStudent.std.name + "（<span style=\"padding-left: 1px; padding-right: 1px\">" + grade.externStudent.std.code + "</span>）于" + grade.acquiredOn?string("yyyy-MM-dd") +"获得“"+ grade.courseName + "”</span>课程及认定明细"]
     bar.addItem("返回", function() {
       bg.form.submit(document.searchForm);
     }, "backward.png");

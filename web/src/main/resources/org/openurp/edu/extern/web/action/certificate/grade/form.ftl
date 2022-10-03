@@ -5,17 +5,17 @@
 [/@]
 [@b.form name="certificateGradeForm" action="!save" theme="list"]
     [#if (certificateGrade.std.id)?exists]
-        [@b.field label="学号"]${(certificateGrade.std.user.code)}[/@]
+        [@b.field label="学号"]${(certificateGrade.std.code)}[/@]
     [#else]
         [@b.field name="findstudent"]
-            [@b.textfield  theme="html" name="certificateGrade.std.user.code" maxlength="15"  id="stdCode" label="学号" value="${(certificateGrade.std.user.code)!}" required="true" style="width:150px" comment="<input type='button' value='查询' onClick='searchStudent()'/>"/]
+            [@b.textfield  theme="html" name="certificateGrade.std.code" maxlength="15"  id="stdCode" label="学号" value="${(certificateGrade.std.code)!}" required="true" style="width:150px" comment="<input type='button' value='查询' onClick='searchStudent()'/>"/]
             <input type="hidden" id="stdId" name="certificateGrade.std.id" value="${(certificateGrade.std.id)!}"/>
         [/@]
     [/#if]
     [@b.field label="姓名"]
       <table>
        <tr>
-            <td id="stdName">${(certificateGrade.std.user.name)?default("&nbsp;")}</td>
+            <td id="stdName">${(certificateGrade.std.name)?default("&nbsp;")}</td>
        </tr>
       </table>
     [/@]

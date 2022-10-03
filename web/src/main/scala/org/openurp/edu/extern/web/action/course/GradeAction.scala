@@ -25,16 +25,16 @@ import org.beangle.web.action.view.{PathView, View}
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.edu.code.CourseType
 import org.openurp.base.edu.model.Course
-import org.openurp.base.model.Semester
+import org.openurp.base.model.{Project, Semester}
 import org.openurp.base.std.model.ExternStudent
 import org.openurp.code.edu.model.{CourseTakeType, GradingMode}
 import org.openurp.edu.extern.model.ExternGrade
-import org.openurp.edu.extern.service.{ExemptionCourse, ExemptionService}
+import org.openurp.edu.extern.service.ExemptionService
 import org.openurp.edu.extern.web.helper.ExternGradePropertyExtractor
 import org.openurp.edu.grade.model.CourseGrade
 import org.openurp.edu.program.domain.CoursePlanProvider
 import org.openurp.edu.program.model.PlanCourse
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -61,24 +61,27 @@ class GradeAction extends RestfulAction[ExternGrade] with ProjectSupport {
   @response
   def loadStudent: Seq[Properties] = {
     val query = OqlBuilder.from(classOf[ExternStudent], "es")
-    query.where("es.std.user.code=:code", get("q", ""))
+    query.where("es.std.code=:code", get("q", ""))
     val yyyyMM = DateTimeFormatter.ofPattern("yyyy-MM")
     entityDao.search(query).map { es =>
       val p = new Properties()
       p.put("value", es.id.toString)
-      p.put("text", s"${es.std.user.code} ${es.std.user.name} ${es.school.name}(${es.beginOn.format(yyyyMM)})")
+      p.put("text", s"${es.std.code} ${es.std.name} ${es.school.name}(${es.beginOn.format(yyyyMM)})")
       p
     }
   }
 
   def convertList: View = {
     val grade = entityDao.get(classOf[ExternGrade], longId("externGrade"))
+
+    given project: Project = grade.externStudent.std.project
+
     put("grade", grade)
     val es = grade.externStudent
     val std = es.std
     val plan = coursePlanProvider.getCoursePlan(grade.externStudent.std)
     if (plan.isEmpty) return PathView("noPlanMsg")
-    val planCourses = exemptionService.getConvertablePlanCourses(std, plan.get, grade.acquiredOn)
+    val planCourses = exemptionService.getConvertablePlanCourses(std, plan.get)
     put("convertedGrades", exemptionService.getConvertedGrades(std, grade.courses))
     val semesters = Collections.newMap[PlanCourse, Semester]
     planCourses foreach { pc =>
@@ -96,19 +99,14 @@ class GradeAction extends RestfulAction[ExternGrade] with ProjectSupport {
   def convert: View = {
     val eg = entityDao.get(classOf[ExternGrade], longId("grade"))
     val courses = entityDao.find(classOf[Course], longIds("course"))
-    val ecs = Collections.newBuffer[ExemptionCourse]
+    val exemptCourses = Collections.newSet[Course]
     courses foreach { c =>
-      val scoreText = get("scoreText_" + c.id,"")
+      val scoreText = get("scoreText_" + c.id, "")
       if (scoreText.nonEmpty) {
-        val courseType = entityDao.get(classOf[CourseType], getInt(s"courseType_${c.id}").getOrElse(0))
-        val semester = entityDao.get(classOf[Semester], getInt(s"semester_${c.id}").getOrElse(0))
-        val gradingMode = entityDao.get(classOf[GradingMode], getInt("gradingMode_" + c.id, 0))
-        val ec = ExemptionCourse(c, courseType, semester, c.examMode, gradingMode,
-          getFloat("score_" + c.id), scoreText)
-        ecs += ec
+        exemptCourses += c
       }
     }
-    this.exemptionService.addExemption(eg, ecs.toSeq)
+    this.exemptionService.addExemption(eg, exemptCourses)
     redirect("search", "info.action.success")
   }
 

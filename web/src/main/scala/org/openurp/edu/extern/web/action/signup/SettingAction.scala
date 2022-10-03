@@ -24,8 +24,8 @@ import org.beangle.web.action.annotation.ignore
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.edu.extern.code.CertificateSubject
-import org.openurp.edu.extern.model.{CertExamSignupConfig, CertExamSignupSetting}
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.edu.extern.config.{CertSignupConfig, CertSignupSetting}
+import org.openurp.starter.web.support.ProjectSupport
 
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
@@ -35,17 +35,17 @@ import scala.collection.mutable.ArrayBuffer
  *
  * @author chaostone
  */
-class SettingAction extends RestfulAction[CertExamSignupSetting] with ProjectSupport {
+class SettingAction extends RestfulAction[CertSignupSetting] with ProjectSupport {
   /**
    * 新增和修改
    */
-  override protected def editSetting(setting: CertExamSignupSetting): Unit = {
+  override protected def editSetting(setting: CertSignupSetting): Unit = {
     val config = getSignupConfig()
     val categoryId = config.category.id
     // 查询报考科目
     val query = OqlBuilder.from(classOf[CertificateSubject], "subject")
     query.where("subject.category.id = :categoryId", categoryId)
-    query.where("not exists (from " + classOf[CertExamSignupSetting].getName +
+    query.where("not exists (from " + classOf[CertSignupSetting].getName +
       " setting where setting.subject.id =subject.id and setting.config.id =:configId)", config.id)
     val set = new mutable.HashSet[CertificateSubject]
     val subjects = entityDao.search(query)
@@ -61,7 +61,7 @@ class SettingAction extends RestfulAction[CertExamSignupSetting] with ProjectSup
 
   override def search(): View = {
     val config = getSignupConfig()
-    val query = OqlBuilder.from(classOf[CertExamSignupSetting], "setting")
+    val query = OqlBuilder.from(classOf[CertSignupSetting], "setting")
     query.where("setting.config=:config", config)
     populateConditions(query)
     query.limit(getPageLimit)
@@ -71,17 +71,17 @@ class SettingAction extends RestfulAction[CertExamSignupSetting] with ProjectSup
   }
 
   def batchEdit(): View = {
-    put("settings", entityDao.find(classOf[CertExamSignupSetting], longIds("setting")))
+    put("settings", entityDao.find(classOf[CertSignupSetting], longIds("setting")))
     getSignupConfig()
     forward()
   }
 
-  private def getSignupConfig(): CertExamSignupConfig = {
+  private def getSignupConfig(): CertSignupConfig = {
     var configId = getLong("config.id")
     if (configId.isEmpty) configId = getLong("setting.config.id")
     configId match {
       case Some(id) =>
-        val config = entityDao.get(classOf[CertExamSignupConfig], id)
+        val config = entityDao.get(classOf[CertSignupConfig], id)
         if (config != null) {
           put("config", config)
         }
@@ -92,9 +92,9 @@ class SettingAction extends RestfulAction[CertExamSignupSetting] with ProjectSup
 
   def batchSave(): View = {
     val settingSize = getInt("settingSize").get
-    val settings = new ArrayBuffer[CertExamSignupSetting]
+    val settings = new ArrayBuffer[CertSignupSetting]
     for (i <- 0 until settingSize) {
-      settings.addOne(populateEntity(classOf[CertExamSignupSetting], "setting" + i))
+      settings.addOne(populateEntity(classOf[CertSignupSetting], "setting" + i))
     }
     val config = getSignupConfig()
     entityDao.saveOrUpdate(settings)

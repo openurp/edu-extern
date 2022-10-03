@@ -22,23 +22,25 @@ import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.excel.schema.ExcelSchema
 import org.beangle.data.transfer.exporter.ExportSetting
+import org.beangle.data.transfer.importer.ImportSetting
+import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.beangle.web.action.annotation.response
 import org.beangle.web.action.view.{PathView, Stream, View}
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.edu.code.CourseType
 import org.openurp.base.edu.model.Course
-import org.openurp.base.model.Semester
+import org.openurp.base.model.{Project, Semester}
 import org.openurp.base.service.SemesterService
 import org.openurp.base.std.model.Student
 import org.openurp.code.edu.model.{CourseTakeType, ExamStatus, GradingMode}
 import org.openurp.edu.extern.code.{CertificateCategory, CertificateSubject}
 import org.openurp.edu.extern.model.CertificateGrade
-import org.openurp.edu.extern.service.{ExemptionCourse, ExemptionService}
-import org.openurp.edu.extern.web.helper.CertificateGradePropertyExtractor
+import org.openurp.edu.extern.service.ExemptionService
+import org.openurp.edu.extern.web.helper.{CertificateGradeImportListener, CertificateGradePropertyExtractor}
 import org.openurp.edu.grade.model.{CourseGrade, Grade}
 import org.openurp.edu.program.domain.CoursePlanProvider
 import org.openurp.edu.program.model.PlanCourse
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 import java.time.{Instant, ZoneId}
@@ -47,10 +49,11 @@ import scala.collection.mutable
 class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
 
   var exemptionService: ExemptionService = _
-  var semesterService: SemesterService = _
   var coursePlanProvider: CoursePlanProvider = _
 
   override def indexSetting(): Unit = {
+    given project: Project = getProject
+
     put("certificateSubjects", getCodes(classOf[CertificateSubject]))
     put("certificateCategories", getCodes(classOf[CertificateCategory]))
     put("departments", getDeparts)
@@ -59,6 +62,9 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
 
   override def editSetting(entity: CertificateGrade): Unit = {
     super.editSetting(entity)
+
+    given project: Project = getProject
+
     put("certificateSubjects", getCodes(classOf[CertificateSubject]))
     put("certificateCategories", getCodes(classOf[CertificateCategory]))
     put("semesters", entityDao.getAll(classOf[Semester])) //error
@@ -68,10 +74,10 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
 
   override def saveAndRedirect(grade: CertificateGrade): View = {
     val project = getProject
-    val stdCode = get("certificateGrade.std.user.code", "")
+    val stdCode = get("certificateGrade.std.code", "")
     if (grade.std == null && Strings.isNotBlank(stdCode)) {
       val q = OqlBuilder.from(classOf[Student], "s")
-      q.where("s.user.code=:code and s.project=:project", stdCode, project)
+      q.where("s.code=:code and s.project=:project", stdCode, project)
       entityDao.search(q).foreach { std =>
         grade.std = std
       }
@@ -97,12 +103,14 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
   }
 
   def convertList: View = {
+    given project: Project = getProject
+
     val grade = entityDao.get(classOf[CertificateGrade], longId("certificateGrade"))
     put("grade", grade)
     val std = grade.std
     val plan = coursePlanProvider.getCoursePlan(grade.std)
     if (plan.isEmpty) return PathView("noPlanMsg")
-    val planCourses = exemptionService.getConvertablePlanCourses(std, plan.get, grade.acquiredOn)
+    val planCourses = exemptionService.getConvertablePlanCourses(std, plan.get)
     val semesters = Collections.newMap[PlanCourse, Semester]
     planCourses foreach { pc =>
       exemptionService.getSemester(plan.get.program, pc.terms.termList.headOption) foreach { s =>
@@ -120,19 +128,12 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
   def convert: View = {
     val eg = entityDao.get(classOf[CertificateGrade], longId("grade"))
     val courses = entityDao.find(classOf[Course], longIds("course"))
-    val ecs = Collections.newBuffer[ExemptionCourse]
+    val exemptionCourses = Collections.newSet[Course]
     courses foreach { c =>
       val scoreText = get("scoreText_" + c.id, "")
-      if (scoreText.nonEmpty) {
-        val courseType = entityDao.get(classOf[CourseType], getInt(s"courseType_${c.id}").getOrElse(0))
-        val semester = entityDao.get(classOf[Semester], getInt(s"semester_${c.id}").getOrElse(0))
-        val gradingMode = entityDao.get(classOf[GradingMode], getInt("gradingMode_" + c.id, 0))
-        val ec = ExemptionCourse(c, courseType, semester, c.examMode, gradingMode,
-          getFloat("score_" + c.id), scoreText)
-        ecs += ec
-      }
+      if scoreText.nonEmpty then exemptionCourses.addOne(c)
     }
-    this.exemptionService.addExemption(eg, ecs.toSeq)
+    this.exemptionService.addExemption(eg, exemptionCourses)
     redirect("search", "info.action.success")
   }
 
@@ -145,26 +146,32 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
 
   @response
   def downloadTemplate(): Any = {
-    val gradingModes = getCodes(classOf[GradingMode]).map(_.name)
-    val subjects = getCodes(classOf[CertificateSubject]).map(_.name)
+    given project: Project = getProject
+
+    val gradingModes = getCodes(classOf[GradingMode]).map(x => x.code + " " + x.name)
+    val subjects = getCodes(classOf[CertificateSubject]).map(x => x.code + " " + x.name)
     val schema = new ExcelSchema()
     val sheet = schema.createScheet("数据模板")
-    sheet.title("证书成绩模板")
+    sheet.title("校外证书成绩模板")
     sheet.remark("特别说明：\n1、不可改变本表格的行列结构以及批注，否则将会导入失败！\n2、须按照规格说明的格式填写。\n3、可以多次导入，重复的信息会被新数据更新覆盖。\n4、保存的excel文件名称可以自定。")
-    sheet.add("学号", "certifiateGrade.std.user.code").length(15).required()
-    sheet.add("考试科目", "certifiateGrade.subject.name").ref(subjects).required()
-    sheet.add("成绩", "certifiateGrade.scoreText").required()
-    sheet.add("获得日期", "certifiateGrade.acquiredOn").date().required()
-    sheet.add("成绩记录方式", "certifiateGrade.gradingMode.name").ref(gradingModes).required()
-    sheet.add("证书编号", "certifiateGrade.certificate")
-    sheet.add("准考证号", "certifiateGrade.examNo")
+    sheet.add("学号", "certificateGrade.std.code").length(15).required()
+    sheet.add("考试科目", "certificateGrade.subject.code").ref(subjects).required()
+    sheet.add("成绩", "certificateGrade.scoreText").required()
+    sheet.add("是否通过", "certificateGrade.passed").bool().required()
+    sheet.add("获得日期", "certificateGrade.acquiredOn").date().required()
+    sheet.add("成绩记录方式", "certificateGrade.gradingMode.code").ref(gradingModes).required()
+    sheet.add("证书编号", "certificateGrade.certificate")
+    sheet.add("准考证号", "certificateGrade.examNo")
+    sheet.add("免修课程代码", "courseCodes").remark("多个课程可用半角逗号分隔")
 
-    val code = schema.createScheet("数据字典")
-    code.add("考试科目").data(subjects)
-    code.add("成绩记录方式").data(gradingModes)
     val os = new ByteArrayOutputStream()
     schema.generate(os)
     Stream(new ByteArrayInputStream(os.toByteArray), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "证书信息.xlsx")
+  }
+
+  override protected def configImport(setting: ImportSetting): Unit = {
+    val fl = new ForeignerListener(entityDao)
+    setting.listeners = List(fl, new CertificateGradeImportListener(entityDao, getProject, exemptionService))
   }
 
   override def configExport(setting: ExportSetting): Unit = {

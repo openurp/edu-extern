@@ -5,8 +5,8 @@
   <div class="search-panel">
       [@b.form name="certificateGradesearchForm" action="!search" title="ui.searchForm" target="certificateGradeList" theme="search"]
           <input type="hidden" name="orderBy" value="certificateGrade.updatedAt desc"/>
-          [@b.textfield name="certificateGrade.std.user.code" label="学号"/]
-          [@b.textfield name="certificateGrade.std.user.name" label="姓名"/]
+          [@b.textfield name="certificateGrade.std.code" label="学号"/]
+          [@b.textfield name="certificateGrade.std.name" label="姓名"/]
           [@b.textfield name="certificateGrade.std.state.grade" label="年级"/]
           [@b.select name="certificateGrade.std.state.department.id" label="院系" items=departments?sortBy(["code"]) empty="..." /]
           [@b.textfield name="certificateGrade.std.state.squad.name" label="班级名称"/]

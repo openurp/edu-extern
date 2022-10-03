@@ -11,13 +11,13 @@
           alert("导出数据每次不能超过10000条，建议分批导出。");
         });
       [#else]
-        bar.addItem("导出", action.exportData("externStudent.std.user.code:学号,externStudent.std.user.name:姓名,externStudent.school.name:校外学校,externStudent.level.name:培养层次,externStudent.category.name:教育类别,externStudent.majorName:外校专业,courseName:外校课程,scoreText:外校得分,credits:外校学分,acquiredOn:获得日期,updatedAt:录入时间"));
+        bar.addItem("导出", action.exportData("externStudent.std.code:学号,externStudent.std.name:姓名,externStudent.school.name:校外学校,externStudent.level.name:培养层次,externStudent.category.name:教育类别,externStudent.majorName:外校专业,courseName:外校课程,scoreText:外校得分,credits:外校学分,acquiredOn:获得日期,updatedAt:录入时间"));
       [/#if]
     [/@]
     [@b.row]
       [@b.boxcol/]
-      [@b.col title="学号" property="externStudent.std.user.code"  width="13%"/]
-      [@b.col title="姓名" property="externStudent.std.user.name" width="10%"/]
+      [@b.col title="学号" property="externStudent.std.code"  width="13%"/]
+      [@b.col title="姓名" property="externStudent.std.name" width="10%"/]
       [@b.col title="专业" property="externStudent.majorName"  width="15%"]
          <span title="${externGrade.externStudent.school.name}" data-toggle="tooltip">${externGrade.externStudent.majorName}</span>
       [/@]

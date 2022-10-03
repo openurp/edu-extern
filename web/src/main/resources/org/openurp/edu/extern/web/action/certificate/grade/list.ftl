@@ -13,8 +13,8 @@
     [/@]
     [@b.row]
         [@b.boxcol/]
-        [@b.col property="std.user.code" title="学号" width="13%"/]
-        [@b.col property="std.user.name" title="姓名" width="11%"/]
+        [@b.col property="std.code" title="学号" width="13%"/]
+        [@b.col property="std.name" title="姓名" width="11%"/]
         [@b.col property="subject.name" title="考试科目" width="25%"/]
         [@b.col property="scoreText" title="成绩" width="7%"]
           <span [#if !(certificateGrade.passed)]style="color:red"[/#if]>
@@ -49,7 +49,7 @@
             bg.form.addInput(form,"certificateGradeIds","");
         }
         bg.form.addInput(form,"certificateGradeIds",bg.input.getCheckBoxValues("certificateGrade.id"));
-        bg.form.addInput(form,"keys","std.user.code,std.user.name,subject.category.name,subject.name,score,scoreText,std.state.department.name,std.state.major.name,std.state.grade,certificate,acquiredOn,examNo,updatedAt,courseSize");
+        bg.form.addInput(form,"keys","std.code,std.name,subject.category.name,subject.name,score,scoreText,std.state.department.name,std.state.major.name,std.state.grade,certificate,acquiredOn,examNo,updatedAt,courseSize");
         bg.form.addInput(form,"titles","学号,姓名,考试类型,考试科目,分数,成绩,院系,专业,年级,证书编号,考试日期,准考证号,录入时间,已认定课数");
         bg.form.addInput(form,"fileName","校外考试成绩数据");
         bg.form.submit(form,"${b.url('!exportData')}","_self");

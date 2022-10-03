@@ -23,24 +23,23 @@ import org.beangle.web.action.annotation.ignore
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.edu.extern.code.CertificateSubject
-import org.openurp.edu.extern.model.{CertExamSignupConfig, CertExamSignupSetting, CertExamStdScope}
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.edu.extern.config.{CertSignupConfig, CertSignupScope, CertSignupSetting}
+import org.openurp.starter.web.support.ProjectSupport
 
 import scala.collection.mutable
 
-class ScopeAction extends RestfulAction[CertExamStdScope] with ProjectSupport {
+class ScopeAction extends RestfulAction[CertSignupScope] with ProjectSupport {
 
-  override protected def editSetting(scope: CertExamStdScope): Unit = {
+  override protected def editSetting(scope: CertSignupScope): Unit = {
     getSignupConfig()
     put("levels", getProject.levels)
-    put("codes", scope.codes.toList.sorted.mkString(","))
     forward()
   }
 
-  private def getSignupConfig(): CertExamSignupConfig = {
+  private def getSignupConfig(): CertSignupConfig = {
     getLong("config.id") match {
       case Some(id) =>
-        val config = entityDao.get(classOf[CertExamSignupConfig], id)
+        val config = entityDao.get(classOf[CertSignupConfig], id)
         if (config != null) {
           put("config", config)
         }
@@ -49,15 +48,13 @@ class ScopeAction extends RestfulAction[CertExamStdScope] with ProjectSupport {
     }
   }
 
-  override protected def saveAndRedirect(entity: CertExamStdScope): View = {
+  override protected def saveAndRedirect(entity: CertSignupScope): View = {
+    entity.codes = None
     get("codes") foreach { c =>
       var codes = Strings.replace(c, "\r", "")
       codes = Strings.replace(c, "\n", ",")
       codes = Strings.replace(c, "，", ",")
-      entity.codes.clear()
-      Strings.split(codes) foreach { code =>
-        entity.codes += code.trim()
-      }
+      entity.codes = Some(Strings.split(codes).map(_.trim).mkString(","))
     }
     super.saveAndRedirect(entity)
   }

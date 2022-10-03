@@ -21,21 +21,19 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.transfer.exporter.ExportSetting
 import org.beangle.web.action.annotation.ignore
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.model.Semester
+import org.openurp.base.model.{Project, Semester}
 import org.openurp.edu.extern.code.{CertificateCategory, CertificateSubject}
-import org.openurp.edu.extern.model.CertExamSignup
+import org.openurp.edu.extern.model.CertSignup
 import org.openurp.edu.extern.web.helper.PETSPropertyExtractor
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 
-class ManageAction extends RestfulAction[CertExamSignup] with ProjectSupport {
+class ManageAction extends RestfulAction[CertSignup] with ProjectSupport {
 
   override protected def indexSetting(): Unit = {
-    put("project", getProject)
-    val semester = getId("semester") match {
-      case Some(sid) => entityDao.get(classOf[Semester], sid.toInt)
-      case None => getCurrentSemester
-    }
-    put("currentSemester", semester)
+    given project: Project = getProject
+
+    put("project", project)
+    put("currentSemester", getSemester)
     put("departments", getDeparts)
     put("categories", getCodes(classOf[CertificateCategory]))
     put("subjects", getCodes(classOf[CertificateSubject]))

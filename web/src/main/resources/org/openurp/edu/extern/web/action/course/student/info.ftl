@@ -1,5 +1,5 @@
 [#ftl]
-[@b.toolbar title="${externStudent.std.user.name}的跨校交流"]
+[@b.toolbar title="${externStudent.std.name}的跨校交流"]
   bar.addBack();
 [/@]
 [@b.card class="card-info card-outline"]
@@ -16,9 +16,9 @@
 <table class="infoTable">
     <tr>
       <td class="title" width="10%">学号：</td>
-      <td width="23%">${(std.user.code)!}</td>
+      <td width="23%">${(std.code)!}</td>
       <td class="title" width="10%">姓名：</td>
-      <td width="23%">${std.user.name?html}</td>
+      <td width="23%">${std.name?html}</td>
       <td class="title" width="10%">修读专业：</td>
       <td>${(externStudent.majorName?html)!}</td>
     </tr>
