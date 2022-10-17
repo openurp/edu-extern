@@ -13,9 +13,9 @@
         [@b.boxcol/]
         [@b.col property="level.name" title="培养层次" width="15%"/]
         [@b.col property="grades" title="年级" width="25%"/]
-        [@b.col property="includeIn" title="包含" width="15%"/]
+        [@b.col property="included" title="包含" width="15%"/]
         [@b.col property="setting.subject.name" title="考试科目" width="30%"/]
-        [@b.col title="学号" width="10%"][#if scope.codes?size>0]${scope.codes?size}[/#if][/@]
+        [@b.col title="学号" width="10%"][#if scope.codes?? && scope.codes?size>0]${scope.codes?size}[/#if][/@]
     [/@]
 [/@]
 

@@ -19,7 +19,7 @@
           [#if setting.feeOfOutline>0]考纲费${setting.feeOfOutline/100.0}[/#if]
         [/@]
         [@b.col property="maxStd" title="最大人数" width="7%"/]
-        [@b.col title="条件" width="25%"][#list setting.scopes as con] ${con.includeIn?string('','限制:')}${(con.level.name)!} ${(con.grades)!('无')}[#if con_has_next]&nbsp;[/#if][/#list][/@]
+        [@b.col title="条件" width="25%"][#list setting.scopes as con] ${con.included?string('','限制:')}${(con.level.name)!} ${(con.grades)!('无')}[#if con_has_next]&nbsp;[/#if][/#list][/@]
         [@b.col property="reExamAllowed" title="能够重考" width="7%"]${(setting.reExamAllowed?default(false))?string("${b.text('common.yes')}","${b.text('common.no')}")}[/@]
         [@b.col property="dependsOn.name" title="须过科目" width="12%"/]
         [@b.col property="examOn" title="考试时间" width="15%"]

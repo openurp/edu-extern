@@ -10,7 +10,7 @@
     <table width="100%" style="background-color:#FEFFCF"  align="center">
          <tr>
             <td width="15%">
-              <img width="80px" height="110px" src="${base}/avatar/my.action" alt="${(student.name)!}" title="${(student.name)!}"/>
+              <img width="80px" height="110px" src="${b.base}/avatar/my.action" alt="${(student.name)!}" title="${(student.name)!}"/>
             </td>
           <td width="85%">
             ${(student.name)!}同学(${(student.code)!})，您好<br>
