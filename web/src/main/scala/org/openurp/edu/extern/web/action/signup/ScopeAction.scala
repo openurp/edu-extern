@@ -22,6 +22,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.annotation.ignore
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
+import org.openurp.base.std.model.Student
 import org.openurp.edu.extern.code.CertificateSubject
 import org.openurp.edu.extern.config.{CertSignupConfig, CertSignupScope, CertSignupSetting}
 import org.openurp.starter.web.support.ProjectSupport
@@ -34,6 +35,13 @@ class ScopeAction extends RestfulAction[CertSignupScope] with ProjectSupport {
     getSignupConfig()
     put("levels", getProject.levels)
     forward()
+  }
+
+  override protected def getQueryBuilder: OqlBuilder[CertSignupScope] = {
+    val query = super.getQueryBuilder
+    val config = getSignupConfig()
+    query.where("scope.setting.config=:config", config)
+    query
   }
 
   private def getSignupConfig(): CertSignupConfig = {
@@ -50,11 +58,19 @@ class ScopeAction extends RestfulAction[CertSignupScope] with ProjectSupport {
 
   override protected def saveAndRedirect(entity: CertSignupScope): View = {
     entity.codes = None
-    get("codes") foreach { c =>
+
+    get("scope.codes") foreach { c =>
       var codes = Strings.replace(c, "\r", "")
       codes = Strings.replace(c, "\n", ",")
       codes = Strings.replace(c, "，", ",")
-      entity.codes = Some(Strings.split(codes).map(_.trim).mkString(","))
+      val query = OqlBuilder.from(classOf[Student], "std")
+      query.where("std.project=:project", getProject)
+      query.where("std.code in(:codes)", Strings.split(codes).map(_.trim))
+      query.where("std.level=:level", entity.level)
+      query.orderBy("std.code")
+      val stds = entityDao.search(query)
+      val validCodes = stds.map(_.code).mkString(",")
+      if Strings.isNotBlank(validCodes) then entity.codes = Some(validCodes)
     }
     super.saveAndRedirect(entity)
   }

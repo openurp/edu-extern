@@ -19,7 +19,7 @@ package org.openurp.edu.extern.web.action.signup
 
 import org.beangle.commons.lang.Strings
 import org.beangle.commons.logging.Logging
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.View
 import org.beangle.web.servlet.util.RequestUtils
@@ -35,6 +35,7 @@ import scala.collection.mutable
 
 class StdAction extends ActionSupport with EntityAction[CertSignup] with ProjectSupport with Logging {
 
+  var entityDao: EntityDao = _
   var examSignupService: CertSignupService = _
 
   def index(): View = {
