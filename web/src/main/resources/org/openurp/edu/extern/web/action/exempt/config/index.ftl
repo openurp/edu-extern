@@ -5,7 +5,7 @@
 <div class="search-container">
   <div class="search-panel">
     [@b.form name="configIdxForm" action="!search" title="ui.searchForm" target="configList" theme="search"]
-      [@urp_base.semester value=currentSemester label="学年学期"/]
+      [@base.semester value=currentSemester label="学年学期"/]
     [/@]
   </div>
   <div class="search-list">

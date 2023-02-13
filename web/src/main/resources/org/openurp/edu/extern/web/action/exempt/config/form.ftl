@@ -4,7 +4,7 @@
   bar.addBack();
 [/@]
 [@b.form name="configForm" action=b.rest.save(config) theme="list"]
-    [@urp_base.semester value=config.semester name="config.semester.id" label="学年学期" required="true"/]
+    [@base.semester value=config.semester name="config.semester.id" label="学年学期" required="true"/]
     [@b.select name="config.level.id" label="培养层次" items=project.levels  value=config.level! required="true"/]
     [@b.select name="config.eduType.id" label="培养类型" items=project.eduTypes  value=config.eduType!   required="true"/]
     [@b.startend label="报名时间" readOnly="readOnly"  required="true"  name="config.beginAt,config.endAt" required="true" start=config.beginAt end=config.endAt format="yyyy-MM-dd HH:mm:ss" /]

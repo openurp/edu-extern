@@ -4,7 +4,7 @@
 <div class="search-container">
   <div class="search-panel">
       [@b.form theme="search" name="signupsearchForm" action="!search" title="ui.searchForm" target="signupList"]
-          [@urp_base.semester value=currentSemester label="学年学期"/]
+          [@base.semester value=currentSemester label="学年学期"/]
           [@b.textfield name="signup.std.code" label="学号"/]
           [@b.textfield name="signup.std.name" label="姓名"/]
           [@b.textfield name="signup.std.state.grade" label="年级"/]

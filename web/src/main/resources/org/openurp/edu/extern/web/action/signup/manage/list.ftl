@@ -32,31 +32,31 @@
     var form = document.signupListForm;
 
     function exportList(form){
-        bg.form.addInput(form, "keys", "std.code,std.name,std.grade,std.gender.name,std.major.name,std.major.code,std.department.name,subject.category.name,subject.name,semester.schoolYear,semester.name,feeOfSignup,feeOfMaterial,feeOfOutline,total,signupAt,campus.name");
+        bg.form.addInput(form, "keys", "std.code,std.name,std.state.grade.code,std.gender.name,std.state.major.name,std.state.major.code,std.state.department.name,subject.category.name,subject.name,semester.schoolYear,semester.name,feeOfSignup,feeOfMaterial,feeOfOutline,total,updatedAt,campus.name");
         bg.form.addInput(form, "titles", "学号,姓名,年级,性别,专业,专业代码,所属院系,考试类型,报名科目,学年,学期,报名费,材料费,考纲费,合计,报名时间,考试校区");
         bg.form.addInput(form, "fileName", "校外考试报名数据");
-        bg.form.submit(form, "manage!exportData.action","_self");
+        bg.form.submit(form, "${b.url('!exportData')}","_self");
     }
 
     function exportCET(form){
-        bg.form.addInput(form, "keys", "subject.name,std.name,std.gender.name,std.code,std.person.idType.name,std.person.code,std.level.name,std.duration,std.beginOn,std.grade,std.department.name,std.major.name,std.squad.name,std.squad.code");
+        bg.form.addInput(form, "keys", "subject.name,std.name,std.gender.name,std.code,std.person.idType.name,std.person.code,std.level.name,std.duration,std.beginOn,std.state.grade.code,std.state.department.name,std.state.major.name,std.squad.name,std.squad.code");
         bg.form.addInput(form, "titles", "报考科目,姓名,性别,学号,证件类型,证件号,培养层次,学制,入学年份,年级,院系,专业,班级名称,班级代码");
         bg.form.addInput(form, "fileName", "四六级报名数据");
-        bg.form.submit(form, "manage!exportData","_self");
+        bg.form.submit(form, "${b.url('!exportData')}","_self");
     }
 
     function exportComputer(form){
-        bg.form.addInput(form, "keys", "std.code,std.name,std.gender.name,std.person.idType.name,std.person.code,std.department.name,std.major.discipline.name,std.major.name,std.beginOn,std.duration,std.squad.name,subject.name,payState.name");
+        bg.form.addInput(form, "keys", "std.code,std.name,std.gender.name,std.person.idType.name,std.person.code,std.state.department.name,std.state.major.discipline.name,std.state.major.name,std.beginOn,std.duration,std.squad.name,subject.name,payState.name");
         bg.form.addInput(form, "titles", "学号,姓名,性别,证件类型,证件号码,学院名称,学科名称,专业名称,入学年份,学制,班级名称,报名科目,缴费状态");
         bg.form.addInput(form, "fileName", "计算机报名数据");
-        bg.form.submit(form, "manage!exportData","_self");
+        bg.form.submit(form, "${b.url('!exportData')}","_self");
     }
 
     function exportPTH(form){
-        bg.form.addInput(form, "keys", "std.code,std.name,std.grade,std.gender.name,std.department.name");
+        bg.form.addInput(form, "keys", "std.code,std.name,std.state.grade.code,std.gender.name,std.state.department.name");
         bg.form.addInput(form, "titles", "学号,姓名,年级,性别,院系");
         bg.form.addInput(form, "fileName", "普通话报名数据");
-        bg.form.submit(form, "manage!exportData","_self");
+        bg.form.submit(form, "${b.url('!exportData')}","_self");
     }
 
     function exportPETS(form){

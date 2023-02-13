@@ -35,19 +35,15 @@ import org.openurp.code.service.CodeService
 import org.openurp.edu.extern.code.CertificateSubject
 import org.openurp.edu.extern.config.{CertExemptConfig, CertExemptSetting}
 import org.openurp.edu.extern.model.{CertExemptApply, CertificateGrade}
-import org.openurp.starter.web.support.StdProjectSupport
+import org.openurp.starter.web.support.StudentSupport
 
 import java.time.Instant
 
-class StdAction extends StdProjectSupport with EntityAction[CertExemptApply] {
-
-  var codeService: CodeService = _
-
-  var semesterService: SemesterService = _
+class StdAction extends StudentSupport with EntityAction[CertExemptApply] {
 
   var businessLogger: WebBusinessLogger = _
 
-  protected def projectIndex(student: Student): Unit = {
+  protected override def projectIndex(student: Student): View = {
     val cgQuery = OqlBuilder.from(classOf[CertificateGrade], "cg")
     cgQuery.where("size(cg.courses)>0")
     cgQuery.where("cg.std=:std", student)
@@ -67,6 +63,7 @@ class StdAction extends StdProjectSupport with EntityAction[CertExemptApply] {
     configQuery.where("config.level=:level and config.eduType=:eduType", student.level, student.eduType)
     configQuery.where("config.endAt > :now ", Instant.now)
     put("configs", entityDao.search(configQuery))
+    forward()
   }
 
   def edit(): View = {
