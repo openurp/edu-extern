@@ -21,21 +21,21 @@ import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.excel.schema.ExcelSchema
-import org.beangle.data.transfer.exporter.ExportSetting
+import org.beangle.data.transfer.exporter.ExportContext
 import org.beangle.data.transfer.importer.ImportSetting
 import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.beangle.web.action.annotation.response
 import org.beangle.web.action.view.{PathView, Stream, View}
-import org.beangle.webmvc.support.action.RestfulAction
+import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulAction}
 import org.openurp.base.edu.code.CourseType
 import org.openurp.base.edu.model.Course
 import org.openurp.base.model.{Project, Semester}
 import org.openurp.base.service.SemesterService
 import org.openurp.base.std.model.Student
 import org.openurp.code.edu.model.{CourseTakeType, ExamStatus, GradingMode}
+import org.openurp.edu.exempt.service.ExemptionService
 import org.openurp.edu.extern.code.{CertificateCategory, CertificateSubject}
 import org.openurp.edu.extern.model.CertificateGrade
-import org.openurp.edu.extern.service.ExemptionService
 import org.openurp.edu.extern.web.helper.{CertificateGradeImportListener, CertificateGradePropertyExtractor}
 import org.openurp.edu.grade.model.{CourseGrade, Grade}
 import org.openurp.edu.program.domain.CoursePlanProvider
@@ -46,7 +46,7 @@ import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 import java.time.{Instant, ZoneId}
 import scala.collection.mutable
 
-class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
+class GradeAction extends RestfulAction[CertificateGrade], ImportSupport[CertificateGrade], ExportSupport[CertificateGrade], ProjectSupport {
 
   var exemptionService: ExemptionService = _
   var coursePlanProvider: CoursePlanProvider = _
@@ -105,7 +105,7 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
   def convertList(): View = {
     given project: Project = getProject
 
-    val grade = entityDao.get(classOf[CertificateGrade], longId("certificateGrade"))
+    val grade = entityDao.get(classOf[CertificateGrade], getLongId("certificateGrade"))
     put("grade", grade)
     val std = grade.std
     val plan = coursePlanProvider.getCoursePlan(grade.std)
@@ -118,7 +118,7 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
       }
     }
     put("semesters", semesters)
-    put("convertedGrades", exemptionService.getConvertedGrades(std, grade.courses))
+    put("convertedGrades", exemptionService.getConvertedGrades(std, grade.exempts))
     put("planCourses", planCourses)
     put("ExemptionType", entityDao.get(classOf[CourseTakeType], CourseTakeType.Exemption))
     put("gradingModes", getCodes(classOf[GradingMode]))
@@ -126,8 +126,8 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
   }
 
   def convert(): View = {
-    val eg = entityDao.get(classOf[CertificateGrade], longId("grade"))
-    val courses = entityDao.find(classOf[Course], longIds("course"))
+    val eg = entityDao.get(classOf[CertificateGrade], getLongId("grade"))
+    val courses = entityDao.find(classOf[Course], getLongIds("course"))
     val exemptionCourses = Collections.newSet[Course]
     courses foreach { c =>
       val scoreText = get("scoreText_" + c.id, "")
@@ -138,8 +138,8 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
   }
 
   def removeCourseGrade(): View = {
-    val grade = entityDao.get(classOf[CertificateGrade], longId("grade"))
-    val cg = entityDao.get(classOf[CourseGrade], longId("courseGrade"))
+    val grade = entityDao.get(classOf[CertificateGrade], getLongId("grade"))
+    val cg = entityDao.get(classOf[CourseGrade], getLongId("courseGrade"))
     exemptionService.removeExemption(grade, cg.course)
     redirect("search", "info.action.success")
   }
@@ -174,9 +174,9 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
     setting.listeners = List(fl, new CertificateGradeImportListener(entityDao, getProject, exemptionService))
   }
 
-  override def configExport(setting: ExportSetting): Unit = {
-    super.configExport(setting)
-    setting.context.extractor = new CertificateGradePropertyExtractor()
+  override def configExport(context: ExportContext): Unit = {
+    super.configExport(context)
+    context.extractor = new CertificateGradePropertyExtractor()
   }
 
   override protected def getQueryBuilder: OqlBuilder[CertificateGrade] = {
@@ -195,7 +195,7 @@ class GradeAction extends RestfulAction[CertificateGrade] with ProjectSupport {
       builder.where(" certificateGrade.updatedAt <= :toAt", toAt.plusDays(1).atTime(0, 0, 0).atZone(ZoneId.systemDefault()).toInstant)
     }
     getBoolean("hasCourse") foreach { hasCourse =>
-      builder.where((if (hasCourse) "" else "not ") + "exists (from certificateGrade.courses ec)")
+      builder.where((if (hasCourse) "" else "not ") + "exists (from certificateGrade.exempts ec)")
     }
     builder
   }

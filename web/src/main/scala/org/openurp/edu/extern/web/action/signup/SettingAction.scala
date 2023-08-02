@@ -71,7 +71,7 @@ class SettingAction extends RestfulAction[CertSignupSetting] with ProjectSupport
   }
 
   def batchEdit(): View = {
-    put("settings", entityDao.find(classOf[CertSignupSetting], longIds("setting")))
+    put("settings", entityDao.find(classOf[CertSignupSetting], getLongIds("setting")))
     getSignupConfig()
     forward()
   }

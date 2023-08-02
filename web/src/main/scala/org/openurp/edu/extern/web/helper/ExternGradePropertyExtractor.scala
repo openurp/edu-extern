@@ -30,14 +30,14 @@ class ExternGradePropertyExtractor extends DefaultPropertyExtractor {
       case "courseCode" => "01"
       case "creditHours" => "0"
       case "acquiredOn" => DateTimeFormatter.ofPattern("yyyyMM").format(eg.acquiredOn)
-      case "courseCodes" => eg.courses.map(c => s"${c.code}").mkString("\r\n")
-      case "courseNames" => eg.courses.map(c => s"${c.name}").mkString("\r\n")
-      case "courseCredits" => eg.courses.map(c => s"${c.getCredits(std.level)}").mkString("\r\n")
+      case "courseCodes" => eg.exempts.map(c => s"${c.code}").mkString("\r\n")
+      case "courseNames" => eg.exempts.map(c => s"${c.name}").mkString("\r\n")
+      case "courseCredits" => eg.exempts.map(c => s"${c.getCredits(std.level)}").mkString("\r\n")
       case "courses" =>
-        if (eg.courses.isEmpty) {
+        if (eg.exempts.isEmpty) {
           "--"
         } else {
-          eg.courses.map(c => s"${c.name} ${c.getCredits(std.level)}分").mkString("\r\n")
+          eg.exempts.map(c => s"${c.name} ${c.getCredits(std.level)}分").mkString("\r\n")
         }
       case _ =>
         super.getPropertyValue(target, property)

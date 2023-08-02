@@ -80,7 +80,7 @@ class StdAction extends ActionSupport with EntityAction[CertSignup] with Project
    * 显示报名须知(操作第二步)
    */
   def notice(): View = {
-    val setting = entityDao.get(classOf[CertSignupSetting], longId("setting"))
+    val setting = entityDao.get(classOf[CertSignupSetting], getLongId("setting"))
     val std = getUser(classOf[Student])
     val msg = examSignupService.canSignup(std, setting)
     if (null != msg) {
@@ -98,7 +98,7 @@ class StdAction extends ActionSupport with EntityAction[CertSignup] with Project
 
   def signUpForm(): View = {
     val std = getUser(classOf[Student])
-    val setting = entityDao.get(classOf[CertSignupSetting], longId("setting"))
+    val setting = entityDao.get(classOf[CertSignupSetting], getLongId("setting"))
     put("setting", setting)
     put("student", std)
     forward()
@@ -106,7 +106,7 @@ class StdAction extends ActionSupport with EntityAction[CertSignup] with Project
 
   def save(): View = {
     val std = getUser(classOf[Student])
-    val setting = entityDao.get(classOf[CertSignupSetting], longId("setting"))
+    val setting = entityDao.get(classOf[CertSignupSetting], getLongId("setting"))
     val config = setting.config
     if (!(config.isTimeSuitable && config.opened)) {
       return redirect("configs", "不在报名时间段内")
@@ -132,7 +132,7 @@ class StdAction extends ActionSupport with EntityAction[CertSignup] with Project
   }
 
   def cancel(): View = {
-    val signup = entityDao.get(classOf[CertSignup], longId("signup"))
+    val signup = entityDao.get(classOf[CertSignup], getLongId("signup"))
     val std = getUser(classOf[Student])
     if (signup.std != std) {
       return redirect("configs", "非法操作，只能取消自己的报名信息!")

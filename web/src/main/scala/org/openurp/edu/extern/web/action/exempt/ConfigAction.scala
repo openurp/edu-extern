@@ -21,8 +21,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.annotation.ignore
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.model.Project
-import org.openurp.edu.extern.config.CertExemptConfig
+import org.openurp.edu.exempt.config.CertExemptConfig
 import org.openurp.starter.web.support.ProjectSupport
 
 class ConfigAction extends RestfulAction[CertExemptConfig] with ProjectSupport {

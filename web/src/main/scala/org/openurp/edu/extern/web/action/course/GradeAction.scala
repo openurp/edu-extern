@@ -19,17 +19,16 @@ package org.openurp.edu.extern.web.action.course
 
 import org.beangle.commons.collection.{Collections, Properties}
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.data.transfer.exporter.ExportSetting
+import org.beangle.data.transfer.exporter.ExportContext
 import org.beangle.web.action.annotation.response
 import org.beangle.web.action.view.{PathView, View}
-import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.base.edu.code.CourseType
+import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.openurp.base.edu.model.Course
 import org.openurp.base.model.{Project, Semester}
 import org.openurp.base.std.model.ExternStudent
 import org.openurp.code.edu.model.{CourseTakeType, GradingMode}
+import org.openurp.edu.exempt.service.ExemptionService
 import org.openurp.edu.extern.model.ExternGrade
-import org.openurp.edu.extern.service.ExemptionService
 import org.openurp.edu.extern.web.helper.ExternGradePropertyExtractor
 import org.openurp.edu.grade.model.CourseGrade
 import org.openurp.edu.program.domain.CoursePlanProvider
@@ -39,7 +38,7 @@ import org.openurp.starter.web.support.ProjectSupport
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-class GradeAction extends RestfulAction[ExternGrade] with ProjectSupport {
+class GradeAction extends RestfulAction[ExternGrade], ExportSupport[ExternGrade], ProjectSupport {
 
   var coursePlanProvider: CoursePlanProvider = _
   var exemptionService: ExemptionService = _
@@ -53,7 +52,7 @@ class GradeAction extends RestfulAction[ExternGrade] with ProjectSupport {
       builder.where(" externGrade.updatedAt <= :toAt", toAt.plusDays(1).atTime(0, 0, 0).atZone(ZoneId.systemDefault()).toInstant)
     }
     getBoolean("hasCourse") foreach { hasCourse =>
-      builder.where((if (hasCourse) "" else "not ") + "exists (from externGrade.courses ec)")
+      builder.where((if (hasCourse) "" else "not ") + "exists (from externGrade.exempts ec)")
     }
     builder
   }
@@ -72,7 +71,7 @@ class GradeAction extends RestfulAction[ExternGrade] with ProjectSupport {
   }
 
   def convertList(): View = {
-    val grade = entityDao.get(classOf[ExternGrade], longId("externGrade"))
+    val grade = entityDao.get(classOf[ExternGrade], getLongId("externGrade"))
 
     given project: Project = grade.externStudent.std.project
 
@@ -82,7 +81,7 @@ class GradeAction extends RestfulAction[ExternGrade] with ProjectSupport {
     val plan = coursePlanProvider.getCoursePlan(grade.externStudent.std)
     if (plan.isEmpty) return PathView("noPlanMsg")
     val planCourses = exemptionService.getConvertablePlanCourses(std, plan.get)
-    put("convertedGrades", exemptionService.getConvertedGrades(std, grade.courses))
+    put("convertedGrades", exemptionService.getConvertedGrades(std, grade.exempts))
     val semesters = Collections.newMap[PlanCourse, Semester]
     planCourses foreach { pc =>
       exemptionService.getSemester(plan.get.program, pc.terms.termList.headOption) foreach { s =>
@@ -97,8 +96,8 @@ class GradeAction extends RestfulAction[ExternGrade] with ProjectSupport {
   }
 
   def convert(): View = {
-    val eg = entityDao.get(classOf[ExternGrade], longId("grade"))
-    val courses = entityDao.find(classOf[Course], longIds("course"))
+    val eg = entityDao.get(classOf[ExternGrade], getLongId("grade"))
+    val courses = entityDao.find(classOf[Course], getLongIds("course"))
     val exemptCourses = Collections.newSet[Course]
     courses foreach { c =>
       val scoreText = get("scoreText_" + c.id, "")
@@ -111,14 +110,14 @@ class GradeAction extends RestfulAction[ExternGrade] with ProjectSupport {
   }
 
   def removeCourseGrade(): View = {
-    val eg = entityDao.get(classOf[ExternGrade], longId("grade"))
-    val cg = entityDao.get(classOf[CourseGrade], longId("courseGrade"))
+    val eg = entityDao.get(classOf[ExternGrade], getLongId("grade"))
+    val cg = entityDao.get(classOf[CourseGrade], getLongId("courseGrade"))
     exemptionService.removeExemption(eg, cg.course)
     redirect("search", "info.action.success")
   }
 
-  override def configExport(setting: ExportSetting): Unit = {
-    super.configExport(setting)
-    setting.context.extractor = new ExternGradePropertyExtractor
+  override def configExport(context: ExportContext): Unit = {
+    super.configExport(context)
+    context.extractor = new ExternGradePropertyExtractor
   }
 }

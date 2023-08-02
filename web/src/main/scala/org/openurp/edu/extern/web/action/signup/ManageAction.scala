@@ -18,16 +18,16 @@
 package org.openurp.edu.extern.web.action.signup
 
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.data.transfer.exporter.ExportSetting
+import org.beangle.data.transfer.exporter.ExportContext
 import org.beangle.web.action.annotation.ignore
-import org.beangle.webmvc.support.action.RestfulAction
+import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.openurp.base.model.{Project, Semester}
 import org.openurp.edu.extern.code.{CertificateCategory, CertificateSubject}
 import org.openurp.edu.extern.model.CertSignup
 import org.openurp.edu.extern.web.helper.PETSPropertyExtractor
 import org.openurp.starter.web.support.ProjectSupport
 
-class ManageAction extends RestfulAction[CertSignup] with ProjectSupport {
+class ManageAction extends RestfulAction[CertSignup], ExportSupport[CertSignup], ProjectSupport {
 
   override protected def indexSetting(): Unit = {
     given project: Project = getProject
@@ -46,8 +46,8 @@ class ManageAction extends RestfulAction[CertSignup] with ProjectSupport {
   }
 
   @ignore
-  protected override def configExport(setting: ExportSetting): Unit = {
-    super.configExport(setting)
-    setting.context.extractor = new PETSPropertyExtractor(entityDao)
+  protected override def configExport(context: ExportContext): Unit = {
+    super.configExport(context)
+    context.extractor = new PETSPropertyExtractor(entityDao)
   }
 }

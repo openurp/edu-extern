@@ -25,8 +25,8 @@ import org.beangle.security.Securities
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.AuditStatus
-import org.openurp.edu.extern.model.{CertExemptApply, CertificateGrade}
-import org.openurp.edu.extern.service.CertExemptApplyService
+import org.openurp.edu.exempt.model.CertExemptApply
+import org.openurp.edu.exempt.service.CertExemptApplyService
 import org.openurp.edu.program.domain.CoursePlanProvider
 import org.openurp.starter.web.support.ProjectSupport
 
@@ -63,7 +63,7 @@ class AdminAction extends RestfulAction[CertExemptApply] with ProjectSupport {
   }
 
   def audit(): View = {
-    val applies = entityDao.find(classOf[CertExemptApply], longIds("apply"))
+    val applies = entityDao.find(classOf[CertExemptApply], getLongIds("apply"))
     val passed = getBoolean("passed", false)
     applies foreach { apply =>
       var msg: String = null

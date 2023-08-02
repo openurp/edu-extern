@@ -25,9 +25,9 @@ import org.beangle.data.transfer.importer.{ImportListener, ImportResult}
 import org.openurp.base.edu.model.Course
 import org.openurp.base.model.Project
 import org.openurp.code.edu.model.ExamStatus
+import org.openurp.edu.exempt.service.ExemptionService
 import org.openurp.edu.extern.code.CertificateSubject
 import org.openurp.edu.extern.model.CertificateGrade
-import org.openurp.edu.extern.service.ExemptionService
 import org.openurp.edu.program.domain.CoursePlanProvider
 
 import java.time.{Instant, LocalDate}

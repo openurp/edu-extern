@@ -22,8 +22,8 @@ import org.beangle.web.action.annotation.ignore
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.edu.model.Course
+import org.openurp.edu.exempt.config.{CertExemptConfig, CertExemptSetting}
 import org.openurp.edu.extern.code.CertificateSubject
-import org.openurp.edu.extern.config.{CertExemptConfig, CertExemptSetting}
 
 class SettingAction extends RestfulAction[CertExemptSetting] {
   @ignore
@@ -46,7 +46,7 @@ class SettingAction extends RestfulAction[CertExemptSetting] {
   }
 
   override protected def saveAndRedirect(setting: CertExemptSetting): View = {
-    val courseIds = longIds("course")
+    val courseIds = getLongIds("course")
     setting.courses.clear()
     setting.courses ++= entityDao.find(classOf[Course], courseIds)
     super.saveAndRedirect(setting)
