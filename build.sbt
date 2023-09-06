@@ -1,5 +1,5 @@
-import org.openurp.parent.Settings._
-import org.openurp.parent.Dependencies._
+import org.openurp.parent.Dependencies.*
+import org.openurp.parent.Settings.*
 
 ThisBuild / organization := "org.openurp.edu.extern"
 ThisBuild / version := "0.1.3-SNAPSHOT"
@@ -23,10 +23,10 @@ ThisBuild / developers := List(
 ThisBuild / description := "OpenURP Edu Extern"
 ThisBuild / homepage := Some(url("http://openurp.github.io/edu-extern/index.html"))
 
-val apiVer = "0.34.0"
-val starterVer = "0.3.7"
-val baseVer = "0.4.5"
-val eduCoreVer = "0.0.12"
+val apiVer = "0.34.1"
+val starterVer = "0.3.8"
+val baseVer = "0.4.6"
+val eduCoreVer = "0.0.13-SNAPSHOT"
 val openurp_edu_api = "org.openurp.edu" % "openurp-edu-api" % apiVer
 val openurp_edu_core = "org.openurp.edu" % "openurp-edu-core" % eduCoreVer
 val openurp_stater_web = "org.openurp.starter" % "openurp-starter-web" % starterVer
@@ -39,11 +39,11 @@ lazy val web = (project in file("web"))
   .settings(
     name := "openurp-edu-extern-web",
     common,
-    libraryDependencies ++= Seq(openurp_edu_api,openurp_stater_web, openurp_base_tag, openurp_edu_core,beangle_serializer_text),
+    libraryDependencies ++= Seq(openurp_edu_api, openurp_stater_web, openurp_base_tag, openurp_edu_core, beangle_serializer_text),
   )
 
 lazy val webapp = (project in file("webapp"))
-  .enablePlugins(WarPlugin, TomcatPlugin)
+  .enablePlugins(WarPlugin, TomcatPlugin, UndertowPlugin)
   .settings(
     name := "openurp-edu-extern-webapp",
     common,
