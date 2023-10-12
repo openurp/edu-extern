@@ -17,15 +17,17 @@
 
 package org.openurp.edu.extern.web.action.signup
 
-import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.transfer.exporter.ExportContext
 import org.beangle.web.action.annotation.ignore
+import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
-import org.openurp.base.model.{Project, Semester}
+import org.openurp.base.model.Project
 import org.openurp.edu.extern.code.{CertificateCategory, CertificateSubject}
 import org.openurp.edu.extern.model.CertSignup
 import org.openurp.edu.extern.web.helper.PETSPropertyExtractor
 import org.openurp.starter.web.support.ProjectSupport
+
+import scala.util.Random
 
 class ManageAction extends RestfulAction[CertSignup], ExportSupport[CertSignup], ProjectSupport {
 
@@ -38,6 +40,25 @@ class ManageAction extends RestfulAction[CertSignup], ExportSupport[CertSignup],
     put("categories", getCodes(classOf[CertificateCategory]))
     put("subjects", getCodes(classOf[CertificateSubject]))
     super.indexSetting()
+  }
+
+  def batchUpdateExamRoom(): View = {
+    val signups = entityDao.find(classOf[CertSignup], getLongIds("signup"))
+    val examRoom = get("examRoom")
+    val head = signups.head
+    signups foreach { signup =>
+      signup.examRoom = examRoom
+    }
+    entityDao.saveOrUpdate(signups)
+    examRoom.foreach { room =>
+      var roomSigns = entityDao.findBy(classOf[CertSignup], "semester" -> head.semester, "subject" -> head.subject, "examRoom" -> examRoom.get)
+      roomSigns = Random.shuffle(roomSigns)
+      var i = 1;
+      roomSigns.foreach { r => r.seatNo = i; i += 1 }
+      entityDao.saveOrUpdate(roomSigns)
+    }
+
+    redirect("search", "info.save.success")
   }
 
   @ignore

@@ -13,10 +13,11 @@
           [@b.select name="signup.subject.category.id" label="考试类型" items=categories empty="..."/]
           [@b.select name="signup.subject.id" label="报名科目" items=subjects empty="..." /]
           [@b.textfield name="signup.std.squad.name" label="班级名称"/]
+          <input type="hidden" name="orderBy" value="signup.updatedAt desc"/>
       [/@]
   </div>
   <div class="search-list">
-      [@b.div id="signupList" href="!search?signup.semester.id="+(currentSemester.id)!/]
+      [@b.div id="signupList" href="!search?orderBy=signup.updatedAt desc&signup.semester.id="+(currentSemester.id)!/]
   </div>
 </div>
 [@b.foot/]

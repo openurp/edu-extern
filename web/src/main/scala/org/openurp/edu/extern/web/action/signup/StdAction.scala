@@ -17,9 +17,12 @@
 
 package org.openurp.edu.extern.web.action.signup
 
+import org.beangle.commons.codec.digest.Digests
 import org.beangle.commons.lang.Strings
 import org.beangle.commons.logging.Logging
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
+import org.beangle.ems.app.Ems
+import org.beangle.template.freemarker.ProfileTemplateLoader
 import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.View
 import org.beangle.web.servlet.util.RequestUtils
@@ -63,7 +66,7 @@ class StdAction extends ActionSupport with EntityAction[CertSignup] with Project
         val signUps = examSignupService.search(std, config)
         signUpList ++= signUps
       }
-      if (!signUpList.isEmpty) put("signUpSubjects", signUpList.map(_.subject).toSet)
+      if (signUpList.nonEmpty) put("signUpSubjects", signUpList.map(_.subject).toSet)
       // 查询已有成绩
       val grades = entityDao.findBy(classOf[CertificateGrade], "std", List(std))
       val passedSubjects = grades.filter(_.passed).map(_.subject)
@@ -154,4 +157,13 @@ class StdAction extends ActionSupport with EntityAction[CertSignup] with Project
     }
   }
 
+  def examCertificate(): View = {
+    val signup = entityDao.get(classOf[CertSignup], getLongId("signup"))
+    val setting = entityDao.findBy(classOf[CertSignupSetting], "subject" -> signup.subject, "config.semester" -> signup.semester).head
+    put("setting", setting)
+    put("signup", signup)
+    put("avatarURL", Ems.api + "/platform/user/avatars/" + Digests.md5Hex(signup.std.code))
+    ProfileTemplateLoader.setProfile(signup.std.project.id)
+    forward()
+  }
 }
