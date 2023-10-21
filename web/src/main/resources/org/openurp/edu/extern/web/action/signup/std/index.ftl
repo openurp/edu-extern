@@ -4,7 +4,7 @@
 <nav class="navbar navbar-default" role="navigation">
   <div class="container-fluid">
     <div class="navbar-header">
-        <a class="navbar-brand" href="#"><i class="fas fa-graduation-cap"></i>校外考试报名</a>
+      <a class="navbar-brand" href="#"><i class="fas fa-graduation-cap"></i>校外考试报名</a>
     </div>
     <ul class="nav navbar-nav navbar-right">
         <li>
@@ -22,6 +22,9 @@
     [@b.row]
       [@b.col title="报名科目"]${(signUp.subject.name)!}[/@]
       [@b.col title="报名时间"]${(signUp.updatedAt?string("yyyy-MM-dd HH:mm:ss"))?if_exists}[/@]
+      [@b.col title="准考证打印"]
+        [#if signUp.examRoom??][@b.a target="_blank" href="!examCertificate?signup.id="+signUp.id]打印[/@][/#if]
+      [/@]
     [/@]
   [/@]
   [@b.div style="margin-top:10px;text-align:center;font-weight:bold;"]校外考试成绩[/@]

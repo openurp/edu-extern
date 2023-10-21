@@ -24,8 +24,8 @@ import org.beangle.security.Securities
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.{AuditStatus, Project}
+import org.openurp.edu.exempt.model.CertExemptApply
 import org.openurp.edu.extern.code.CertificateSubject
-import org.openurp.edu.extern.model.CertExemptApply
 import org.openurp.starter.web.support.ProjectSupport
 
 class AuditAction extends RestfulAction[CertExemptApply] with ProjectSupport {

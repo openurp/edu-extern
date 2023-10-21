@@ -26,7 +26,7 @@ import org.openurp.base.model.{ExternSchool, Project}
 import org.openurp.base.std.model.{ExternStudent, Student}
 import org.openurp.code.edu.model.{EduCategory, EducationLevel}
 import org.openurp.code.std.model.StudentStatus
-import org.openurp.edu.extern.service.ExemptionService
+import org.openurp.edu.exempt.service.ExemptionService
 import org.openurp.edu.program.domain.CoursePlanProvider
 import org.openurp.starter.web.support.ProjectSupport
 

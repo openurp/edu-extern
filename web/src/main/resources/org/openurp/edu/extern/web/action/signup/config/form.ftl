@@ -18,6 +18,7 @@
     [/#if]
     [@b.radios  name="config.opened" required="true"  value=config.opened  label="是否开放" /]
     [@b.radios  name="config.prediction" required="true"  value=config.prediction  label="是否预报名" /]
+    [@b.textfield name="config.maxSubject" label="最多报名科目数" value=config.maxSubject! required="true" /]
     [@b.startend label="报名时间" readOnly="readOnly"  required="true"  name="config.beginAt,config.endAt" required="true" start=config.beginAt end=config.endAt format="yyyy-MM-dd HH:mm:ss" /]
     [@b.textarea name="config.notice"  required="true" maxlength="1000" label="报考须知" value=(config.notice)! cols="80" rows="4"/]
     [#if ((config.id)!0)==0]

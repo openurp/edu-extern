@@ -13,8 +13,6 @@
           [@b.datepicker label="考试日期" name="apply.acquiredOn"/]
           [@b.select items=statuses label="状态" empty="..." name="apply.status"/]
       [/@]
-
-      [@b.form name="importForm" action="!importForm" target="applyList"/]
   </div>
   <div class="search-list">
       [@b.div id="applyList" href="!search" /]

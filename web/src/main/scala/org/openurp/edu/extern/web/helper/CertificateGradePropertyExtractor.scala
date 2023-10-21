@@ -24,7 +24,7 @@ class CertificateGradePropertyExtractor extends DefaultPropertyExtractor {
 
   override def getPropertyValue(target: Object, property: String): Any = {
     if (property == "courseSize") {
-      target.asInstanceOf[CertificateGrade].courses.size;
+      target.asInstanceOf[CertificateGrade].exempts.size;
     } else {
       super.getPropertyValue(target, property)
     }

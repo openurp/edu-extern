@@ -32,9 +32,10 @@ import org.openurp.base.service.SemesterService
 import org.openurp.base.std.model.Student
 import org.openurp.code.edu.model.GradingMode
 import org.openurp.code.service.CodeService
+import org.openurp.edu.exempt.config.{CertExemptConfig, CertExemptSetting}
+import org.openurp.edu.exempt.model.CertExemptApply
 import org.openurp.edu.extern.code.CertificateSubject
-import org.openurp.edu.extern.config.{CertExemptConfig, CertExemptSetting}
-import org.openurp.edu.extern.model.{CertExemptApply, CertificateGrade}
+import org.openurp.edu.extern.model.CertificateGrade
 import org.openurp.starter.web.support.StudentSupport
 
 import java.time.Instant
@@ -45,7 +46,7 @@ class StdAction extends StudentSupport with EntityAction[CertExemptApply] {
 
   protected override def projectIndex(student: Student): View = {
     val cgQuery = OqlBuilder.from(classOf[CertificateGrade], "cg")
-    cgQuery.where("size(cg.courses)>0")
+    cgQuery.where("size(cg.exempts)>0")
     cgQuery.where("cg.std=:std", student)
     val grades = entityDao.search(cgQuery)
     put("grades", grades)
@@ -67,12 +68,12 @@ class StdAction extends StudentSupport with EntityAction[CertExemptApply] {
   }
 
   def edit(): View = {
-    val setting = entityDao.get(classOf[CertExemptSetting], longId("setting"))
+    val setting = entityDao.get(classOf[CertExemptSetting], getLongId("setting"))
     val apply =
       getLong("apply.id") match {
         case None =>
           val ap = new CertExemptApply
-          ap.std = getStudent()
+          ap.std = getStudent
           ap
         case Some(id) => entityDao.get(classOf[CertExemptApply], id)
       }
@@ -94,8 +95,8 @@ class StdAction extends StudentSupport with EntityAction[CertExemptApply] {
   }
 
   def remove(): View = {
-    val std = getStudent()
-    val apply = entityDao.get(classOf[CertExemptApply], longId("apply"))
+    val std = getStudent
+    val apply = entityDao.get(classOf[CertExemptApply], getLongId("apply"))
     if (apply.std == std) {
       if (apply.status == AuditStatus.Passed || apply.status == AuditStatus.PassedByDepart) {
         redirect("index", "已经审核通过，暂时不能删除")
@@ -115,9 +116,9 @@ class StdAction extends StudentSupport with EntityAction[CertExemptApply] {
   }
 
   def save(): View = {
-    val std = getStudent()
+    val std = getStudent
     val apply = populateEntity(classOf[CertExemptApply], "apply")
-    val setting = entityDao.get(classOf[CertExemptSetting], longId("setting"))
+    val setting = entityDao.get(classOf[CertExemptSetting], getLongId("setting"))
     if (apply.status == AuditStatus.Passed || apply.status == AuditStatus.PassedByDepart) {
       redirect("index", "已经审核通过，暂时不能修改")
     } else if (!setting.config.within(Instant.now)) {
@@ -127,7 +128,7 @@ class StdAction extends StudentSupport with EntityAction[CertExemptApply] {
       apply.updatedAt = Instant.now
       apply.subject = setting.subject
       apply.auditDepart = setting.auditDepart
-      val courses = entityDao.find(classOf[Course], longIds("course"))
+      val courses = entityDao.find(classOf[Course], getLongIds("course"))
       if (courses.size <= setting.maxCount) {
         apply.courses.clear()
         apply.courses ++= courses
