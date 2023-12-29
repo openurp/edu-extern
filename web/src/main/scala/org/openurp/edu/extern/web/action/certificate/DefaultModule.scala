@@ -24,6 +24,7 @@ class DefaultModule extends BindModule {
   override protected def binding(): Unit = {
     bind(classOf[GradeAction])
     bind(classOf[CategoryAction])
-    bind(classOf[SubjectAction])
+    bind(classOf[CertificateAction])
+    bind(classOf[GradeSearchAction])
   }
 }

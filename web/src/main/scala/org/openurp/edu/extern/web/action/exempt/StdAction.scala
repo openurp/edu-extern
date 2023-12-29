@@ -19,22 +19,17 @@ package org.openurp.edu.extern.web.action.exempt
 
 import jakarta.servlet.http.Part
 import org.beangle.commons.lang.Strings
-import org.beangle.data.dao.{EntityDao, OqlBuilder}
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.ems.app.EmsApp
-import org.beangle.ems.app.log.BusinessLogProto.BusinessLogEvent
 import org.beangle.ems.app.web.WebBusinessLogger
-import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.edu.model.Course
 import org.openurp.base.model.{AuditStatus, Project}
-import org.openurp.base.service.SemesterService
 import org.openurp.base.std.model.Student
 import org.openurp.code.edu.model.GradingMode
-import org.openurp.code.service.CodeService
 import org.openurp.edu.exempt.config.{CertExemptConfig, CertExemptSetting}
 import org.openurp.edu.exempt.model.CertExemptApply
-import org.openurp.edu.extern.code.CertificateSubject
 import org.openurp.edu.extern.model.CertificateGrade
 import org.openurp.starter.web.support.StudentSupport
 
@@ -61,7 +56,7 @@ class StdAction extends StudentSupport with EntityAction[CertExemptApply] {
 
     val configQuery = OqlBuilder.from(classOf[CertExemptConfig], "config")
     configQuery.where("config.project=:project", student.project)
-    configQuery.where("config.level=:level and config.eduType=:eduType", student.level, student.eduType)
+    configQuery.where(":level in elements(config.levels) and config.eduType=:eduType", student.level, student.eduType)
     configQuery.where("config.endAt > :now ", Instant.now)
     put("configs", entityDao.search(configQuery))
     forward()
@@ -88,7 +83,7 @@ class StdAction extends StudentSupport with EntityAction[CertExemptApply] {
       apply.courses.clear()
       apply.courses ++= courses
     }
-    apply.subject = setting.subject
+    apply.certificate = setting.certificate
     put("setting", setting)
     put("apply", apply)
     forward()
@@ -106,8 +101,8 @@ class StdAction extends StudentSupport with EntityAction[CertExemptApply] {
           repo.remove(apply.attachmentPath)
         }
         entityDao.remove(apply)
-        val details = Map("scoreText" -> apply.scoreText, "acquiredOn" -> apply.acquiredOn.toString, "certificate" -> apply.certificate)
-        businessLogger.info(s"${std.code} ${std.name}删除了${apply.subject.name}免修申请", apply.id, details)
+        val details = Map("scoreText" -> apply.scoreText, "acquiredOn" -> apply.acquiredOn.toString, "certificateNo" -> apply.certificateNo)
+        businessLogger.info(s"${std.code} ${std.name}删除了${apply.certificate.name}免修申请", apply.id, details)
         redirect("index", "删除成功")
       }
     } else {
@@ -126,14 +121,14 @@ class StdAction extends StudentSupport with EntityAction[CertExemptApply] {
     } else {
       apply.std = std
       apply.updatedAt = Instant.now
-      apply.subject = setting.subject
+      apply.certificate = setting.certificate
       apply.auditDepart = setting.auditDepart
       val courses = entityDao.find(classOf[Course], getLongIds("course"))
       if (courses.size <= setting.maxCount) {
         apply.courses.clear()
         apply.courses ++= courses
       }
-      apply.semester = setting.config.semester
+      apply.semester = getSemester
 
       val parts = getAll("attachment", classOf[Part])
       if (parts.nonEmpty && null != parts.head && parts.head.getSize > 0) {
@@ -150,8 +145,8 @@ class StdAction extends StudentSupport with EntityAction[CertExemptApply] {
       if (Strings.isNotBlank(apply.attachmentPath)) {
         apply.status = AuditStatus.Submited
         entityDao.saveOrUpdate(apply)
-        val details = Map("scoreText" -> apply.scoreText, "acquiredOn" -> apply.acquiredOn.toString, "certificate" -> apply.certificate)
-        businessLogger.info(s"${std.code} ${std.name}提交了${setting.subject.name}免修申请", apply.id, details)
+        val details = Map("scoreText" -> apply.scoreText, "acquiredOn" -> apply.acquiredOn.toString, "certificateNo" -> apply.certificateNo)
+        businessLogger.info(s"${std.code} ${std.name}提交了${setting.certificate.name}免修申请", apply.id, details)
         redirect("index", s"&projectId=${std.project.id}", "提交成功")
       } else {
         redirect("edit", s"&settingId=${setting.id}&projectId=${std.project.id}&apply.id=${apply.id}", "缺少附件")

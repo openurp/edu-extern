@@ -9,7 +9,7 @@
   [@b.row]
     [@b.boxcol /]
     [@b.col width="15%" property="code" title="代码"]${certificateCategory.code}[/@]
-    [@b.col width="45%" property="name" title="名称"/]
+    [@b.col property="name" title="名称"/]
     [@b.col width="15%" property="enName" title="英文名"]${certificateCategory.enName!}[/@]
     [@b.col width="10%" property="beginOn" title="生效日期"]${certificateCategory.beginOn!}[/@]
     [@b.col width="10%" property="endOn" title="失效日期"]${certificateCategory.endOn!}[/@]

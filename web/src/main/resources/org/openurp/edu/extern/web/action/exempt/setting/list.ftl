@@ -11,7 +11,7 @@
     [/@]
     [@b.row]
         [@b.boxcol/]
-        [@b.col property="subject.name" title="免修科目" width="15%"/]
+        [@b.col property="certificate.name" title="免修科目" width="15%"/]
         [@b.col property="minScore" title="最低分" width="7%"/]
         [@b.col property="validMonths" title="有效月数" width="7%"/]
         [@b.col property="maxCount" title="冲抵门数上限" width="10%"/]

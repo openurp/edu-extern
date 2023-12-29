@@ -17,17 +17,14 @@
 
 package org.openurp.edu.extern.web.action.signup
 
-import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.annotation.ignore
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Project
-import org.openurp.edu.extern.code.{CertificateCategory, CertificateSubject}
+import org.openurp.edu.extern.code.{Certificate, CertificateCategory}
 import org.openurp.edu.extern.config.CertSignupConfig
 import org.openurp.starter.web.support.ProjectSupport
-
-import scala.collection.mutable
 
 class ConfigAction extends RestfulAction[CertSignupConfig] with ProjectSupport {
 
@@ -49,117 +46,32 @@ class ConfigAction extends RestfulAction[CertSignupConfig] with ProjectSupport {
     val examCategories = getCodes(classOf[CertificateCategory])
     put("categories", examCategories)
     if (!config.persisted) {
-      config.opened = true
       config.prediction = false
     }
-    if (config.category != null) {
-      val query = OqlBuilder.from(classOf[CertificateSubject], "subject").where("subject.category=:category", config.category)
-      put("subjects", entityDao.search(query))
+
+    if (examCategories.isEmpty) {
+      put("certificates", Map.empty)
     } else {
-      if (examCategories.isEmpty) {
-        put("categorySubjects", Map.empty)
-      } else {
-        val categorySubjects = new mutable.HashMap[Int, mutable.ArrayBuffer[CertificateSubject]]
-        val subjects = entityDao.findBy(classOf[CertificateSubject], "category", examCategories)
-        subjects foreach { examSubject =>
-          val oneCategorySubjects = categorySubjects.getOrElseUpdate(examSubject.category.id, new mutable.ArrayBuffer[CertificateSubject])
-          oneCategorySubjects += examSubject
-        }
-        put("categorySubjects", categorySubjects)
-      }
+      val query = OqlBuilder.from(classOf[Certificate], "cert")
+      query.where("cert.category in (:categories)", examCategories)
+      query.where("cert.endOn is null")
+      val certificates = entityDao.search(query)
+      put("certificates", certificates.groupBy(_.category.id))
     }
   }
 
   override protected def saveAndRedirect(config: CertSignupConfig): View = {
     val query = OqlBuilder.from(classOf[CertSignupConfig], "config")
-    query.where("config.code = :configCode", config.code)
     query.where("config.name = :configName", config.name)
+    query.where("config.semester = :semester", config.semester)
+
     val configs = entityDao.search(query)
     if (configs.nonEmpty && !config.persisted) {
       return redirect("edit", "期号名称重复")
     }
     config.project = getProject
+    entityDao.saveOrUpdate(config)
+    entityDao.evict(classOf[CertSignupConfig])
     super.saveAndRedirect(config)
   }
-  //
-  //  public String save() throws ParseException {
-  //    ExamSignupConfig config = (ExamSignupConfig) populateEntity()
-
-  //    String campusIdSeq = get("selectCampus")
-  //    config.getCampuses().clear()
-  //    if (Strings.isNotEmpty(campusIdSeq)) {
-  //      config.addCampuses(entityDao.get(Campus.
-  //      class, Strings.splitToInt(campusIdSeq)
-  //      ) )
-  //    }
-  //    config.setProject(getProject())
-  //    boolean createDefaultSubject = getBool("createDefaultSubject")
-  //    if (createDefaultSubject) {
-  //      examSignupConfigService.configDefaultSubject(
-  //        entityDao.get(ExamCategory.
-  //      class, getInt("examSignupConfig.category.id")
-  //      ), config
-  //      )
-  //    }
-  //    // 生成考试科目
-  //    config.getExclusiveSubjects().clear()
-  //    Collection < ExclusiveSubject > exclusiveList = CollectUtils.newArrayList()
-  //    String subjectOneString = get("subjectOne")
-  //    String subjectTwoString = get("subjectTwo")
-  //    String[] subjectOnes = Strings.split(subjectOneString, ",")
-  //    String[] subjectTwos = Strings.split(subjectTwoString, ",")
-  //    if (null != subjectOnes && null != subjectTwos) {
-  //      for (int i
-  //      = 0
-  //      i < subjectOnes.length
-  //      i ++
-  //      )
-  //      {
-  //        Integer subjectOneId = new Integer(subjectOnes[i])
-  //        ExamSubject subjectOne = entityDao.get(ExamSubject.
-  //        class, subjectOneId
-  //        )
-  //        for (int j
-  //        = 0
-  //        j < subjectTwos.length
-  //        j ++
-  //        )
-  //        {
-  //          Integer subjectTwoId = new Integer(subjectTwos[j])
-  //          ExamSubject subjectTwo = entityDao.get(ExamSubject.
-  //          class, subjectTwoId
-  //          )
-  //          ExclusiveSubject exclusive = Model.newInstance(ExclusiveSubject.
-  //          class)
-  //          exclusive.setSubjectOne(subjectOne)
-  //          exclusive.setSubjectTwo(subjectTwo)
-  //          exclusive.setConfig(config)
-  //          exclusiveList.add(exclusive)
-  //        }
-  //      }
-  //    }
-  //    config.getExclusiveSubjects().addAll(exclusiveList)
-  //    try {
-  //      entityDao.saveOrUpdate(config)
-  //      return redirect("search", "info.save.success")
-  //    } catch (Exception e) {
-  //      logger.info("saveAndForwad failure", e)
-  //      return redirect("search", "info.save.failure")
-  //    }
-  //  }
-  //
-  //  public String getExternExamSubjects() {
-  //    Long categoryId = getLong("categoryId")
-  //    if (categoryId != null) {
-  //      OqlBuilder < ExamSubject > query = OqlBuilder.from(ExamSubject.
-  //      class, "subject"
-  //      )
-  //      query.where("subject.category.id =:categoryId", categoryId)
-  //      List < ExamSubject > subjects = entityDao.search(query)
-  //      put("datas", subjects)
-  //    } else {
-  //      put("datas", Collections.emptyList())
-  //    }
-  //    return forward("examSubject")
-  //  }
 }

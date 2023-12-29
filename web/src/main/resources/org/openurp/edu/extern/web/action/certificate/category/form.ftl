@@ -1,6 +1,6 @@
 [#ftl]
 [@b.head/]
-[@b.toolbar title="修改出版社"]bar.addBack();[/@]
+[@b.toolbar title="修改证书类型"]bar.addBack();[/@]
 [@b.tabs]
   [@b.form action=b.rest.save(certificateCategory) theme="list"]
     [@b.textfield name="certificateCategory.code" label="代码" value="${certificateCategory.code!}" required="true" maxlength="20"/]

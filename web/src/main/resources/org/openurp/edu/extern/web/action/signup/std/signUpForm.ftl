@@ -41,7 +41,7 @@
           </tr>
         <tr>
           <td class="title">报名科目:</td>
-          <td colspan="3">${setting.subject.name}</td>
+          <td colspan="3">${setting.certificate.name}</td>
         </tr>
         <tr>
           <td colspan="4" align="center">

@@ -5,13 +5,13 @@
 [#assign std= apply.std/]
 [@b.card class="card-info card-outline"]
   [@b.card_header]
-    <i class="fas fa-school"></i>&nbsp;${apply.subject.name}<span style="font-size:0.8em">(${apply.acquiredOn?string("yyyy-MM")})</span>
+    <i class="fas fa-school"></i>&nbsp;${apply.certificate.name}<span style="font-size:0.8em">(${apply.acquiredOn?string("yyyy-MM")})</span>
   [/@]
 
   <table class="infoTable">
     <tr>
       <td class="title">考试科目：</td>
-      <td>${apply.subject.name}</td>
+      <td>${apply.certificate.name}</td>
       <td class="title">成绩：</td>
       <td>${apply.scoreText!}</td>
       <td class="title">填写时间：</td>

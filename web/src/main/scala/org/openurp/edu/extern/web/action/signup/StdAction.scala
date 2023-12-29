@@ -48,6 +48,7 @@ class StdAction extends ActionSupport with EntityAction[CertSignup] with Project
     val gradeBuilder = OqlBuilder.from(classOf[CertificateGrade], "grade").where("grade.std =:std", std)
     put("grades", entityDao.search(gradeBuilder))
     put("signUps", signUpList)
+    put("configs", examSignupService.getOpenedConfigs(std.project))
     forward()
   }
 
@@ -66,12 +67,12 @@ class StdAction extends ActionSupport with EntityAction[CertSignup] with Project
         val signUps = examSignupService.search(std, config)
         signUpList ++= signUps
       }
-      if (signUpList.nonEmpty) put("signUpSubjects", signUpList.map(_.subject).toSet)
+      if (signUpList.nonEmpty) put("signUpCertificates", signUpList.map(_.certificate).toSet)
       // 查询已有成绩
       val grades = entityDao.findBy(classOf[CertificateGrade], "std", List(std))
-      val passedSubjects = grades.filter(_.passed).map(_.subject)
+      val passedCertificates = grades.filter(_.passed).map(_.subject)
 
-      put("passedSubjects", passedSubjects)
+      put("passedCertificates", passedCertificates)
       put("signUpList", signUpList)
       put("configs", configs)
       put("student", std)
@@ -111,7 +112,7 @@ class StdAction extends ActionSupport with EntityAction[CertSignup] with Project
     val std = getUser(classOf[Student])
     val setting = entityDao.get(classOf[CertSignupSetting], getLongId("setting"))
     val config = setting.config
-    if (!(config.isTimeSuitable && config.opened)) {
+    if (!config.isTimeSuitable) {
       return redirect("configs", "不在报名时间段内")
     }
     val signup = new CertSignup
@@ -119,14 +120,14 @@ class StdAction extends ActionSupport with EntityAction[CertSignup] with Project
     signup.updatedAt = Instant.now
     signup.ip = RequestUtils.getIpAddr(request)
     signup.semester = setting.config.semester
-    signup.subject = setting.subject
+    signup.certificate = setting.certificate
     val project = std.project
 
     if (config.isTimeSuitable) {
       var msg = examSignupService.signup(signup, setting)
       if (null == msg) {
         msg = if (config.prediction) "预报名成功" else "报名成功"
-        logger.info(std.code + " 报名 " + signup.subject.name + " @" + RequestUtils.getIpAddr(request))
+        logger.info(std.code + " 报名 " + signup.certificate.name + " @" + RequestUtils.getIpAddr(request))
       }
       redirect("configs", msg)
     } else {
@@ -150,7 +151,7 @@ class StdAction extends ActionSupport with EntityAction[CertSignup] with Project
     if (openConfig) {
       entityDao.remove(signup)
       val remoteAddr = RequestUtils.getIpAddr(request)
-      logger.info(std.code + " 取消了 " + signup.subject.name + " @" + remoteAddr)
+      logger.info(std.code + " 取消了 " + signup.certificate.name + " @" + remoteAddr)
       redirect("configs", "取消报名成功!")
     } else {
       redirect("configs", "不在报名时间内")
@@ -159,7 +160,7 @@ class StdAction extends ActionSupport with EntityAction[CertSignup] with Project
 
   def examCertificate(): View = {
     val signup = entityDao.get(classOf[CertSignup], getLongId("signup"))
-    val setting = entityDao.findBy(classOf[CertSignupSetting], "subject" -> signup.subject, "config.semester" -> signup.semester).head
+    val setting = entityDao.findBy(classOf[CertSignupSetting], "certificate" -> signup.certificate, "config.semester" -> signup.semester).head
     put("setting", setting)
     put("signup", signup)
     put("avatarURL", Ems.api + "/platform/user/avatars/" + Digests.md5Hex(signup.std.code))

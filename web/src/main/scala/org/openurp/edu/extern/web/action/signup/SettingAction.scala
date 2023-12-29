@@ -23,7 +23,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.annotation.ignore
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.edu.extern.code.CertificateSubject
+import org.openurp.edu.extern.code.Certificate
 import org.openurp.edu.extern.config.{CertSignupConfig, CertSignupSetting}
 import org.openurp.starter.web.support.ProjectSupport
 
@@ -41,21 +41,18 @@ class SettingAction extends RestfulAction[CertSignupSetting] with ProjectSupport
    */
   override protected def editSetting(setting: CertSignupSetting): Unit = {
     val config = getSignupConfig()
-    val categoryId = config.category.id
     // 查询报考科目
-    val query = OqlBuilder.from(classOf[CertificateSubject], "subject")
-    query.where("subject.category.id = :categoryId", categoryId)
+    val query = OqlBuilder.from(classOf[Certificate], "cert")
     query.where("not exists (from " + classOf[CertSignupSetting].getName +
-      " setting where setting.subject.id =subject.id and setting.config.id =:configId)", config.id)
-    val set = new mutable.HashSet[CertificateSubject]
-    val subjects = entityDao.search(query)
-    set.addAll(subjects)
-    if (setting.persisted) set.add(setting.subject)
+      " setting where setting.certificate.id =cert.id and setting.config.id =:configId)", config.id)
+    val set = new mutable.HashSet[Certificate]
+    val certificates = entityDao.search(query)
+    set.addAll(certificates)
+    if (setting.persisted) set.add(setting.certificate)
     else setting.config = config
-    put("subjects", set)
+    put("certificates", set)
     // 查询必须通过的科目
-    val query2 = OqlBuilder.from(classOf[CertificateSubject], "subject")
-    query2.where("subject.category.id=:categoryId", categoryId)
+    val query2 = OqlBuilder.from(classOf[Certificate], "cert")
     put("dependsOn", entityDao.search(query2))
   }
 

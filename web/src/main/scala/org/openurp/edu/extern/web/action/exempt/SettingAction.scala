@@ -22,10 +22,13 @@ import org.beangle.web.action.annotation.ignore
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.edu.model.Course
+import org.openurp.code.service.CodeService
 import org.openurp.edu.exempt.config.{CertExemptConfig, CertExemptSetting}
-import org.openurp.edu.extern.code.CertificateSubject
+import org.openurp.edu.extern.code.Certificate
 
 class SettingAction extends RestfulAction[CertExemptSetting] {
+  var codeService: CodeService = _
+
   @ignore
   protected override def simpleEntityName: String = "setting"
 
@@ -35,11 +38,11 @@ class SettingAction extends RestfulAction[CertExemptSetting] {
     setting.config = config
 
     put("project", config.project)
-    val subjects = entityDao.getAll(classOf[CertificateSubject]).toBuffer
-    subjects --= config.settings.map(_.subject)
-    if (null != setting.subject) subjects += setting.subject
+    val certificates = codeService.get(classOf[Certificate]).toBuffer
+    certificates --= config.settings.map(_.certificate)
+    if (null != setting.certificate) certificates += setting.certificate
 
-    put("subjects", subjects)
+    put("certificates", certificates)
     put("urp", Ems)
 
     super.editSetting(setting)

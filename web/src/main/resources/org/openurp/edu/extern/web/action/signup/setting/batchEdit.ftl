@@ -11,21 +11,21 @@
     }
 [/@]
 [@b.form name="settingListForm" action="!batchSave" theme="list"]
-    [@b.grid items=settings var="setting"]
-        <table class="formTable" align="center" width="90%">
+        <table class="grid-table" width="100%">
             <input type="hidden" name="setting.config.id" value="${config.id}"/>
             <input type="hidden" name="settingSize" value="${settings?size}"/>
-            <tr class="darkColumn">
-                  <td width="25%">报考科目名称</td>
-                  <td width="15%" id="f_settingFeeOfMaterial">材料费</td>
-                  <td width="15%" id="f_settingFeeOfSignup">报名费</td>
-                  <td width="15%" id="f_settingFeeOfOutline">考纲费</td>
-                  <td width="15%" id="f_settingMaxStd">最大学生数</td>
-
-            </tr>
+            <thead class="grid-head">
+              <tr>
+                <td width="40%">报考科目名称</td>
+                <td width="15%" id="f_settingFeeOfMaterial">材料费</td>
+                <td width="15%" id="f_settingFeeOfSignup">报名费</td>
+                <td width="15%" id="f_settingFeeOfOutline">考纲费</td>
+                <td width="15%" id="f_settingMaxStd">最大学生数</td>
+              </tr>
+            </thead>
             [#list settings as setting]
             <tr>
-                 <td>${(setting.subject.name)!}</td>
+                 <td style="text-align:center">${(setting.certificate.name)!}</td>
                  <td>
                       [@b.textfield label="" name="setting${setting_index}.feeOfMaterial"  maxLength="10" value="${(setting.feeOfMaterial)!}" request="true" style="width:75%" onBlur="clearNoNum(this)"/]
                  </td>
@@ -43,12 +43,11 @@
             [/#list]
             <tr class="darkColumn">
                 <td colspan="6" align="center">
+                [@b.reset/]
                 [@b.submit value="action.submit"/]
-                <input type="reset"  name="reset1" value="${b.text("action.reset")}" />
                 </td>
 
             </tr>
-    [/@]
-            </table>
+        </table>
 [/@]
 [@b.foot/]

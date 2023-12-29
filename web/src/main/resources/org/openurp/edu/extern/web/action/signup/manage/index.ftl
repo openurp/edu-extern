@@ -10,8 +10,8 @@
           [@b.textfield name="signup.std.state.grade" label="年级"/]
           [@b.select name="signup.std.level.id" id="levelTypeId" label="培养层次" items=levels empty="..."/]
           [@b.select name="signup.std.state.department.id" label="院系" items=departments empty="..." /]
-          [@b.select name="signup.subject.category.id" label="考试类型" items=categories empty="..."/]
-          [@b.select name="signup.subject.id" label="报名科目" items=subjects empty="..." /]
+          [@b.select name="signup.certificate.category.id" label="证书类型" items=categories empty="..."/]
+          [@b.select name="signup.certificate.id" label="报名证书" items=certificates empty="..." /]
           [@b.textfield name="signup.std.squad.name" label="班级名称"/]
           <input type="hidden" name="orderBy" value="signup.updatedAt desc"/>
       [/@]

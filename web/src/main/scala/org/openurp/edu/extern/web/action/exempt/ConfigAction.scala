@@ -21,6 +21,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.annotation.ignore
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
+import org.openurp.code.edu.model.EducationLevel
 import org.openurp.edu.exempt.config.CertExemptConfig
 import org.openurp.starter.web.support.ProjectSupport
 
@@ -44,6 +45,8 @@ class ConfigAction extends RestfulAction[CertExemptConfig] with ProjectSupport {
 
   override protected def saveAndRedirect(entity: CertExemptConfig): View = {
     entity.project = getProject
+    entity.levels.clear()
+    entity.levels.addAll(entityDao.find(classOf[EducationLevel], getIntIds("level")))
     super.saveAndRedirect(entity)
   }
 

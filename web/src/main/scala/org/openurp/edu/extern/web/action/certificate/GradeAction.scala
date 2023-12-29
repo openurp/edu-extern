@@ -27,14 +27,12 @@ import org.beangle.data.transfer.importer.listener.ForeignerListener
 import org.beangle.web.action.annotation.response
 import org.beangle.web.action.view.{PathView, Stream, View}
 import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulAction}
-import org.openurp.base.edu.code.CourseType
 import org.openurp.base.edu.model.Course
 import org.openurp.base.model.{Project, Semester}
-import org.openurp.base.service.SemesterService
 import org.openurp.base.std.model.Student
 import org.openurp.code.edu.model.{CourseTakeType, ExamStatus, GradingMode}
 import org.openurp.edu.exempt.service.ExemptionService
-import org.openurp.edu.extern.code.{CertificateCategory, CertificateSubject}
+import org.openurp.edu.extern.code.{Certificate, CertificateCategory}
 import org.openurp.edu.extern.model.CertificateGrade
 import org.openurp.edu.extern.web.helper.{CertificateGradeImportListener, CertificateGradePropertyExtractor}
 import org.openurp.edu.grade.model.{CourseGrade, Grade}
@@ -43,8 +41,7 @@ import org.openurp.edu.program.model.PlanCourse
 import org.openurp.starter.web.support.ProjectSupport
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
-import java.time.{Instant, ZoneId}
-import scala.collection.mutable
+import java.time.{Instant, YearMonth, ZoneId}
 
 class GradeAction extends RestfulAction[CertificateGrade], ImportSupport[CertificateGrade], ExportSupport[CertificateGrade], ProjectSupport {
 
@@ -54,10 +51,11 @@ class GradeAction extends RestfulAction[CertificateGrade], ImportSupport[Certifi
   override def indexSetting(): Unit = {
     given project: Project = getProject
 
-    put("certificateSubjects", getCodes(classOf[CertificateSubject]))
+    put("certificates", getCodes(classOf[Certificate]))
     put("certificateCategories", getCodes(classOf[CertificateCategory]))
     put("departments", getDeparts)
-    put("project", getProject)
+    put("project", project)
+    put("semester", getSemester)
   }
 
   override def editSetting(entity: CertificateGrade): Unit = {
@@ -65,9 +63,8 @@ class GradeAction extends RestfulAction[CertificateGrade], ImportSupport[Certifi
 
     given project: Project = getProject
 
-    put("certificateSubjects", getCodes(classOf[CertificateSubject]))
+    put("certificates", getCodes(classOf[Certificate]))
     put("certificateCategories", getCodes(classOf[CertificateCategory]))
-    put("semesters", entityDao.getAll(classOf[Semester])) //error
     put("gradingModes", getCodes(classOf[GradingMode]))
     put("examStatuses", getCodes(classOf[ExamStatus]))
   }
@@ -85,6 +82,7 @@ class GradeAction extends RestfulAction[CertificateGrade], ImportSupport[Certifi
     if (grade.std == null) return redirect("search", "保存失败,学号不存在")
     if (isExist(grade)) return redirect("search", "保存失败,成绩重复")
     grade.status = Grade.Status.Published
+    grade.semester = semesterService.get(project, grade.acquiredOn.atDay(1))
     grade.updatedAt = Instant.now
     super.saveAndRedirect(grade)
   }
@@ -93,7 +91,7 @@ class GradeAction extends RestfulAction[CertificateGrade], ImportSupport[Certifi
     val query = OqlBuilder.from(classOf[CertificateGrade], "grade")
     query.where("grade.std= :std", grade.std)
     query.where("grade.acquiredOn = :acquiredOn", grade.acquiredOn)
-    query.where("grade.subject = :subject", grade.subject)
+    query.where("grade.certificate = :certificate", grade.certificate)
     if (!grade.persisted) {
       entityDao.search(query).nonEmpty
     } else {
@@ -149,18 +147,18 @@ class GradeAction extends RestfulAction[CertificateGrade], ImportSupport[Certifi
     given project: Project = getProject
 
     val gradingModes = getCodes(classOf[GradingMode]).map(x => x.code + " " + x.name)
-    val subjects = getCodes(classOf[CertificateSubject]).map(x => x.code + " " + x.name)
+    val certificates = getCodes(classOf[Certificate]).map(x => x.code + " " + x.name)
     val schema = new ExcelSchema()
     val sheet = schema.createScheet("数据模板")
     sheet.title("校外证书成绩模板")
     sheet.remark("特别说明：\n1、不可改变本表格的行列结构以及批注，否则将会导入失败！\n2、须按照规格说明的格式填写。\n3、可以多次导入，重复的信息会被新数据更新覆盖。\n4、保存的excel文件名称可以自定。")
     sheet.add("学号", "certificateGrade.std.code").length(15).required()
-    sheet.add("考试科目", "certificateGrade.subject.code").ref(subjects).required()
+    sheet.add("考试科目", "certificateGrade.certificate.code").ref(certificates).required()
     sheet.add("成绩", "certificateGrade.scoreText").required()
     sheet.add("是否通过", "certificateGrade.passed").bool().required()
-    sheet.add("获得日期", "certificateGrade.acquiredOn").date().required()
+    sheet.add("获得日期", "certificateGrade.acquiredOn").yearMonth().remark("格式为YYYY-MM").required()
     sheet.add("成绩记录方式", "certificateGrade.gradingMode.code").ref(gradingModes).required()
-    sheet.add("证书编号", "certificateGrade.certificate")
+    sheet.add("证书编号", "certificateGrade.certificateNo")
     sheet.add("准考证号", "certificateGrade.examNo")
     sheet.add("免修课程代码", "courseCodes").remark("多个课程可用半角逗号分隔")
 
@@ -171,7 +169,7 @@ class GradeAction extends RestfulAction[CertificateGrade], ImportSupport[Certifi
 
   override protected def configImport(setting: ImportSetting): Unit = {
     val fl = new ForeignerListener(entityDao)
-    setting.listeners = List(fl, new CertificateGradeImportListener(entityDao, getProject, exemptionService))
+    setting.listeners = List(fl, new CertificateGradeImportListener(entityDao, getProject, exemptionService, semesterService))
   }
 
   override def configExport(context: ExportContext): Unit = {
@@ -192,10 +190,13 @@ class GradeAction extends RestfulAction[CertificateGrade], ImportSupport[Certifi
       builder.where("certificateGrade.updatedAt >= :fromAt", fromAt.atTime(0, 0, 0).atZone(ZoneId.systemDefault()).toInstant)
     }
     getDate("toAt") foreach { toAt =>
-      builder.where(" certificateGrade.updatedAt <= :toAt", toAt.plusDays(1).atTime(0, 0, 0).atZone(ZoneId.systemDefault()).toInstant)
+      builder.where("certificateGrade.updatedAt <= :toAt", toAt.plusDays(1).atTime(0, 0, 0).atZone(ZoneId.systemDefault()).toInstant)
     }
     getBoolean("hasCourse") foreach { hasCourse =>
       builder.where((if (hasCourse) "" else "not ") + "exists (from certificateGrade.exempts ec)")
+    }
+    get("acquiredOn", classOf[YearMonth]) foreach { ym =>
+      builder.where("to_char(certificateGrade.acquiredOn,'yyyy-MM')=:acquiredOn", ym.toString)
     }
     builder
   }

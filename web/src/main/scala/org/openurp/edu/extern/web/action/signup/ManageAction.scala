@@ -22,7 +22,7 @@ import org.beangle.web.action.annotation.ignore
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.openurp.base.model.Project
-import org.openurp.edu.extern.code.{CertificateCategory, CertificateSubject}
+import org.openurp.edu.extern.code.{Certificate, CertificateCategory}
 import org.openurp.edu.extern.model.CertSignup
 import org.openurp.edu.extern.web.helper.PETSPropertyExtractor
 import org.openurp.starter.web.support.ProjectSupport
@@ -38,7 +38,7 @@ class ManageAction extends RestfulAction[CertSignup], ExportSupport[CertSignup],
     put("currentSemester", getSemester)
     put("departments", getDeparts)
     put("categories", getCodes(classOf[CertificateCategory]))
-    put("subjects", getCodes(classOf[CertificateSubject]))
+    put("certificates", getCodes(classOf[Certificate]))
     super.indexSetting()
   }
 
@@ -51,7 +51,7 @@ class ManageAction extends RestfulAction[CertSignup], ExportSupport[CertSignup],
     }
     entityDao.saveOrUpdate(signups)
     examRoom.foreach { room =>
-      var roomSigns = entityDao.findBy(classOf[CertSignup], "semester" -> head.semester, "subject" -> head.subject, "examRoom" -> examRoom.get)
+      var roomSigns = entityDao.findBy(classOf[CertSignup], "semester" -> head.semester, "certificate" -> head.certificate, "examRoom" -> examRoom.get)
       roomSigns = Random.shuffle(roomSigns)
       var i = 1;
       roomSigns.foreach { r => r.seatNo = i; i += 1 }

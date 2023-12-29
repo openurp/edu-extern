@@ -17,7 +17,7 @@
     [@b.textfield label="外校课程" name="externGrade.courseName" value=(externGrade.courseName)! required="true" maxlength="100" style=elementSTYLE/]
     [@b.textfield label="外校学分" name="externGrade.credits" value=(externGrade.credits)! required="true" maxlength="5" check="match('number')" style=elementSTYLE/]
     [@b.textfield label="外校得分" name="externGrade.scoreText" value=(externGrade.scoreText)! required="true" maxlength="5" style=elementSTYLE/]
-    [@b.datepicker label="获得日期" name="externGrade.acquiredOn" value=(externGrade.acquiredOn?string('yyyy-MM-dd'))! format="yyyy-MM-dd" required="true" style=elementSTYLE/]
+    [@b.date label="获得日期" name="externGrade.acquiredOn" value=(externGrade.acquiredOn?string('yyyy-MM-dd'))! format="yyyy-MM-dd" required="true" style=elementSTYLE/]
     [@b.textfield label="备注" name="externGrade.remark" value=(externGrade.remark)! required="false" maxlength="100" style="width:300px"/]
     <div style="margin-left: 50px;color: blue">说明：一个学生相同获得日期相同课程只能出现一次。</div>
     [@b.formfoot]

@@ -25,7 +25,7 @@
       [@b.grid items=signUpList var="signUp" sortable="false"]
         [@b.row]
           [@b.col title="学年学期" width="20%"]${(signUp.semester.schoolYear)!}学年 ${(signUp.semester.name)!}[/@]
-          [@b.col property="subject.name" title="报名科目"/]
+          [@b.col property="certificate.name" title="报名科目"/]
           [@b.col property="updatedAt" title="报名时间"]${(signUp.updatedAt?string("yyyy-MM-dd HH:mm:ss"))?if_exists}[/@]
           [@b.col title="操作"]<button class="btn btn-danger btn-sm" onclick="cancelSignUp('${signUp.id}')">取消报名</button>[/@]
         [/@]
@@ -46,18 +46,18 @@
         </tr>
       </thead>
       <tbody>
-      [#list config.settings?sort_by(["subject","code"]) as setting]
+      [#list config.settings?sort_by(["certificate","code"]) as setting]
         [#if setting_index % 2 == 0]
           [#assign lessonClass="griddata-even"/]
         [#else]
           [#assign lessonClass="griddata-odd"/]
         [/#if]
         <tr class="${lessonClass!}">
-          <td>${(setting.subject.name)!}</td>
+          <td>${(setting.certificate.name)!}</td>
           <td>${(setting.examOn?string('yyyy-MM-dd'))!} [#if setting.examBeginAt.value>0] ${setting.examBeginAt}-${setting.examEndAt!}[/#if]</td>
           <td>${(setting.dependsOn.name)!'无'}</td>
           <td align="center">
-            [#if (!signUpSubjects?? || !signUpSubjects?seq_contains(setting.subject))]
+            [#if (!signUpCertificates?? || !signUpCertificates?seq_contains(setting.certificate))]
               <button class="btn btn-primary btn-sm" onclick="signUp('${setting.id}')">报名</button>
             [#else]
               已报名

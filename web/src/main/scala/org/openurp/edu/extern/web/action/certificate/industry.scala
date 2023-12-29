@@ -18,10 +18,10 @@
 package org.openurp.edu.extern.web.action.certificate
 
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.edu.extern.code.{CertificateCategory, CertificateSubject}
+import org.openurp.edu.extern.code.{CertificateCategory, Certificate}
 
-class SubjectAction extends RestfulAction[CertificateSubject] {
-  override protected def editSetting(subject: CertificateSubject): Unit = {
+class CertificateAction extends RestfulAction[Certificate] {
+  override protected def editSetting(cert: Certificate): Unit = {
     put("categories", entityDao.getAll(classOf[CertificateCategory]))
   }
 }
