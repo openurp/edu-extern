@@ -18,7 +18,7 @@
 package org.openurp.edu.extern.web.action.certificate
 
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.edu.extern.code.{CertificateCategory, Certificate}
+import org.openurp.code.edu.model.{Certificate, CertificateCategory}
 
 class CertificateAction extends RestfulAction[Certificate] {
   override protected def editSetting(cert: Certificate): Unit = {

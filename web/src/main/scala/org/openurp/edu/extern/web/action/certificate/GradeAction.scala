@@ -18,7 +18,7 @@
 package org.openurp.edu.extern.web.action.certificate
 
 import org.beangle.commons.collection.Collections
-import org.beangle.commons.lang.Strings
+import org.beangle.commons.lang.{Numbers, Strings}
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.excel.schema.ExcelSchema
 import org.beangle.data.transfer.exporter.ExportContext
@@ -30,9 +30,8 @@ import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulA
 import org.openurp.base.edu.model.Course
 import org.openurp.base.model.{Project, Semester}
 import org.openurp.base.std.model.Student
-import org.openurp.code.edu.model.{CourseTakeType, ExamStatus, GradingMode}
+import org.openurp.code.edu.model.*
 import org.openurp.edu.exempt.service.ExemptionService
-import org.openurp.edu.extern.code.{Certificate, CertificateCategory}
 import org.openurp.edu.extern.model.CertificateGrade
 import org.openurp.edu.extern.web.helper.{CertificateGradeImportListener, CertificateGradePropertyExtractor}
 import org.openurp.edu.grade.model.{CourseGrade, Grade}
@@ -127,11 +126,14 @@ class GradeAction extends RestfulAction[CertificateGrade], ImportSupport[Certifi
     val eg = entityDao.get(classOf[CertificateGrade], getLongId("grade"))
     val courses = entityDao.find(classOf[Course], getLongIds("course"))
     val exemptionCourses = Collections.newSet[Course]
+    var score: Option[Float] = None
     courses foreach { c =>
       val scoreText = get("scoreText_" + c.id, "")
-      if scoreText.nonEmpty then exemptionCourses.addOne(c)
+      if scoreText.nonEmpty then
+        exemptionCourses.addOne(c)
+        if Numbers.isDigits(scoreText) then score = Some(scoreText.toFloat)
     }
-    this.exemptionService.addExemption(eg, exemptionCourses)
+    this.exemptionService.addExemption(eg, exemptionCourses, score)
     redirect("search", "info.action.success")
   }
 

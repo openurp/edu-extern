@@ -23,7 +23,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.annotation.ignore
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.edu.extern.code.Certificate
+import org.openurp.code.edu.model.Certificate
 import org.openurp.edu.extern.config.{CertSignupConfig, CertSignupSetting}
 import org.openurp.starter.web.support.ProjectSupport
 

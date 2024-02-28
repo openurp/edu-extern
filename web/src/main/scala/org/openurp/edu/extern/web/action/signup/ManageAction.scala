@@ -22,7 +22,7 @@ import org.beangle.web.action.annotation.ignore
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.openurp.base.model.Project
-import org.openurp.edu.extern.code.{Certificate, CertificateCategory}
+import org.openurp.code.edu.model.{Certificate, CertificateCategory}
 import org.openurp.edu.extern.model.CertSignup
 import org.openurp.edu.extern.web.helper.PETSPropertyExtractor
 import org.openurp.starter.web.support.ProjectSupport

@@ -24,7 +24,7 @@ import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.edu.model.Course
 import org.openurp.code.service.CodeService
 import org.openurp.edu.exempt.config.{CertExemptConfig, CertExemptSetting}
-import org.openurp.edu.extern.code.Certificate
+import org.openurp.code.edu.model.Certificate
 
 class SettingAction extends RestfulAction[CertExemptSetting] {
   var codeService: CodeService = _

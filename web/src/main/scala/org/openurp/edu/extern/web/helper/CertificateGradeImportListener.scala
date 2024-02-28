@@ -25,9 +25,8 @@ import org.beangle.data.transfer.importer.{ImportListener, ImportResult}
 import org.openurp.base.edu.model.Course
 import org.openurp.base.model.Project
 import org.openurp.base.service.SemesterService
-import org.openurp.code.edu.model.ExamStatus
+import org.openurp.code.edu.model.{Certificate, ExamStatus}
 import org.openurp.edu.exempt.service.ExemptionService
-import org.openurp.edu.extern.code.Certificate
 import org.openurp.edu.extern.model.CertificateGrade
 
 import java.time.{Instant, YearMonth}
@@ -83,7 +82,8 @@ class CertificateGradeImportListener(entityDao: EntityDao, project: Project,
             tr.addFailure("找不到课程代码", courseCode)
           }
         }
-        if codeList.size == courseSets.size then exemptionService.addExemption(grade, courseSets)
+        if codeList.size == courseSets.size then
+          exemptionService.addExemption(grade, courseSets, exemptionService.calcExemptScore(grade))
       }
     }
   }

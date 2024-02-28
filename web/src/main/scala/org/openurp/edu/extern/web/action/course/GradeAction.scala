@@ -18,6 +18,7 @@
 package org.openurp.edu.extern.web.action.course
 
 import org.beangle.commons.collection.{Collections, Properties}
+import org.beangle.commons.lang.Numbers
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.transfer.exporter.ExportContext
 import org.beangle.web.action.annotation.response
@@ -99,13 +100,15 @@ class GradeAction extends RestfulAction[ExternGrade], ExportSupport[ExternGrade]
     val eg = entityDao.get(classOf[ExternGrade], getLongId("grade"))
     val courses = entityDao.find(classOf[Course], getLongIds("course"))
     val exemptCourses = Collections.newSet[Course]
+    var score: Option[Float] = None
     courses foreach { c =>
       val scoreText = get("scoreText_" + c.id, "")
       if (scoreText.nonEmpty) {
         exemptCourses += c
+        if Numbers.isDigits(scoreText) then score = Some(scoreText.toFloat)
       }
     }
-    this.exemptionService.addExemption(eg, exemptCourses)
+    this.exemptionService.addExemption(eg, exemptCourses, score)
     redirect("search", "info.action.success")
   }
 
