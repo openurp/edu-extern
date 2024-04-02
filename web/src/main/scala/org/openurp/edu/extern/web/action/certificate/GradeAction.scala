@@ -66,6 +66,7 @@ class GradeAction extends RestfulAction[CertificateGrade], ImportSupport[Certifi
     put("certificateCategories", getCodes(classOf[CertificateCategory]))
     put("gradingModes", getCodes(classOf[GradingMode]))
     put("examStatuses", getCodes(classOf[ExamStatus]))
+    put("project", project)
   }
 
   override def saveAndRedirect(grade: CertificateGrade): View = {

@@ -17,16 +17,16 @@
 
 package org.openurp.edu.extern.web.helper
 
-import org.beangle.data.transfer.exporter.DefaultPropertyExtractor
+import org.beangle.commons.bean.DefaultPropertyExtractor
 import org.openurp.edu.extern.model.CertificateGrade
 
 class CertificateGradePropertyExtractor extends DefaultPropertyExtractor {
 
-  override def getPropertyValue(target: Object, property: String): Any = {
+  override def get(target: Object, property: String): Any = {
     if (property == "courseSize") {
       target.asInstanceOf[CertificateGrade].exempts.size;
     } else {
-      super.getPropertyValue(target, property)
+      super.get(target, property)
     }
   }
 }

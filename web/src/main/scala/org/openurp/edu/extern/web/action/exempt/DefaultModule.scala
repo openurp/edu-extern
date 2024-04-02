@@ -18,6 +18,7 @@
 package org.openurp.edu.extern.web.action.exempt
 
 import org.beangle.cdi.bind.BindModule
+import org.openurp.edu.grade.service.impl.GradeRateServiceImpl
 
 class DefaultModule extends BindModule {
 
@@ -28,5 +29,7 @@ class DefaultModule extends BindModule {
 
     bind(classOf[ConfigAction])
     bind(classOf[SettingAction])
+
+    bind(classOf[GradeRateServiceImpl])
   }
 }

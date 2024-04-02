@@ -44,8 +44,8 @@
   [@b.form name="gradeDistributeForm" action="!convert"]
   <input type="hidden" name="grade.id" value="${grade.id}"/>
   <div class="grid" style="border:0.5px solid #006CB2">
-  <table class="gridtable">
-    <thead class="gridhead">
+  <table class="grid-table">
+    <thead class="grid-head">
       <tr>
         <th width="10%">课程代码</th>
         <th width="20%">课程名称</th>

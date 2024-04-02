@@ -36,8 +36,8 @@
 [#list configs as config]
 [@b.card class="card-info card-outline"]
   [@b.card_header][#if config.prediction]<span class="badge badge-warning">预</span>[/#if]&nbsp;${config.name}&nbsp;(报名时间：${(config.beginAt?string("yyyy-MM-dd hh:mm"))!}~${(config.endAt?string("yyyy-MM-dd hh:mm"))!})[/@]
-      <table class="gridtable" width="100%"  align="center">
-      <thead class="gridhead">
+      <table class="grid-table" width="100%"  align="center">
+      <thead class="grid-head">
         <tr class="darkColumn" align="center">
           <th>报名科目</th>
           <th>考试时间</th>
@@ -45,7 +45,7 @@
           <th>点击即可报名</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="grid-body">
       [#list config.settings?sort_by(["certificate","code"]) as setting]
         [#if setting_index % 2 == 0]
           [#assign lessonClass="griddata-even"/]

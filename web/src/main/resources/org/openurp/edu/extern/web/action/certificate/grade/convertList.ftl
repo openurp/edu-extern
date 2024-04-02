@@ -44,8 +44,8 @@
   [@b.form name="gradeDistributeForm" action="!convert"]
   <input type="hidden" name="grade.id" value="${grade.id}"/>
   <div class="grid" style="border:0.5px solid #006CB2">
-  <table class="gridtable">
-    <thead class="gridhead">
+  <table class="grid-table">
+    <thead class="grid-head">
       <tr>
         <th width="60px">序号</th>
         <th width="10%">课程代码</th>
@@ -58,7 +58,7 @@
         <th width="60px">考核方式</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="grid-body">
       [#list planCourses?sort_by(["course","name"]) as planCourse]
       <tr class="${(0 == planCourse_index % 2)?string("griddata-even", "griddata-odd")}">
         <td>${planCourse_index+1}</td>

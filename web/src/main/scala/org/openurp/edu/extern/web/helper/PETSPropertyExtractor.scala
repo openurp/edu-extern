@@ -18,7 +18,7 @@
 package org.openurp.edu.extern.web.helper
 
 import org.beangle.data.dao.EntityDao
-import org.beangle.data.transfer.exporter.DefaultPropertyExtractor
+import org.beangle.commons.bean.DefaultPropertyExtractor
 import org.openurp.base.std.model.Graduate
 import org.openurp.edu.extern.model.{CertSignup, ExternGrade}
 import org.openurp.std.info.model.Examinee
@@ -28,7 +28,7 @@ import java.time.format.DateTimeFormatter
 
 class PETSPropertyExtractor(entityDao: EntityDao) extends DefaultPropertyExtractor {
 
-  override def getPropertyValue(target: Object, property: String): Any = {
+  override def get(target: Object, property: String): Any = {
     val signup = target.asInstanceOf[CertSignup]
     val std = signup.std
     property match {
@@ -46,7 +46,7 @@ class PETSPropertyExtractor(entityDao: EntityDao) extends DefaultPropertyExtract
       case "std.examineeCode" =>
         val examinees = entityDao.findBy(classOf[Examinee], "std", List(std))
         if (examinees.isEmpty) "" else examinees.head.code
-      case _ => super.getPropertyValue(target, property)
+      case _ => super.get(target, property)
     }
   }
 }

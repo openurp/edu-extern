@@ -21,7 +21,7 @@
       <td class="title">获得日期：</td>
       <td>${apply.acquiredOn}</td>
       <td class="title">证书编号：</td>
-      <td>${apply.certificate!}</td>
+      <td>${apply.certificateNo!}</td>
       <td class="title">免修课程：</td>
       <td>[#list apply.courses as course]${course.name}[#sep],[/#list]</td>
     </tr>

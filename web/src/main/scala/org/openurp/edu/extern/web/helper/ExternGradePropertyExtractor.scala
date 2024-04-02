@@ -17,13 +17,12 @@
 
 package org.openurp.edu.extern.web.helper
 
-import org.beangle.data.transfer.exporter.DefaultPropertyExtractor
 import org.openurp.edu.extern.model.ExternGrade
 
 import java.time.format.DateTimeFormatter
-
+import org.beangle.commons.bean.DefaultPropertyExtractor
 class ExternGradePropertyExtractor extends DefaultPropertyExtractor {
-  override def getPropertyValue(target: Object, property: String): Any = {
+  override def get(target: Object, property: String): Any = {
     val eg = target.asInstanceOf[ExternGrade]
     val std = eg.externStudent.std
     property match {
@@ -40,7 +39,7 @@ class ExternGradePropertyExtractor extends DefaultPropertyExtractor {
           eg.exempts.map(c => s"${c.name} ${c.getCredits(std.level)}分").mkString("\r\n")
         }
       case _ =>
-        super.getPropertyValue(target, property)
+        super.get(target, property)
     }
   }
 }
