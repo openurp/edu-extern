@@ -4,14 +4,8 @@
 [/@]
 [@b.card class="card-info card-outline"]
   [@b.card_header]
-         <i class="fas fa-school"></i>&nbsp;${externStudent.school.name}<span style="font-size:0.8em">(${externStudent.beginOn?string("yyyy-MM")}~${externStudent.endOn?string("yyyy-MM")})</span>
-         [#if externStudent.auditState!="通过"]
-         <div class="btn-group">
-         [@b.a onclick="return audit('${externStudent.id}',1)" class="btn btn-sm btn-info"]<i class="fa fa-check"></i>审核通过[/@]
-         </div>
-         [/#if]
-         [@b.a onclick="return audit('${externStudent.id}',0)" class="btn btn-sm btn-warning"]<i class="fa fa-undo"></i>退回修改[/@]
-   [/@]
+     <i class="fas fa-school"></i>&nbsp;${externStudent.school.name}<span style="font-size:0.8em">(${externStudent.beginOn?string("yyyy-MM")}~${externStudent.endOn?string("yyyy-MM")})</span>
+  [/@]
 [#assign std= externStudent.std/]
 <table class="infoTable">
     <tr>
@@ -39,7 +33,7 @@
          [#else]--[/#if]
       </td>
       <td class="title">审核状态：</td>
-      <td><span class="[#if externStudent.auditState=="通过"]text-success[#else]text-danger[/#if]">${externStudent.auditState}${externStudent.auditOpinion!}</span></td>
+      <td><span class="[#if externStudent.auditState=="审核通过"]text-success[#else]text-danger[/#if]">${externStudent.auditState}${externStudent.auditOpinion!}</span></td>
     </tr>
   </table>
     [@b.grid items=externStudent.grades sortable="false" var="grade" ]

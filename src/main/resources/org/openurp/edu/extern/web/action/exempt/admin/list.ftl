@@ -14,7 +14,7 @@
         [/@]
         [@b.col property="certificate.name" title="考试科目" width="18%"/]
         [@b.col property="scoreText" title="成绩" width="7%"]
-          <span [#if apply.status!="通过"]style="color:red"[/#if]>
+          <span [#if apply.status.id==100]style="color:red"[/#if]>
             ${(apply.scoreText)!}
           </span>
         [/@]

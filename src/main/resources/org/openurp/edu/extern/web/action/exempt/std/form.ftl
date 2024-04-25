@@ -18,7 +18,7 @@
         [@b.select name="apply.gradingMode.id" items=gradingModes label="记录方式" empty="..." required="true" value=apply.gradingMode! style="width:150px" /]
         [@b.textfield name="apply.scoreText" maxlength="5" label="成绩" required="true"  value=apply.scoreText! style="width:150px" comment="不适用时，可填无"/]
         [@b.date label="获得日期" name="apply.acquiredOn" value=(apply.acquiredOn)! required="true"/]
-        [@b.textfield name="apply.certificateNo" label="证书编号" value=(apply.certificate)! maxlength="100" /]
+        [@b.textfield name="apply.certificateNo" label="证书编号" value=(apply.certificateNo)! maxlength="100" /]
         [@b.field label="成绩证明材料" required="true"]
          <input type="file" name="attachment">
          [#if apply.attachmentPath??]已上传[/#if]

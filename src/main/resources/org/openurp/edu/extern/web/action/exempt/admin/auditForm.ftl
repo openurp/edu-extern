@@ -33,7 +33,7 @@
       <td class="title">审核部门：</td>
       <td>${apply.auditDepart.name}</td>
       <td class="title">审核状态：</td>
-      <td><span class="[#if apply.status=="通过"]text-success[#else]text-danger[/#if]">${apply.status} ${apply.auditOpinion!}</span></td>
+      <td><span class="[#if apply.status.id=100]text-success[#else]text-danger[/#if]">${apply.status} ${apply.auditOpinion!}</span></td>
     </tr>
     <tr>
       <td class="title">申请理由：</td>
