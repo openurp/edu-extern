@@ -29,7 +29,7 @@ import org.openurp.base.model.{AuditStatus, Project}
 import org.openurp.base.std.model.Student
 import org.openurp.code.edu.model.GradingMode
 import org.openurp.edu.exempt.config.{CertExemptConfig, CertExemptSetting}
-import org.openurp.edu.exempt.model.CertExemptApply
+import org.openurp.edu.exempt.flow.CertExemptApply
 import org.openurp.edu.extern.model.CertificateGrade
 import org.openurp.starter.web.support.StudentSupport
 

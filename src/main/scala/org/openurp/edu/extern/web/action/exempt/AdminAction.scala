@@ -25,7 +25,7 @@ import org.beangle.security.Securities
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.AuditStatus
-import org.openurp.edu.exempt.model.CertExemptApply
+import org.openurp.edu.exempt.flow.CertExemptApply
 import org.openurp.edu.exempt.service.CertExemptApplyService
 import org.openurp.edu.program.domain.CoursePlanProvider
 import org.openurp.starter.web.support.ProjectSupport
