@@ -27,7 +27,7 @@
       [@b.col title="获得日期" property="acquiredOn" width="7%"]${externGrade.acquiredOn?string("yyyy-MM")}[/@]
       [@b.col title="免修" sortable="false" width="25%"]
         [#if externGrade.exempts?size >0 ]
-        <span style="font-size:0.8em">[#list externGrade.exempts as c]${c.name} ${c.defaultCredits}分 [#if c_has_next]<br>[/#if][/#list]</span>
+        <span style="font-size:0.8em">[#list externGrade.exempts as c]${c.name} ${c.defaultCredits}分 [#if c_has_next]&nbsp;[/#if][/#list]</span>
         [#else]--[/#if]
       [/@]
     [/@]

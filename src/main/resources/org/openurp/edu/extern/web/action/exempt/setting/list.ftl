@@ -17,7 +17,7 @@
         [@b.col property="maxCount" title="冲抵门数上限" width="10%"/]
         [@b.col property="auditDepart.name" title="审核部门" width="10%"/]
         [@b.col title="免修课程"]
-          [#list setting.courses?sort_by('code') as c]${c.code} ${c.name}[#sep]<br>[/#list]
+          [#list setting.courses?sort_by('code') as c]${c.code} ${c.name}[#sep]&nbsp;[/#list]
         [/@]
         [@b.col property="remark" title="备注" width="30%"]
           <span>${setting.remark!}<span>
