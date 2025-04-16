@@ -2,11 +2,11 @@
 [#assign std= apply.std/]
 <table class="infoTable">
     <tr>
-      <td class="title">考试科目：</td>
+      <td class="title" style="width:12%">考试科目：</td>
       <td>${apply.certificate.name}</td>
-      <td class="title">成绩：</td>
+      <td class="title" style="width:12%">成绩：</td>
       <td>${apply.scoreText!}</td>
-      <td class="title">填写时间：</td>
+      <td class="title" style="width:12%">填写时间：</td>
       <td>${(std.updatedAt?string("yyyy-MM-dd HH:mm"))!}</td>
     </tr>
     <tr>

@@ -17,7 +17,7 @@
 
 package org.openurp.edu.extern.web.action.exempt
 
-import org.beangle.cdi.bind.BindModule
+import org.beangle.commons.cdi.BindModule
 import org.openurp.edu.grade.service.impl.GradeRateServiceImpl
 
 class DefaultModule extends BindModule {

@@ -21,8 +21,8 @@ import org.beangle.commons.collection.{Collections, Properties}
 import org.beangle.commons.lang.Numbers
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.doc.transfer.exporter.ExportContext
-import org.beangle.web.action.annotation.response
-import org.beangle.web.action.view.{PathView, View}
+import org.beangle.webmvc.annotation.response
+import org.beangle.webmvc.view.{PathView, View}
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.openurp.base.edu.model.Course
 import org.openurp.base.model.{Project, Semester}
@@ -96,6 +96,10 @@ class GradeAction extends RestfulAction[ExternGrade], ExportSupport[ExternGrade]
     forward()
   }
 
+  /** 提交成绩认定
+   *
+   * @return
+   */
   def convert(): View = {
     val eg = entityDao.get(classOf[ExternGrade], getLongId("grade"))
     val courses = entityDao.find(classOf[Course], getLongIds("course"))

@@ -21,28 +21,25 @@ import org.beangle.commons.codec.digest.Digests
 import org.beangle.commons.lang.Strings
 import org.beangle.commons.logging.Logging
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
-import org.beangle.ems.app.Ems
-import org.beangle.template.freemarker.ProfileTemplateLoader
-import org.beangle.web.action.support.ActionSupport
-import org.beangle.web.action.view.View
+import org.beangle.ems.app.{Ems, EmsApi, EmsApp}
 import org.beangle.web.servlet.util.RequestUtils
 import org.beangle.webmvc.support.action.EntityAction
+import org.beangle.webmvc.view.View
 import org.openurp.base.std.model.Student
 import org.openurp.edu.extern.config.CertSignupSetting
 import org.openurp.edu.extern.model.{CertSignup, CertificateGrade}
 import org.openurp.edu.extern.service.signup.CertSignupService
-import org.openurp.starter.web.support.ProjectSupport
+import org.openurp.starter.web.helper.ProjectProfile
+import org.openurp.starter.web.support.StudentSupport
 
 import java.time.Instant
 import scala.collection.mutable
 
-class StdAction extends ActionSupport with EntityAction[CertSignup] with ProjectSupport with Logging {
+class StdAction extends StudentSupport, EntityAction[CertSignup], Logging {
 
-  var entityDao: EntityDao = _
   var examSignupService: CertSignupService = _
 
-  def index(): View = {
-    val std = getUser(classOf[Student])
+  override def projectIndex(std: Student): View = {
     val builder = OqlBuilder.from(classOf[CertSignup], "signUp").where("signUp.std =:std", std)
     val signUpList = entityDao.search(builder)
     val gradeBuilder = OqlBuilder.from(classOf[CertificateGrade], "grade").where("grade.std =:std", std)
@@ -56,7 +53,7 @@ class StdAction extends ActionSupport with EntityAction[CertSignup] with Project
    * 列举出可以报名的期号设置(操作第一步)
    */
   def configs(): View = {
-    val std = getUser(classOf[Student])
+    val std = getStudent
     // 可以开放的期号设置
     val configs = examSignupService.getOpenedConfigs(std.project)
     if (configs.isEmpty) {
@@ -85,7 +82,7 @@ class StdAction extends ActionSupport with EntityAction[CertSignup] with Project
    */
   def notice(): View = {
     val setting = entityDao.get(classOf[CertSignupSetting], getLongId("setting"))
-    val std = getUser(classOf[Student])
+    val std = getStudent
     val msg = examSignupService.canSignup(std, setting)
     if (null != msg) {
       //FIXME 如果configs页面提交过来，又要重定向到configs页面,相同的内容firefox不会再次渲染，所以增加了一个随机参数
@@ -101,7 +98,7 @@ class StdAction extends ActionSupport with EntityAction[CertSignup] with Project
   }
 
   def signUpForm(): View = {
-    val std = getUser(classOf[Student])
+    val std = getStudent
     val setting = entityDao.get(classOf[CertSignupSetting], getLongId("setting"))
     put("setting", setting)
     put("student", std)
@@ -109,7 +106,7 @@ class StdAction extends ActionSupport with EntityAction[CertSignup] with Project
   }
 
   def save(): View = {
-    val std = getUser(classOf[Student])
+    val std = getStudent
     val setting = entityDao.get(classOf[CertSignupSetting], getLongId("setting"))
     val config = setting.config
     if (!config.isTimeSuitable) {
@@ -137,7 +134,7 @@ class StdAction extends ActionSupport with EntityAction[CertSignup] with Project
 
   def cancel(): View = {
     val signup = entityDao.get(classOf[CertSignup], getLongId("signup"))
-    val std = getUser(classOf[Student])
+    val std = getStudent
     if (signup.std != std) {
       return redirect("configs", "非法操作，只能取消自己的报名信息!")
     }
@@ -158,13 +155,17 @@ class StdAction extends ActionSupport with EntityAction[CertSignup] with Project
     }
   }
 
+  /** 查看准考证
+   *
+   * @return
+   */
   def examCertificate(): View = {
     val signup = entityDao.get(classOf[CertSignup], getLongId("signup"))
     val setting = entityDao.findBy(classOf[CertSignupSetting], "certificate" -> signup.certificate, "config.semester" -> signup.semester).head
     put("setting", setting)
     put("signup", signup)
     put("avatarURL", Ems.api + "/platform/user/avatars/" + Digests.md5Hex(signup.std.code))
-    ProfileTemplateLoader.setProfile(signup.std.project.id)
+    ProjectProfile.set(signup.std.project)
     forward()
   }
 }

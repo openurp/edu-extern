@@ -18,8 +18,8 @@
 package org.openurp.edu.extern.web.action.exempt
 
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.web.action.annotation.ignore
-import org.beangle.web.action.view.View
+import org.beangle.webmvc.annotation.ignore
+import org.beangle.webmvc.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.code.edu.model.EducationLevel
 import org.openurp.edu.exempt.config.CertExemptConfig

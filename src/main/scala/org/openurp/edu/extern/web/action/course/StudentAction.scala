@@ -19,8 +19,8 @@ package org.openurp.edu.extern.web.action.course
 
 import org.beangle.commons.collection.Properties
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.web.action.annotation.response
-import org.beangle.web.action.view.View
+import org.beangle.webmvc.annotation.response
+import org.beangle.webmvc.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.{ExternSchool, Project}
 import org.openurp.base.std.model.{ExternStudent, Student}

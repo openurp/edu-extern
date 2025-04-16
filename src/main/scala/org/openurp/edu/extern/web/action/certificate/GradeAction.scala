@@ -17,6 +17,7 @@
 
 package org.openurp.edu.extern.web.action.certificate
 
+import org.beangle.commons.activation.MediaTypes
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.{Numbers, Strings}
 import org.beangle.data.dao.OqlBuilder
@@ -24,9 +25,9 @@ import org.beangle.doc.excel.schema.ExcelSchema
 import org.beangle.doc.transfer.exporter.ExportContext
 import org.beangle.doc.transfer.importer.ImportSetting
 import org.beangle.doc.transfer.importer.listener.ForeignerListener
-import org.beangle.web.action.annotation.response
-import org.beangle.web.action.view.{PathView, Stream, View}
+import org.beangle.webmvc.annotation.response
 import org.beangle.webmvc.support.action.{ExportSupport, ImportSupport, RestfulAction}
+import org.beangle.webmvc.view.{PathView, Stream, View}
 import org.openurp.base.edu.model.Course
 import org.openurp.base.model.{Project, Semester}
 import org.openurp.base.std.model.Student
@@ -167,7 +168,7 @@ class GradeAction extends RestfulAction[CertificateGrade], ImportSupport[Certifi
 
     val os = new ByteArrayOutputStream()
     schema.generate(os)
-    Stream(new ByteArrayInputStream(os.toByteArray), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "证书信息.xlsx")
+    Stream(new ByteArrayInputStream(os.toByteArray), MediaTypes.ApplicationXlsx, "证书信息.xlsx")
   }
 
   override protected def configImport(setting: ImportSetting): Unit = {

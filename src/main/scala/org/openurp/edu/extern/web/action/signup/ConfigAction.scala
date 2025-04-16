@@ -18,15 +18,15 @@
 package org.openurp.edu.extern.web.action.signup
 
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.web.action.annotation.ignore
-import org.beangle.web.action.view.View
+import org.beangle.webmvc.annotation.ignore
 import org.beangle.webmvc.support.action.RestfulAction
+import org.beangle.webmvc.view.View
 import org.openurp.base.model.Project
 import org.openurp.code.edu.model.{Certificate, CertificateCategory}
 import org.openurp.edu.extern.config.CertSignupConfig
 import org.openurp.starter.web.support.ProjectSupport
 
-class ConfigAction extends RestfulAction[CertSignupConfig] with ProjectSupport {
+class ConfigAction extends RestfulAction[CertSignupConfig], ProjectSupport {
 
   override def indexSetting(): Unit = {
     given project: Project = getProject

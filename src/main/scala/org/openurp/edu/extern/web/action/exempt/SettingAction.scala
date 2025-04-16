@@ -18,8 +18,8 @@
 package org.openurp.edu.extern.web.action.exempt
 
 import org.beangle.ems.app.Ems
-import org.beangle.web.action.annotation.ignore
-import org.beangle.web.action.view.View
+import org.beangle.webmvc.annotation.ignore
+import org.beangle.webmvc.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.edu.model.Course
 import org.openurp.code.service.CodeService
