@@ -11,7 +11,7 @@
           alert("导出数据每次不能超过10000条，建议分批导出。");
         });
       [#else]
-        bar.addItem("导出", action.exportData("externStudent.std.code:学号,externStudent.std.name:姓名,externStudent.school.name:校外学校,externStudent.level.name:培养层次,externStudent.category.name:教育类别,externStudent.majorName:外校专业,courseName:外校课程,scoreText:外校得分,credits:外校学分,acquiredOn:获得日期,updatedAt:录入时间"));
+        bar.addItem("导出", action.exportData("externStudent.std.code:学号,externStudent.std.name:姓名,externStudent.school.name:校外学校,externStudent.level.name:培养层次,externStudent.category.name:教育类别,externStudent.majorName:外校专业,courseName:外校课程,scoreText:外校得分,credits:外校学分,acquiredIn:获得年月,updatedAt:录入时间"));
       [/#if]
     [/@]
     [@b.row]
@@ -24,7 +24,7 @@
       [@b.col title="课程" property="courseName" width="20%"/]
       [@b.col title="得分" property="scoreText" width="5%"/]
       [@b.col title="学分" property="credits" width="5%"/]
-      [@b.col title="获得日期" property="acquiredOn" width="7%"]${externGrade.acquiredOn?string("yyyy-MM")}[/@]
+      [@b.col title="获得年月" property="acquiredIn" width="7%"]${externGrade.acquiredIn?string("yyyy-MM")}[/@]
       [@b.col title="免修" sortable="false" width="25%"]
         [#if externGrade.exempts?size >0 ]
         <span style="font-size:0.8em">[#list externGrade.exempts as c]${c.name} ${c.defaultCredits}分 [#if c_has_next]&nbsp;[/#if][/#list]</span>

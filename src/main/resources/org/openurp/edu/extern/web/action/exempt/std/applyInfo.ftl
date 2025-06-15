@@ -10,8 +10,8 @@
       <td>${(std.updatedAt?string("yyyy-MM-dd HH:mm"))!}</td>
     </tr>
     <tr>
-      <td class="title">获得日期：</td>
-      <td>${apply.acquiredOn}</td>
+      <td class="title">获得年月：</td>
+      <td>${apply.acquiredIn}</td>
       <td class="title">证书编号：</td>
       <td>${apply.certificateNo!}</td>
       <td class="title">免修课程：</td>

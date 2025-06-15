@@ -38,7 +38,7 @@
       [@b.col title="成绩"]${(grade.scoreText)!}[/@]
       [@b.col title="是否通过"]${(grade.passed?string("通过","不通过"))!}[/@]
       [@b.col title="证书号"]${(grade.certificateNo)!}[/@]
-      [@b.col title="获得年月"]${(grade.acquiredOn?string('yyyy-MM'))!}[/@]
+      [@b.col title="获得年月"]${(grade.acquiredIn?string('yyyy-MM'))!}[/@]
     [/@]
   [/@]
 [/@]

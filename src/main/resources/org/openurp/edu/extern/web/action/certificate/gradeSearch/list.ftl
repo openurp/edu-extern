@@ -4,7 +4,7 @@
     [@b.gridbar]
       bar.addItem("${b.text('action.export')}",
            action.exportData("std.code:学号,std.name:姓名,certificate.name:证书,scoreText:成绩,"+
-                             "std.state.department.name:院系,std.state.major.name:专业,std.state.grade.code:年级,certificate:证书编号,acquiredOn:考试日期",null,'fileName=证书成绩'));
+                             "std.state.department.name:院系,std.state.major.name:专业,std.state.grade.code:年级,certificate:证书编号,acquiredIn:考试年月",null,'fileName=证书成绩'));
     [/@]
     [@b.row]
         [@b.boxcol/]
@@ -18,7 +18,7 @@
         [/@]
         [@b.col property="std.state.department.name" title="院系"  width="15%"/]
         [@b.col property="certificateNo" title="证书编号"  width="15%"]${(certificateGrade.certificateNo)!"--"}[/@]
-        [@b.col property="acquiredOn" title="获得年月" width="12%"]${(certificateGrade.acquiredOn?string("yy-MM"))!"--"}[/@]
+        [@b.col property="acquiredIn" title="获得年月" width="12%"]${(certificateGrade.acquiredIn?string("yy-MM"))!"--"}[/@]
     [/@]
 [/@]
 [@b.foot/]

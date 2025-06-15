@@ -28,7 +28,7 @@ class ExternGradePropertyExtractor extends DefaultPropertyExtractor {
     property match {
       case "courseCode" => "01"
       case "creditHours" => "0"
-      case "acquiredOn" => DateTimeFormatter.ofPattern("yyyyMM").format(eg.acquiredOn)
+      case "acquiredIn" => DateTimeFormatter.ofPattern("yyyyMM").format(eg.acquiredIn)
       case "courseCodes" => eg.exempts.map(c => s"${c.code}").mkString("\r\n")
       case "courseNames" => eg.exempts.map(c => s"${c.name}").mkString("\r\n")
       case "courseCredits" => eg.exempts.map(c => s"${c.getCredits(std.level)}").mkString("\r\n")

@@ -63,8 +63,8 @@ class GradeSearchAction extends ActionSupport, EntityAction[CertificateGrade], E
     getBoolean("hasCourse") foreach { hasCourse =>
       builder.where((if (hasCourse) "" else "not ") + "exists (from certificateGrade.exempts ec)")
     }
-    get("acquiredOn", classOf[YearMonth]) foreach { ym =>
-      builder.where("to_char(certificateGrade.acquiredOn,'yyyy-MM')=:acquiredOn", ym.toString)
+    get("acquiredIn", classOf[YearMonth]) foreach { ym =>
+      builder.where("to_char(certificateGrade.acquiredIn,'yyyy-MM')=:acquiredIn", ym.toString)
     }
     builder
   }

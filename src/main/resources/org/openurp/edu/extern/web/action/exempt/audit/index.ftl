@@ -10,7 +10,7 @@
           [@b.select name="apply.std.level.id" items=levels label="培养层次" empty="..."/]
           [@b.select name="apply.certificate.id" items=certificates label="考试科目" empty="..."/]
           [@b.textfield name="exemptCourseName" label="免修课程" placeholder="课程名称"/]
-          [@b.date label="考试日期" name="apply.acquiredOn"/]
+          [@b.date label="考试年月" name="apply.acquiredIn"/]
           [@b.select items=statuses label="状态" empty="..." name="apply.status"/]
       [/@]
   </div>

@@ -16,7 +16,7 @@
     [@b.textfield name="certificateGrade.scoreText" maxlength="5" label="成绩"  onchange="setScore(this.value)" value=(certificateGrade.scoreText)! required="true" style="width:150px"/]
     [@b.textfield name="certificateGrade.score" maxlength="5" label="分数" check="match('number')" value=(certificateGrade.score)! style="width:150px" comment="须数字"/]
     [@b.radios name="certificateGrade.passed" items={"1":"合格", "0":"不合格"} label="是否合格" value=(certificateGrade.passed)!true?string("1", "0")/]
-    [@b.date label="考试日期" name="certificateGrade.acquiredOn" value=(certificateGrade.acquiredOn)! required="true"/]
+    [@b.date label="考试年月" name="certificateGrade.acquiredIn" value=(certificateGrade.acquiredIn)! required="true" format="yyyy-MM"/]
     [@b.textfield name="certificateGrade.examNo" label="准考证号码" value=(certificateGrade.examNo)! style="width:150px"/]
     [@b.textfield name="certificateGrade.certificateNo" label="证书编号" value=(certificateGrade.certificateNo)! maxlength="100" style="width:150px"/]
     [@b.formfoot]

@@ -19,7 +19,7 @@
         [@b.col property="std.state.department.name" title="院系" width="10%"]
           ${apply.std.state.department.shortName!apply.std.state.department.name}
         [/@]
-        [@b.col property="acquiredOn" title="获得日期" width="10%"]${(apply.acquiredOn)!"--"}[/@]
+        [@b.col property="acquiredIn" title="获得年月" width="10%"]${(apply.acquiredIn?string('yyyy-MM'))!"--"}[/@]
         [@b.col title="免修" sortable="false"]
           [#list apply.courses as c]${c.name}[#sep],[/#list]
         [/@]

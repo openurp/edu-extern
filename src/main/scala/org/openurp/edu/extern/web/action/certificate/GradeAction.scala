@@ -83,15 +83,15 @@ class GradeAction extends RestfulAction[CertificateGrade], ImportSupport[Certifi
     if (grade.std == null) return redirect("search", "保存失败,学号不存在")
     if (isExist(grade)) return redirect("search", "保存失败,成绩重复")
     grade.status = Grade.Status.Published
-    grade.semester = semesterService.get(project, grade.acquiredOn.atDay(1))
+    grade.semester = semesterService.get(project, grade.acquiredIn.atDay(1))
     grade.updatedAt = Instant.now
     super.saveAndRedirect(grade)
   }
 
   private def isExist(grade: CertificateGrade): Boolean = {
     val query = OqlBuilder.from(classOf[CertificateGrade], "grade")
-    query.where("grade.std= :std", grade.std)
-    query.where("grade.acquiredOn = :acquiredOn", grade.acquiredOn)
+    query.where("grade.std = :std", grade.std)
+    query.where("grade.acquiredIn = :acquiredIn", grade.acquiredIn)
     query.where("grade.certificate = :certificate", grade.certificate)
     if (!grade.persisted) {
       entityDao.search(query).nonEmpty
@@ -160,7 +160,7 @@ class GradeAction extends RestfulAction[CertificateGrade], ImportSupport[Certifi
     sheet.add("考试科目", "certificateGrade.certificate.code").ref(certificates).required()
     sheet.add("成绩", "certificateGrade.scoreText").required()
     sheet.add("是否通过", "certificateGrade.passed").bool().required()
-    sheet.add("获得日期", "certificateGrade.acquiredOn").yearMonth().remark("格式为YYYY-MM").required()
+    sheet.add("获得年月", "certificateGrade.acquiredIn").yearMonth().remark("格式为YYYY-MM").required()
     sheet.add("成绩记录方式", "certificateGrade.gradingMode.code").ref(gradingModes).required()
     sheet.add("证书编号", "certificateGrade.certificateNo")
     sheet.add("准考证号", "certificateGrade.examNo")
@@ -199,8 +199,8 @@ class GradeAction extends RestfulAction[CertificateGrade], ImportSupport[Certifi
     getBoolean("hasCourse") foreach { hasCourse =>
       builder.where((if (hasCourse) "" else "not ") + "exists (from certificateGrade.exempts ec)")
     }
-    get("acquiredOn", classOf[YearMonth]) foreach { ym =>
-      builder.where("to_char(certificateGrade.acquiredOn,'yyyy-MM')=:acquiredOn", ym.toString)
+    get("acquiredIn", classOf[YearMonth]) foreach { ym =>
+      builder.where("to_char(certificateGrade.acquiredIn,'yyyy-MM')=:acquiredIn", ym.toString)
     }
     builder
   }

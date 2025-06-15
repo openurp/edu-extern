@@ -19,7 +19,7 @@
           [@b.textfield name="certificateGrade.examNo" label="准考证号"/]
           [@b.textfield name="certificateGrade.certificateNo" label="证书编号"/]
           [@b.select name="certificateGrade.passed" label="是否合格" items={"1":"合格", "0":"不合格"} empty="..." /]
-          [@b.date label="获得年月" name="acquiredOn" format="yyyy-MM"/]
+          [@b.date label="获得年月" name="acquiredIn" format="yyyy-MM"/]
       [/@]
   </div>
   <div class="search-list">

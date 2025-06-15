@@ -101,7 +101,7 @@ class StdAction extends StudentSupport with EntityAction[CertExemptApply] {
           repo.remove(apply.attachmentPath)
         }
         entityDao.remove(apply)
-        val details = Map("scoreText" -> apply.scoreText, "acquiredOn" -> apply.acquiredOn.toString, "certificateNo" -> apply.certificateNo)
+        val details = Map("scoreText" -> apply.scoreText, "acquiredIn" -> apply.acquiredIn.toString, "certificateNo" -> apply.certificateNo)
         businessLogger.info(s"${std.code} ${std.name}删除了${apply.certificate.name}免修申请", apply.id, details)
         redirect("index", "删除成功")
       }
@@ -145,7 +145,7 @@ class StdAction extends StudentSupport with EntityAction[CertExemptApply] {
       if (Strings.isNotBlank(apply.attachmentPath)) {
         apply.status = AuditStatus.Submited
         entityDao.saveOrUpdate(apply)
-        val details = Map("scoreText" -> apply.scoreText, "acquiredOn" -> apply.acquiredOn.toString, "certificateNo" -> apply.certificateNo)
+        val details = Map("scoreText" -> apply.scoreText, "acquiredIn" -> apply.acquiredIn.toString, "certificateNo" -> apply.certificateNo)
         businessLogger.info(s"${std.code} ${std.name}提交了${setting.certificate.name}免修申请", apply.id, details)
         redirect("index", s"&projectId=${std.project.id}", "提交成功")
       } else {

@@ -36,19 +36,19 @@ class CertificateGradeImportListener(entityDao: EntityDao, project: Project,
 
   override def onItemStart(tr: ImportResult): Unit = {
     val data = transfer.curData
-    for (code <- data.get("certificateGrade.std.code"); certificateCode <- data.get("certificateGrade.certificate.code"); acquiredOn <- data.get("certificateGrade.acquiredOn")) {
+    for (code <- data.get("certificateGrade.std.code"); certificateCode <- data.get("certificateGrade.certificate.code"); acquiredIn <- data.get("certificateGrade.acquiredIn")) {
       val q = if certificateCode.toString.contains(" ") then Strings.substringBefore(certificateCode.toString, " ") else certificateCode.toString
       val sQuery = OqlBuilder.from(classOf[Certificate], "cs")
       sQuery.where("cs.code = :q or cs.name = :q", q)
       sQuery.cacheable()
       val certificates = entityDao.search(sQuery)
       if (certificates.size == 1) {
-        val acquiredOnDate = DefaultConversion.Instance.convert(acquiredOn, classOf[YearMonth])
+        val acquired = DefaultConversion.Instance.convert(acquiredIn, classOf[YearMonth])
         val query = OqlBuilder.from(classOf[CertificateGrade], "cg")
         query.where("cg.std.project = :project", project)
         query.where("cg.std.code = :stdCode", code)
         query.where("cg.certificate = :certificate", certificates.head)
-        query.where("cg.acquiredOn = :acquiredOn", acquiredOnDate)
+        query.where("cg.acquiredIn = :acquiredIn", acquired)
         val grades = entityDao.search(query)
         if (grades.nonEmpty) transfer.current = grades.head
       }
@@ -64,7 +64,7 @@ class CertificateGradeImportListener(entityDao: EntityDao, project: Project,
       }
     }
     grade.updatedAt = Instant.now
-    grade.semester = semesterService.get(project, grade.acquiredOn.atDay(1))
+    grade.semester = semesterService.get(project, grade.acquiredIn.atDay(1))
     entityDao.saveOrUpdate(grade)
 
     transfer.curData.get("courseCodes") foreach { courseCodes =>

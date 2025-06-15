@@ -49,7 +49,7 @@
     [/#list]
   [/#list]
   [#assign title]
-     <i class="fas fa-school"></i> &nbsp;${apply.certificate.name}<span style="font-size:0.8em">(${apply.acquiredOn?string("yyyy-MM")})</span>
+     <i class="fas fa-school"></i> &nbsp;${apply.certificate.name}<span style="font-size:0.8em">(${apply.acquiredIn?string("yyyy-MM")})</span>
      [#if editables?seq_contains(apply.status)]
        [#if settingId>0][@b.a href="!edit?apply.id="+apply.id+"&settingId="+settingId class="btn btn-sm btn-info"]<i class="far fa-edit"></i>修改[/@][/#if]
        [@b.a href="!remove?apply.id="+apply.id+"&projectId="+student.project.id onclick="return removeApply(this);" class="btn btn-sm btn-warning"]<i class="fas fa-times"></i>删除申请[/@]
